@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stepit/pages/take_picture.dart';
+import 'package:stepit/pages/100_steps.dart';
+
 
 
 void main() {
@@ -14,7 +16,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: TakePictureScreen(), 
+      home: StepCounter(), 
       // TODO: change TakePicturePage to HomePage
       // TODO: Add theme:, Learn themes
     );
