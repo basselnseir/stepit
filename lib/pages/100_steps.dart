@@ -53,11 +53,30 @@ class _StepCounterState extends State<StepCounter> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text(
-        'Steps: $_steps',
-        style: TextStyle(fontSize: 30),
-      ),
-    );
-  }
+      return Scaffold(
+          appBar: AppBar(
+          title: const Text('500 STEPS CHALLENGE'),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    
+                    const Text(
+                      'Challenge: Walk 500 steps',
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    const SizedBox(height: 20),
+                    Text(
+                      'Steps count: $_steps',
+                      style: const TextStyle(fontSize: 18),
+                    ),
+                  ]
+            ),
+          ),
+        ),
+      );
+    }
 }

@@ -48,25 +48,25 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
     _stepCountSubscription.cancel();
   }
 
-Future<void> _takePicture() async {
-  final pickedFile = await ImagePicker().pickImage(source: ImageSource.camera);
-  if (pickedFile != null) {
-    final dir = await getApplicationDocumentsDirectory();
-    final timestamp = DateTime.now().millisecondsSinceEpoch;
-    final targetPath = dir.absolute.path + "/image_${timestamp}.jpg";
-    final file = await File(pickedFile.path).copy(targetPath);
+  Future<void> _takePicture() async {
+    final pickedFile = await ImagePicker().pickImage(source: ImageSource.camera);
+    if (pickedFile != null) {
+      final dir = await getApplicationDocumentsDirectory();
+      final timestamp = DateTime.now().millisecondsSinceEpoch;
+      final targetPath = dir.absolute.path + "/image_${timestamp}.jpg";
+      final file = await File(pickedFile.path).copy(targetPath);
 
-    setState(() {
-      imagePaths.add(file.path);
-    });
+      setState(() {
+        imagePaths.add(file.path);
+      });
+    }
   }
-}
   
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Take trees\' pictures'),
+        title: const Text('CHALLENGE: TREES'),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -75,22 +75,6 @@ Future<void> _takePicture() async {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ...widget.imagePaths.map((path) {
-                  var dateTime = DateTime.fromMillisecondsSinceEpoch(int.parse(path.split('_').last.split('.').first));
-                  return Card(
-                    child: Row(
-                      children: [
-                        // Container(
-                        //   height: 100, // Set the height of the image
-                        //   width: 100, // Set the width of the image
-                        //   child: Image.file(File(path), fit: BoxFit.contain),
-                        // ),
-                        SizedBox(width: 10),
-                        // Text(dateTime.toString()), // Display the date and time
-                      ],
-                    ),
-                  );
-                }).toList(),
                 const Text(
                   'In this challenge, you should take as many trees\' pictures as you can.',
                   style: TextStyle(fontSize: 20),
