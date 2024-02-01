@@ -56,7 +56,7 @@ class HomePage extends StatelessWidget {
   onPressed: () {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => StepCounter()),
+      MaterialPageRoute(builder: (context) => TakePictureScreen(imagePaths: [],)),
     );
   },
   child: const Column(
