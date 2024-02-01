@@ -35,7 +35,7 @@ class HomePage extends StatelessWidget {
                     Flexible(
                       fit: FlexFit.loose,
                       child: Text(
-                        '500 Steps',
+                        '100 Steps',
                         style: TextStyle(fontSize: 10),
                       ),
                     ),
