@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:pedometer/pedometer.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter/services.dart';
+
 
 class TakePictureScreen extends StatefulWidget {
   final List<String> imagePaths;
@@ -19,33 +22,82 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
 
   _TakePictureScreenState(this.imagePaths);
 
-  String _stepCount = '0';
+  // String _stepCount = '0';
+  // late Stream<StepCount> _stepCountStream;
+  // late StreamSubscription<StepCount> _stepCountSubscription;
+
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _startPedometer();
+  // }
+
+  // @override
+  // void dispose() {
+  //   _stopPedometer();
+  //   super.dispose();
+  // }
+
+  // void _startPedometer() {
+  //   _stepCountStream = Pedometer.stepCountStream;
+  //   _stepCountSubscription = _stepCountStream.listen((stepCount) {
+  //     setState(() {
+  //       _stepCount = stepCount.steps.toString();
+  //     });
+  //   });
+  // }
+
+  // void _stopPedometer() {
+  //   _stepCountSubscription.cancel();
+  // }
+
+  late Pedometer _pedometer;
   late Stream<StepCount> _stepCountStream;
-  late StreamSubscription<StepCount> _stepCountSubscription;
+  String _steps = '0';
+  int _initialSteps = 0;
+  bool started = false;
 
   @override
   void initState() {
     super.initState();
-    _startPedometer();
+    initPlatformState();
+    _requestPermission();
   }
 
-  @override
-  void dispose() {
-    _stopPedometer();
-    super.dispose();
+  void _requestPermission() async {
+    if (await Permission.activityRecognition.request().isGranted) {
+      // Either the permission was already granted before or the user just granted it.
+      // You can start listening to the pedometer here.
+    }
   }
 
-  void _startPedometer() {
+  Future<void> initPlatformState() async {
+    _pedometer = Pedometer();
     _stepCountStream = Pedometer.stepCountStream;
-    _stepCountSubscription = _stepCountStream.listen((stepCount) {
-      setState(() {
-        _stepCount = stepCount.steps.toString();
-      });
+    _stepCountStream.listen(onData).onError(onError);
+
+    // Get the initial step count
+    _stepCountStream.first.then((StepCount event) {
+      _initialSteps = event.steps;
+      started = true;
     });
   }
 
-  void _stopPedometer() {
-    _stepCountSubscription.cancel();
+  void onData(StepCount event) {
+    setState(() {
+      if (started){
+        _steps = (event.steps - _initialSteps).toString();
+      }
+    });
+  }
+
+  void onError(error) {
+    print('Flutter Pedometer Error: $error');
+    if (error is PlatformException && error.code == '1') {
+      setState(() {
+        _steps = 'Step counter not available on this device';
+      });
+    }
   }
 
   Future<void> _takePicture() async {
@@ -81,7 +133,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  'Steps count: $_stepCount',
+                  'Steps count: $_steps',
                   style: const TextStyle(fontSize: 18),
                 ),
                 const SizedBox(height: 20),
