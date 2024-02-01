@@ -35,6 +35,8 @@ class _StepCounterState extends State<StepCounter> {
   int goal = 100;
   bool _buttonPressed = false;
   StreamSubscription<StepCount>? _stepCountSubscription;
+  Timer? _timer;
+  Duration _duration = Duration();
 
   @override
   void initState() {
@@ -112,8 +114,8 @@ class _StepCounterState extends State<StepCounter> {
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  title: Text('Reset steps'),
-                                  content: Text('Are you sure you want to reset the steps?'),
+                                  title: Text('Reset steps challenge'),
+                                  content: Text('Are you sure you want to reset the steps challenge?'),
                                   actions: <Widget>[
                                     TextButton(
                                       child: Text('Cancel'),
@@ -138,6 +140,8 @@ class _StepCounterState extends State<StepCounter> {
                                 started = false;
                                 _steps = '0';
                                 _stepCountSubscription?.cancel();
+                                _timer?.cancel();
+                                _duration = Duration();
                               });
                             }
                           }
@@ -151,6 +155,12 @@ class _StepCounterState extends State<StepCounter> {
                               _initialSteps = event.steps;
                               started = true;
                             });
+
+                            _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+                              setState(() {
+                                _duration += Duration(seconds: 1);
+                              });
+                            });
                           }
                         });
                       },
@@ -159,6 +169,20 @@ class _StepCounterState extends State<StepCounter> {
                         onPrimary: Colors.white, // foreground
                       ),
                       child: Text(_buttonPressed ? 'RESET' : 'START!'),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(top: 20), // Adjust this value to move the text down
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Icon(Icons.access_time, size: 20), // This is the clock logo
+                          SizedBox(width: 10), // This adds some space between the logo and the text
+                          Text(
+                            'Timer: ${_duration.inMinutes}:${(_duration.inSeconds % 60).toString().padLeft(2, '0')}',
+                            style: Theme.of(context).textTheme.headline4?.copyWith(fontSize: 20), // Adjust the font size here
+                          ),
+                        ],
+                      ),
                     ),
                   ],
             ),
