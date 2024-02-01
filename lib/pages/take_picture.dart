@@ -51,7 +51,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
   //   _stepCountSubscription.cancel();
   // }
 
-  late Pedometer _pedometer;
+  // late Pedometer _pedometer;
   late Stream<StepCount> _stepCountStream;
   String _steps = '0';
   int _initialSteps = 0;
@@ -72,7 +72,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
   }
 
   Future<void> initPlatformState() async {
-    _pedometer = Pedometer();
+    // _pedometer = Pedometer();
     _stepCountStream = Pedometer.stepCountStream;
     _stepCountStream.listen(onData).onError(onError);
 
@@ -155,7 +155,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
                               width: 100, // Set the width of the image
                               child: Image.file(File(path), fit: BoxFit.contain),
                             ),
-                            SizedBox(width: 10),
+                            const SizedBox(width: 10),
                             Text(dateTime.toString()), // Display the date and time
                           ],
                         ),

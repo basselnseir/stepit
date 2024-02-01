@@ -27,7 +27,7 @@ class StepCounter extends StatefulWidget {
 }
 
 class _StepCounterState extends State<StepCounter> {
-  late Pedometer _pedometer;
+  // late Pedometer _pedometer;
   late Stream<StepCount> _stepCountStream;
   String _steps = '0';
   int _initialSteps = 0;
@@ -36,7 +36,7 @@ class _StepCounterState extends State<StepCounter> {
   bool _buttonPressed = false;
   StreamSubscription<StepCount>? _stepCountSubscription;
   Timer? _timer;
-  Duration _duration = Duration();
+  Duration _duration = const Duration();
 
   @override
   void initState() {
@@ -53,7 +53,7 @@ class _StepCounterState extends State<StepCounter> {
   }
 
   Future<void> initPlatformState() async {
-    _pedometer = Pedometer();
+    // _pedometer = Pedometer();
     _stepCountStream = Pedometer.stepCountStream;
     // _stepCountStream.listen(onData).onError(onError);
 
@@ -114,17 +114,17 @@ class _StepCounterState extends State<StepCounter> {
                               context: context,
                               builder: (BuildContext context) {
                                 return AlertDialog(
-                                  title: Text('Reset steps challenge'),
-                                  content: Text('Are you sure you want to reset the steps challenge?'),
+                                  title: const Text('Reset steps challenge'),
+                                  content: const Text('Are you sure you want to reset the steps challenge?'),
                                   actions: <Widget>[
                                     TextButton(
-                                      child: Text('Cancel'),
+                                      child: const Text('Cancel'),
                                       onPressed: () {
                                         Navigator.of(context).pop(false);
                                       },
                                     ),
                                     TextButton(
-                                      child: Text('Yes'),
+                                      child: const Text('Yes'),
                                       onPressed: () {
                                         Navigator.of(context).pop(true);
                                       },
@@ -141,7 +141,7 @@ class _StepCounterState extends State<StepCounter> {
                                 _steps = '0';
                                 _stepCountSubscription?.cancel();
                                 _timer?.cancel();
-                                _duration = Duration();
+                                _duration = const Duration();
                               });
                             }
                           }
@@ -156,9 +156,9 @@ class _StepCounterState extends State<StepCounter> {
                               started = true;
                             });
 
-                            _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+                            _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
                               setState(() {
-                                _duration += Duration(seconds: 1);
+                                _duration += const Duration(seconds: 1);
                               });
                             });
                           }
@@ -171,12 +171,12 @@ class _StepCounterState extends State<StepCounter> {
                       child: Text(_buttonPressed ? 'RESET' : 'START!'),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(top: 20), // Adjust this value to move the text down
+                      padding: const EdgeInsets.only(top: 20), // Adjust this value to move the text down
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          Icon(Icons.access_time, size: 20), // This is the clock logo
-                          SizedBox(width: 10), // This adds some space between the logo and the text
+                          const Icon(Icons.access_time, size: 20), // This is the clock logo
+                          const SizedBox(width: 10), // This adds some space between the logo and the text
                           Text(
                             'Timer: ${_duration.inMinutes}:${(_duration.inSeconds % 60).toString().padLeft(2, '0')}',
                             style: Theme.of(context).textTheme.headline4?.copyWith(fontSize: 20), // Adjust the font size here
