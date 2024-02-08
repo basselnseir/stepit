@@ -6,7 +6,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/services.dart';
-
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class TakePictureScreen extends StatefulWidget {
   final List<String> imagePaths;
@@ -22,36 +23,6 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
 
   _TakePictureScreenState(this.imagePaths);
 
-  // String _stepCount = '0';
-  // late Stream<StepCount> _stepCountStream;
-  // late StreamSubscription<StepCount> _stepCountSubscription;
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _startPedometer();
-  // }
-
-  // @override
-  // void dispose() {
-  //   _stopPedometer();
-  //   super.dispose();
-  // }
-
-  // void _startPedometer() {
-  //   _stepCountStream = Pedometer.stepCountStream;
-  //   _stepCountSubscription = _stepCountStream.listen((stepCount) {
-  //     setState(() {
-  //       _stepCount = stepCount.steps.toString();
-  //     });
-  //   });
-  // }
-
-  // void _stopPedometer() {
-  //   _stepCountSubscription.cancel();
-  // }
-
-  // late Pedometer _pedometer;
   late Stream<StepCount> _stepCountStream;
   String _steps = '0';
   int _initialSteps = 0;
@@ -62,6 +33,15 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
     super.initState();
     initPlatformState();
     _requestPermission();
+    _loadImagePaths();
+  }
+
+  void _loadImagePaths() async {
+    final querySnapshot = await FirebaseFirestore.instance.collection('images').get();
+    final urls = querySnapshot.docs.map((doc) => doc['url']).toList();
+    setState(() {
+      imagePaths = List<String>.from(urls);
+    });
   }
 
   void _requestPermission() async {
@@ -100,19 +80,39 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
     }
   }
 
-  Future<void> _takePicture() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.camera);
-    if (pickedFile != null) {
-      final dir = await getApplicationDocumentsDirectory();
-      final timestamp = DateTime.now().millisecondsSinceEpoch;
-      final targetPath = dir.absolute.path + "/image_${timestamp}.jpg";
-      final file = await File(pickedFile.path).copy(targetPath);
+Future<void> _takePicture() async {
+  final pickedFile = await ImagePicker().pickImage(source: ImageSource.camera);
+  if (pickedFile != null) {
+    final timestamp = DateTime.now().millisecondsSinceEpoch;
+    final targetPath = "images/image_${timestamp}.jpg";
+    final file = File(pickedFile.path);
+    try {
+      
+      // Upload the file to Firebase Storage
+      await firebase_storage.FirebaseStorage.instance
+          .ref(targetPath)
+          .putFile(file);
+      // Add a delay before getting the download URL
+
+      // Once the file upload is complete, get the download URL
+      final downloadUrl = await firebase_storage.FirebaseStorage.instance
+          .ref(targetPath)
+          .getDownloadURL();
+
 
       setState(() {
-        imagePaths.add(file.path);
+        imagePaths.add(downloadUrl);
       });
+
+      await FirebaseFirestore.instance.collection('images').add({
+        'url': downloadUrl,
+        'timestamp': timestamp,
+      });
+    } on firebase_storage.FirebaseException catch (e){
+      // Handle any errors
     }
   }
+}
   
   @override
   Widget build(BuildContext context) {
@@ -143,8 +143,8 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
                 ),
                 const SizedBox(height: 20),
                 Table(
-                  children: imagePaths.map((path) {
-                    var dateTime = DateTime.fromMillisecondsSinceEpoch(int.parse(path.split('_').last.split('.').first));
+                  children: imagePaths.map((url) {
+                    var dateTime = DateTime.fromMillisecondsSinceEpoch(int.parse(url.split('_').last.split('.').first));
 
                     return TableRow(children: [
                       Card(
@@ -153,7 +153,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
                             Container(
                               height: 100, // Set the height of the image
                               width: 100, // Set the width of the image
-                              child: Image.file(File(path), fit: BoxFit.contain),
+                              child: Image.network(url, fit: BoxFit.contain),
                             ),
                             const SizedBox(width: 10),
                             Text(dateTime.toString()), // Display the date and time
