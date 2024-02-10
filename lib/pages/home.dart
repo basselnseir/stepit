@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '100_steps.dart'; 
 import 'take_picture.dart'; 
+import 'globals.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -23,6 +24,7 @@ class HomePage extends StatelessWidget {
                   ),
                 ),
                 onPressed: () {
+                  logEvent_('user entered 100_steps_challenge');
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => StepCounter()),
@@ -54,6 +56,7 @@ class HomePage extends StatelessWidget {
     ),
   ),
   onPressed: () {
+    logEvent_('user entered trees_challenge');
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => TakePictureScreen(imagePaths: [],)),

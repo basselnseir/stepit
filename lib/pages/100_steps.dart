@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pedometer/pedometer.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/services.dart';
+import 'globals.dart';
 import 'dart:async';
 
 
@@ -65,12 +66,14 @@ class _StepCounterState extends State<StepCounter> {
   }
 
   void onData(StepCount event) {
+    logEvent_('user steps increased in 100_steps_challenge');
     setState(() {
       if (started){
         _steps = (event.steps - _initialSteps).toString();
       }
       if (int.parse(_steps) >= goal){
         _steps = 'You have reached your goal of $goal steps!';
+        logEvent_('100_steps_challenge completed');
       }
     });
   }
@@ -135,6 +138,7 @@ class _StepCounterState extends State<StepCounter> {
                             );
 
                             if (shouldReset == true) {
+                              logEvent_('100_steps_challenge reset');
                               setState(() {
                                 _buttonPressed = false;
                                 started = false;
@@ -146,6 +150,7 @@ class _StepCounterState extends State<StepCounter> {
                             }
                           }
                           else{
+                            logEvent_('100_steps_challenge started');
                             _buttonPressed = true;
                             _stepCountSubscription = _stepCountStream.listen(onData);
                             _stepCountSubscription?.onError(onError);

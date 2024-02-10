@@ -8,6 +8,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'globals.dart';
+
 
 class TakePictureScreen extends StatefulWidget {
   final List<String> imagePaths;
@@ -64,6 +66,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
   }
 
   void onData(StepCount event) {
+    logEvent_('user steps increased in take_picture_challenge');
     setState(() {
       if (started){
         _steps = (event.steps - _initialSteps).toString();
@@ -82,6 +85,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
 
 Future<void> _takePicture() async {
   final pickedFile = await ImagePicker().pickImage(source: ImageSource.camera);
+  logEvent_('user took a picture in take_picture_challenge');
   if (pickedFile != null) {
     final timestamp = DateTime.now().millisecondsSinceEpoch;
     final targetPath = "images/image_${timestamp}.jpg";
