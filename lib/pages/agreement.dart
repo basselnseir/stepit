@@ -30,6 +30,7 @@ class _AgreementPageState extends State<AgreementPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  SizedBox(height: 80,),
                   Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Container(
