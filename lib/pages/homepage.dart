@@ -5,20 +5,20 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-WidgetsBinding.instance.addPostFrameCallback((_) {
-  if (_scrollController.hasClients) {
-    final double screenWidth = MediaQuery.of(context).size.width;
-    final double tileWidth = 210.0; // Assuming each tile has a width of 200.0
-    final double padding = 8.0; // Assuming padding around each tile is 8.0
-    final double targetOffset = tileWidth + 2 * padding + tileWidth / 2 - screenWidth / 2;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        final double screenWidth = MediaQuery.of(context).size.width;
+        final double tileWidth = 210.0; // Assuming each tile has a width of 200.0
+        final double padding = 8.0; // Assuming padding around each tile is 8.0
+        final double targetOffset = tileWidth + 2 * padding + tileWidth / 2 - screenWidth / 2;
 
-    _scrollController.animateTo(
-      targetOffset,
-      curve: Curves.easeOut,
-      duration: const Duration(milliseconds: 1000),
-    );
-  }
-});
+        _scrollController.animateTo(
+          targetOffset,
+          curve: Curves.easeOut,
+          duration: const Duration(milliseconds: 1000),
+        );
+      }
+    });
 
     return Scaffold(
       appBar: AppBar(
