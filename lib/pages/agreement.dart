@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stepit/pages/Identification.dart';
 import 'package:stepit/pages/homepage.dart';
 
 class AgreementPage extends StatefulWidget {
@@ -30,19 +31,22 @@ class _AgreementPageState extends State<AgreementPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  SizedBox(height: 80,),
+                  const SizedBox(
+                    height: 80,
+                  ),
                   Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: Container(
                       // Wrap the SingleChildScrollView with a Container
-                      height: 500, 
-                      padding: EdgeInsets.all(10),
+                      height: 500,
+                      padding: const EdgeInsets.all(10),
                       decoration: const BoxDecoration(
-                        color:  Colors.white, 
+                        color: Colors.white,
                         borderRadius: BorderRadius.all(Radius.circular(20)),
                         boxShadow: [
                           BoxShadow(
-                            color: Color.fromARGB(255, 219, 218, 218), // Change this color as needed
+                            color: Color.fromARGB(255, 219, 218,
+                                218), // Change this color as needed
                             spreadRadius: 2, // Change this value as needed
                             blurRadius: 100, // Change this value as needed
                             offset: Offset(0, 3), // Change this value as needed
@@ -50,7 +54,7 @@ class _AgreementPageState extends State<AgreementPage> {
                         ],
                       ),
                       child: const SingleChildScrollView(
-                        child:  Text(
+                        child: Text(
                           'This Agreement is entered into by and between the user, hereinafter referred to as "User", '
                           'and Stepit, hereinafter referred to as "Company". \n\n'
                           '1. Terms and Conditions: User agrees to abide by all terms and conditions of this Agreement, '
@@ -75,7 +79,9 @@ class _AgreementPageState extends State<AgreementPage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 50,),
+                  const SizedBox(
+                    height: 50,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
@@ -87,20 +93,20 @@ class _AgreementPageState extends State<AgreementPage> {
                           });
                         },
                       ),
-                      Text('I agree to the terms and conditions'),
+                      const Text('I agree to the terms and conditions.'),
                     ],
                   ),
                   ElevatedButton(
-                    child: Text('Next'),
                     onPressed: _agreed
                         ? () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => HomePage()),
+                                  builder: (context) => IdentificationPage()),
                             );
                           }
                         : null,
+                    child: const Text('Next'),
                   ),
                 ],
               ),
