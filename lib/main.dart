@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stepit/pages/agreement.dart';
 import 'package:stepit/pages/homepage.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -19,7 +20,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomePage(), 
+      home: AgreementPage(), 
       // TODO: Add theme:, Learn themes
     );
   }
