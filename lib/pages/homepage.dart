@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '100_steps.dart'; 
-import 'take_picture.dart'; 
 import 'globals.dart';
+import 'package:stepit/features/picture_challenge.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -59,7 +59,7 @@ class HomePage extends StatelessWidget {
     logEvent_('user entered trees_challenge');
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => TakePictureScreen(imagePaths: [],)),
+      MaterialPageRoute(builder: (context) => TakePictureFeature(imagePaths: [],)),
     );
   },
   child: const Column(
