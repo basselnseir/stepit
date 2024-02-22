@@ -1,83 +1,71 @@
 import 'package:flutter/material.dart';
-import '100_steps.dart'; 
-import 'globals.dart';
-import 'package:stepit/features/picture_challenge.dart';
 
 class HomePage extends StatelessWidget {
+  final ScrollController _scrollController = ScrollController();
+
   @override
   Widget build(BuildContext context) {
+WidgetsBinding.instance.addPostFrameCallback((_) {
+  if (_scrollController.hasClients) {
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double tileWidth = 210.0; // Assuming each tile has a width of 200.0
+    final double padding = 8.0; // Assuming padding around each tile is 8.0
+    final double targetOffset = tileWidth + 2 * padding + tileWidth / 2 - screenWidth / 2;
+
+    _scrollController.animateTo(
+      targetOffset,
+      curve: Curves.easeOut,
+      duration: const Duration(milliseconds: 1000),
+    );
+  }
+});
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         automaticallyImplyLeading: false,
         title: const Text('StepIT'),
       ),
-      body: Center(
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            Container(
-              width: 100,
-              height: 100,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-                onPressed: () {
-                  logEvent_('user entered 100_steps_challenge');
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => StepCounter()),
-                  );
-                },
-                child: const Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Icon(Icons.directions_walk),
-                    Flexible(
-                      fit: FlexFit.loose,
-                      child: Text(
-                        '100 Steps',
-                        style: TextStyle(fontSize: 10),
-                      ),
-                    ),
-                  ],
-                ),
+            const SizedBox(height: 30),
+            const Center(            
+              child: Text(
+                'Choose one of the following challenges',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 30,),
               ),
             ),
-            const SizedBox(height: 50,),
+            const SizedBox(height: 70),
             Container(
-              width: 100,
-              height: 100,
-              child: ElevatedButton(
-  style: ElevatedButton.styleFrom(
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(20), // Adjust this value to your desired corner radius
-    ),
-  ),
-  onPressed: () {
-    logEvent_('user entered trees_challenge');
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => TakePictureFeature(imagePaths: [],)),
-    );
-  },
-  child: const Column(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: <Widget>[
-      Icon(Icons.camera_alt),
-      Flexible(
-        fit: FlexFit.loose,
-        child: Text(
-          'Trees',
-          style: TextStyle(fontSize: 10),
-        ),
-      ),
-    ],
-  ),
-),
+              height: 200,
+              child: ListView.builder(
+                controller: _scrollController,
+                scrollDirection: Axis.horizontal,
+                itemCount: 3,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Container(
+                      width: 200,
+                      child: Card(
+                        child: Center(child: Text('Tile ${index + 1}')),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+            Text(
+              'ID: 1234567890',
+              style: TextStyle(fontSize: 16),
+            ),
+            Text(
+              'Level: 1',
+              style: TextStyle(fontSize: 16),
             ),
           ],
         ),
