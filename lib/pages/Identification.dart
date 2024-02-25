@@ -52,34 +52,35 @@ class _IdentificationPageState extends State<IdentificationPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Container(
-          height: 200, // Adjust this value as needed
-          padding: const EdgeInsets.all(10), // Add this line to add padding
-          decoration: const BoxDecoration(
-            color: Color.fromARGB(255, 248, 246,
-                246), // Change this color to match your background color
-            borderRadius: BorderRadius.all(Radius.circular(
-                20)), // Add this line to make the corners rounded
-            boxShadow: [
-              BoxShadow(
-                color: Colors.grey, // Change this color as needed
-                spreadRadius: 5, // Change this value as needed
-                blurRadius: 7, // Change this value as needed
-                offset: Offset(0, 3), // Change this value as needed
-              ),
-            ],
-          ),
+      appBar: AppBar(
+        centerTitle: true,
+        automaticallyImplyLeading: false,
+        title: const Text('Welcome to StepIT!'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(30.0),
+        child: Center(
           child: Column(
+            
             children: <Widget>[
-              TextField(
-                onChanged: (value) {
-                  setState(() {
-                    _username = value;
-                  });
-                },
-                decoration: const InputDecoration(
-                  labelText: 'Enter username',
+              const SizedBox(height: 50),
+              const Text(
+                'Enter a username to get started',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 20,),
+              ),
+              const SizedBox(height: 80),
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: TextField(
+                  onChanged: (value) {
+                    setState(() {
+                      _username = value;
+                    });
+                  },
+                  decoration: const InputDecoration(
+                    labelText: 'Enter username',
+                  ),
                 ),
               ),
               FutureBuilder<int>(
@@ -92,6 +93,7 @@ class _IdentificationPageState extends State<IdentificationPage> {
                   }
                 },
               ),
+              const SizedBox(height: 30),
               ElevatedButton(
                 onPressed: () {
                   _saveToFirestore();
@@ -100,7 +102,12 @@ class _IdentificationPageState extends State<IdentificationPage> {
                     MaterialPageRoute(builder: (context) => HomePage()),
                   );
                 },
-                child: Text('Continue'),
+                child: Text(
+                  'Continue',
+                  style: TextStyle(
+                    color: Color.fromARGB(255, 0, 0, 0), // Set the desired text color here
+                  ),
+                ),
               ),
             ],
           ),

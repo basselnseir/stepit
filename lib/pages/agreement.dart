@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stepit/pages/Identification.dart';
 import 'package:stepit/pages/homepage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AgreementPage extends StatefulWidget {
   @override
@@ -13,6 +14,11 @@ class _AgreementPageState extends State<AgreementPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        automaticallyImplyLeading: false,
+        title: const Text('Terms And Conditions'),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Stack(
@@ -20,7 +26,7 @@ class _AgreementPageState extends State<AgreementPage> {
             const Align(
               alignment: Alignment.topCenter,
               child: Padding(
-                padding: EdgeInsets.only(top: 50.0),
+                padding: EdgeInsets.only(top: 10.0),
                 child: Text(
                   'Welcome to Stepit',
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -32,7 +38,7 @@ class _AgreementPageState extends State<AgreementPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   const SizedBox(
-                    height: 80,
+                    height: 40,
                   ),
                   Padding(
                     padding: const EdgeInsets.all(10.0),
@@ -80,7 +86,7 @@ class _AgreementPageState extends State<AgreementPage> {
                     ),
                   ),
                   const SizedBox(
-                    height: 50,
+                    height: 15,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -97,8 +103,11 @@ class _AgreementPageState extends State<AgreementPage> {
                     ],
                   ),
                   ElevatedButton(
-                    onPressed: _agreed
-                        ? () {
+                    onPressed: _agreed ? () async
+                        {
+                            SharedPreferences prefs = await SharedPreferences.getInstance();
+                            await prefs.setBool('first_time', false);
+
                             Navigator.push(
                               context,
                               MaterialPageRoute(
