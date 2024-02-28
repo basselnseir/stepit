@@ -33,6 +33,7 @@ Future<int> getSteps() async {
 // }
 
 Future<void> saveStepsToFirebase(int steps) async {
+  
   // Format the current date as yyyy-MM-dd
   String date = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
@@ -43,7 +44,7 @@ Future<void> saveStepsToFirebase(int steps) async {
   });
 }
 
-void main() {
+void startStepsTracking() {
   // Initialize Firebase
   Firebase.initializeApp();
 
