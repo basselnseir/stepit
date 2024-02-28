@@ -4,7 +4,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:stepit/features/globals.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 
 void callbackDispatcher() {
@@ -28,27 +27,13 @@ Future<int> getSteps() async {
   return stepCount.steps;
 }
 
-// Future<DocumentReference> saveStepsToFirebase(int steps) async {
-//   CollectionReference stepsCollection = FirebaseFirestore.instance.collection('steps');
-//   return stepsCollection.add({'timestamp': DateTime.now(), 'steps': steps});
-// }
-
 Future<void> saveStepsToFirebase(int steps) async {
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  int uniqueNumber = prefs.getInt('uniqueNumber') ?? 0;
   String date = DateFormat('yyyy-MM-dd').format(DateTime.now());
-  
 
-  // Use the date as part of the collection name
-  await FirebaseFirestore.instance.collection('steps_$date').add({
-    'steps': steps,
-    'timestamp': DateTime.now(),
+  // add the steps to the user's daily steps with the current timestamp as the key
+  await FirebaseFirestore.instance.collection('steps_$date').doc(user.uniqueNumber.toString()).set({
+    DateFormat('HH:mm:ss').format(DateTime.now()): steps,
   });
-
-  // Save the steps to the user's daily steps list
-  DocumentReference userDoc = FirebaseFirestore.instance.collection('users').doc(uniqueNumber.toString());
-  DocumentSnapshot userSnapshot = await userDoc.get();
-  List<dynamic> dailyStepsList = userSnapshot.data()!['dailyStepsList'];
 
 }
 

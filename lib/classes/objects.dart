@@ -5,8 +5,8 @@ import 'package:intl/intl.dart';
 class User {
   String username;
   int uniqueNumber;
-  DateTime borntimestamp = DateTime.now();
-  LinkedList<DailySteps> dailyStepsList = LinkedList<DailySteps>();
+  DateTime createdTimeStamp = DateTime.now();
+  // LinkedList<DailySteps> dailyStepsList = LinkedList<DailySteps>();
 
   User(this.username, this.uniqueNumber); //constructor
 
@@ -14,8 +14,8 @@ class User {
     return {
       'username': username,
       'uniqueNumber': uniqueNumber,
-      'borntimestamp': borntimestamp,
-      'dailyStepsList': dailyStepsList,
+      'borntimestamp': createdTimeStamp,
+      // 'dailyStepsList': dailyStepsList,
     };
   }
 
@@ -23,8 +23,8 @@ class User {
   User.fromMap(Map<String, dynamic> map)
       : username = map['username'],
         uniqueNumber = map['uniqueNumber'],
-        borntimestamp = map['borntimestamp'],
-        dailyStepsList = map['dailyStepsList'];
+        createdTimeStamp = map['borntimestamp'];
+        // dailyStepsList = map['dailyStepsList'];
 
   // comparing two users
   @override

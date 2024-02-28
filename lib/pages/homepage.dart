@@ -15,7 +15,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    DataBase.loadUser();
   }
 
   @override
@@ -76,7 +75,7 @@ class _HomePageState extends State<HomePage> {
             ),
               
             Text(
-              'ID: $user.uniqueNumber',
+              'ID: ${user.uniqueNumber}',
               style: const TextStyle(fontSize: 16),
             ),
             const Text(

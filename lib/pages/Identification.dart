@@ -1,7 +1,4 @@
-import 'dart:collection';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:math';
 import "package:stepit/background/steps_tracking.dart";
 import 'package:stepit/classes/database.dart';
@@ -21,7 +18,6 @@ class _IdentificationPageState extends State<IdentificationPage> {
   void initState() {
     super.initState();
     _uniqueNumber = _generateUniqueNumber();
-    startStepsTracking();
   }
 
   Future<int> _generateUniqueNumber() async {
@@ -46,7 +42,7 @@ class _IdentificationPageState extends State<IdentificationPage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -94,6 +90,8 @@ class _IdentificationPageState extends State<IdentificationPage> {
               ElevatedButton(
                 onPressed: () {
                   _saveToFirestore();
+                  DataBase.loadUser();
+                  startStepsTracking();
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => HomePage()),
