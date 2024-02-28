@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -46,6 +48,8 @@ class _IdentificationPageState extends State<IdentificationPage> {
     FirebaseFirestore.instance.collection('users').add({
       'username': _username,
       'uniqueNumber': uniqueNumber,
+      'timestamp': DateTime.now(),
+      'steps': LinkedList<int>(),
     });
     // Save uniqueNumber to SharedPreferences
     SharedPreferences prefs = await SharedPreferences.getInstance();

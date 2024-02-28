@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:stepit/features/globals.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 void callbackDispatcher() {
@@ -33,7 +34,8 @@ Future<int> getSteps() async {
 // }
 
 Future<void> saveStepsToFirebase(int steps) async {
-  
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  int uniqueNumber = prefs.getInt('uniqueNumber') ?? 0;
   // Format the current date as yyyy-MM-dd
   String date = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
