@@ -32,7 +32,6 @@ class _IdentificationPageState extends State<IdentificationPage> {
     return uniqueNumber;
   }
 
-
   Future<bool> _checkUniqueNumber(int uniqueNumber) async {
     final result = await FirebaseFirestore.instance
         .collection('users')
@@ -47,6 +46,9 @@ class _IdentificationPageState extends State<IdentificationPage> {
       'username': _username,
       'uniqueNumber': uniqueNumber,
     });
+    // Save uniqueNumber to SharedPreferences
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setInt('uniqueNumber', uniqueNumber);
   }
 
   @override
@@ -61,13 +63,14 @@ class _IdentificationPageState extends State<IdentificationPage> {
         padding: const EdgeInsets.all(30.0),
         child: Center(
           child: Column(
-            
             children: <Widget>[
               const SizedBox(height: 50),
               const Text(
                 'Enter a username to get started',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 20,),
+                style: TextStyle(
+                  fontSize: 20,
+                ),
               ),
               const SizedBox(height: 80),
               Padding(
@@ -102,10 +105,11 @@ class _IdentificationPageState extends State<IdentificationPage> {
                     MaterialPageRoute(builder: (context) => HomePage()),
                   );
                 },
-                child: Text(
+                child: const Text(
                   'Continue',
                   style: TextStyle(
-                    color: Color.fromARGB(255, 0, 0, 0), // Set the desired text color here
+                    color: Color.fromARGB(
+                        255, 0, 0, 0), // Set the desired text color here
                   ),
                 ),
               ),
