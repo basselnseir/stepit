@@ -12,6 +12,7 @@ void main() async {
   );
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool isFirstTime = prefs.getBool('first_time') ?? true;
+  //bool isFirstTime = true;
 
   runApp(MyApp(isFirstTime: isFirstTime));
 }

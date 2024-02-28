@@ -1,8 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-class HomePage extends StatelessWidget {
+
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+
+class _HomePageState extends State<HomePage> {
   final ScrollController _scrollController = ScrollController();
+  int _uniqueNumber = 0;
+  
+  @override
+  void initState() {
+    super.initState();
+    _loadUniqueNumber();
+  }
 
+  _loadUniqueNumber() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _uniqueNumber = prefs.getInt('uniqueNumber') ?? 0;
+    });
+  }
+  
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -59,11 +81,12 @@ class HomePage extends StatelessWidget {
                 },
               ),
             ),
+              
             Text(
-              'ID: 1234567890',
-              style: TextStyle(fontSize: 16),
+              'ID: $_uniqueNumber',
+              style: const TextStyle(fontSize: 16),
             ),
-            Text(
+            const Text(
               'Level: 1',
               style: TextStyle(fontSize: 16),
             ),
