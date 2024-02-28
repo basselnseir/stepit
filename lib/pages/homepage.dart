@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:stepit/classes/database.dart';
+import 'package:stepit/features/globals.dart';
 
 
 class HomePage extends StatefulWidget {
@@ -7,31 +9,22 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-
 class _HomePageState extends State<HomePage> {
   final ScrollController _scrollController = ScrollController();
-  int _uniqueNumber = 0;
   
   @override
   void initState() {
     super.initState();
-    _loadUniqueNumber();
+    DataBase.loadUser();
   }
 
-  _loadUniqueNumber() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _uniqueNumber = prefs.getInt('uniqueNumber') ?? 0;
-    });
-  }
-  
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
         final double screenWidth = MediaQuery.of(context).size.width;
-        final double tileWidth = 210.0; // Assuming each tile has a width of 200.0
-        final double padding = 8.0; // Assuming padding around each tile is 8.0
+        const double tileWidth = 210.0; // Assuming each tile has a width of 200.0
+        const double padding = 8.0; // Assuming padding around each tile is 8.0
         final double targetOffset = tileWidth + 2 * padding + tileWidth / 2 - screenWidth / 2;
 
         _scrollController.animateTo(
@@ -83,7 +76,7 @@ class _HomePageState extends State<HomePage> {
             ),
               
             Text(
-              'ID: $_uniqueNumber',
+              'ID: $user.uniqueNumber',
               style: const TextStyle(fontSize: 16),
             ),
             const Text(

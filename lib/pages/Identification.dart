@@ -1,10 +1,11 @@
 import 'dart:collection';
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:math';
 import "package:stepit/background/steps_tracking.dart";
+import 'package:stepit/classes/database.dart';
+import 'package:stepit/classes/objects.dart';
 import 'package:stepit/pages/homepage.dart';
 
 class IdentificationPage extends StatefulWidget {
@@ -36,24 +37,12 @@ class _IdentificationPageState extends State<IdentificationPage> {
   }
 
   Future<bool> _checkUniqueNumber(int uniqueNumber) async {
-    final result = await FirebaseFirestore.instance
-        .collection('users')
-        .where('uniqueNumber', isEqualTo: uniqueNumber)
-        .get();
-    return result.docs.isEmpty;
+    return DataBase.userExists(uniqueNumber);
   }
 
   void _saveToFirestore() async {
     int uniqueNumber = await _uniqueNumber;
-    FirebaseFirestore.instance.collection('users').add({
-      'username': _username,
-      'uniqueNumber': uniqueNumber,
-      'timestamp': DateTime.now(),
-      'steps': LinkedList<int>(),
-    });
-    // Save uniqueNumber to SharedPreferences
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setInt('uniqueNumber', uniqueNumber);
+    DataBase.addUser(User(_username, uniqueNumber));
   }
 
   @override
@@ -95,7 +84,7 @@ class _IdentificationPageState extends State<IdentificationPage> {
                 future: _uniqueNumber,
                 builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return CircularProgressIndicator();
+                    return const CircularProgressIndicator();
                   } else {
                     return Text('Unique number: ${snapshot.data}');
                   }

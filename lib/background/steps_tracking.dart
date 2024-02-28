@@ -36,14 +36,20 @@ Future<int> getSteps() async {
 Future<void> saveStepsToFirebase(int steps) async {
   SharedPreferences prefs = await SharedPreferences.getInstance();
   int uniqueNumber = prefs.getInt('uniqueNumber') ?? 0;
-  // Format the current date as yyyy-MM-dd
   String date = DateFormat('yyyy-MM-dd').format(DateTime.now());
+  
 
   // Use the date as part of the collection name
   await FirebaseFirestore.instance.collection('steps_$date').add({
     'steps': steps,
     'timestamp': DateTime.now(),
   });
+
+  // Save the steps to the user's daily steps list
+  DocumentReference userDoc = FirebaseFirestore.instance.collection('users').doc(uniqueNumber.toString());
+  DocumentSnapshot userSnapshot = await userDoc.get();
+  List<dynamic> dailyStepsList = userSnapshot.data()!['dailyStepsList'];
+
 }
 
 void startStepsTracking() {
