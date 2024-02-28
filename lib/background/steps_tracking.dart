@@ -3,6 +3,8 @@ import 'package:workmanager/workmanager.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:stepit/features/globals.dart';
+
 
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
@@ -55,7 +57,7 @@ void main() {
   Workmanager().registerPeriodicTask(
     "1",
     "stepCountTask",
-    frequency: const Duration(minutes: 5),
+    frequency: const Duration(minutes: trackingFreq),
   );
 
 }
