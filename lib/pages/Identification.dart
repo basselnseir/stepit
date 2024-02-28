@@ -1,8 +1,10 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:math';
-
+import "package:stepit/background/steps_tracking.dart";
 import 'package:stepit/pages/homepage.dart';
 
 class IdentificationPage extends StatefulWidget {
@@ -18,6 +20,7 @@ class _IdentificationPageState extends State<IdentificationPage> {
   void initState() {
     super.initState();
     _uniqueNumber = _generateUniqueNumber();
+    startStepsTracking();
   }
 
   Future<int> _generateUniqueNumber() async {
@@ -45,6 +48,8 @@ class _IdentificationPageState extends State<IdentificationPage> {
     FirebaseFirestore.instance.collection('users').add({
       'username': _username,
       'uniqueNumber': uniqueNumber,
+      'timestamp': DateTime.now(),
+      'steps': LinkedList<int>(),
     });
     // Save uniqueNumber to SharedPreferences
     SharedPreferences prefs = await SharedPreferences.getInstance();
