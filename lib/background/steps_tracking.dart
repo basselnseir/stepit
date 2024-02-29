@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:stepit/features/globals.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 void callbackDispatcher() {
@@ -31,11 +32,12 @@ Future<void> saveStepsToFirebase(int steps) async {
   String date = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
   // add the steps to the user's daily steps with the current timestamp as the key
-  await FirebaseFirestore.instance.collection('steps_$date').doc(user?.uniqueNumber.toString()).set({
+  await FirebaseFirestore.instance.collection('steps_$date').doc(user.uniqueNumber.toString()).set({
     DateFormat('HH:mm:ss').format(DateTime.now()): steps,
   });
 
 }
+
 
 void startStepsTracking() {
   // Initialize Firebase
