@@ -32,7 +32,7 @@ Future<void> saveStepsToFirebase(int steps) async {
   String date = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
   // add the steps to the user's daily steps with the current timestamp as the key
-  await FirebaseFirestore.instance.collection('steps_$date').doc(user.uniqueNumber.toString()).set({
+  await FirebaseFirestore.instance.collection('steps_$date').doc(user?.uniqueNumber.toString()).set({
     DateFormat('HH:mm:ss').format(DateTime.now()): steps,
   });
 

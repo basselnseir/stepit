@@ -96,7 +96,7 @@ class _HomePageState extends State<HomePage> {
                         return Text('Error: ${snapshot.error}');
                       } else {
                         return Text(
-                          'ID: ${snapshot.data!.uniqueNumber}',
+                          'ID: ${snapshot.data!.uniqueNumber.toString().padLeft(6, '0')}',
                           style: const TextStyle(fontSize: 16),
                         );
                       }
