@@ -10,7 +10,7 @@ import 'package:stepit/features/globals.dart';
 class DataBase {
   // a static method to add a user to firestore
   static Future<void> addUser(User user) async {
-    FirebaseFirestore.instance.collection('users').doc(user.uniqueNumber.toString()).set(user.toMap());
+    FirebaseFirestore.instance.collection('users').doc(user.uniqueNumber.toString().padLeft(6, '0')).set(user.toMap());
     // Save uniqueNumber to SharedPreferences
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setInt('uniqueNumber', user.uniqueNumber);
@@ -35,5 +35,11 @@ class DataBase {
         .get();
     user = User.fromMap(result.docs.first.data());
   }
-  
+
+  // a static method thatr returns the number of users in the database
+  static Future<int> getNumberOfUsers() async {
+    final result = await FirebaseFirestore.instance.collection('users').get();
+    return result.docs.length;
+  }
+
 }

@@ -13,28 +13,36 @@ class IdentificationPage extends StatefulWidget {
 class _IdentificationPageState extends State<IdentificationPage> {
   String _username = '';
   late Future<int> _uniqueNumber;
+  bool connectionState = false;
 
   @override
   void initState() {
     super.initState();
     _uniqueNumber = _generateUniqueNumber();
+    _uniqueNumber.then((int value) {
+      print('\n\n\n\nhereeeeeeeeeeeeeeeeeee: $value\n\n\n\n');
+    });
   }
 
   Future<int> _generateUniqueNumber() async {
-    int uniqueNumber = 100000 +
-        Random().nextInt(
-            900000); // Generates a random number between 100000 and 999999
-    bool isUnique = await _checkUniqueNumber(uniqueNumber);
-    while (!isUnique) {
-      uniqueNumber = 100000 + Random().nextInt(900000);
-      isUnique = await _checkUniqueNumber(uniqueNumber);
-    }
-    return uniqueNumber;
+    // return the number of user in the database + 1
+    return await DataBase.getNumberOfUsers() + 1;
   }
 
-  Future<bool> _checkUniqueNumber(int uniqueNumber) async {
-    return DataBase.userExists(uniqueNumber);
-  }
+  // Future<int> _generateUniqueNumber() async {
+    //     Random().nextInt(
+    //         900000); // Generates a random number between 100000 and 999999
+    // bool isUnique = await _checkUniqueNumber(uniqueNumber);
+    // while (!isUnique) {
+    //   uniqueNumber = 100000 + Random().nextInt(900000);
+    //   isUnique = await _checkUniqueNumber(uniqueNumber);
+    // }
+    // return uniqueNumber;
+  // }
+
+  // Future<bool> _checkUniqueNumber(int uniqueNumber) async {
+  //   return DataBase.userExists(uniqueNumber);
+  // }
 
   void _saveToFirestore() async {
     int uniqueNumber = await _uniqueNumber;
@@ -82,23 +90,25 @@ class _IdentificationPageState extends State<IdentificationPage> {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const CircularProgressIndicator();
                   } else {
-                    return Text('Unique number: ${snapshot.data}');
+                    connectionState = true;
+                    return Text('Unique number: ${snapshot.data.toString().padLeft(6, '0')}');
                   }
                 },
               ),
               const SizedBox(height: 30),
               ElevatedButton(
-                onPressed: () {
-                  _saveToFirestore();
-                  DataBase.loadUser();
-                  startStepsTracking();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => HomePage()),
-                  );
-                },
+                onPressed: connectionState
+                    ? () {
+                        _saveToFirestore();
+                        // startStepsTracking();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => HomePage()),
+                        );
+                      }
+                    : null,
                 child: const Text(
-                  'Continue',
+                  "Continue",
                   style: TextStyle(
                     color: Color.fromARGB(
                         255, 0, 0, 0), // Set the desired text color here

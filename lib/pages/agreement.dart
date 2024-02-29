@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:stepit/pages/Identification.dart';
-import 'package:stepit/pages/homepage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AgreementPage extends StatefulWidget {

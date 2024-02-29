@@ -1,11 +1,12 @@
 import "dart:collection";
 import "dart:ffi";
+import "package:cloud_firestore/cloud_firestore.dart";
 import 'package:intl/intl.dart';
 
 class User {
   String username;
   int uniqueNumber;
-  DateTime createdTimeStamp = DateTime.now();
+  Timestamp joinedTime = Timestamp.now();
   // LinkedList<DailySteps> dailyStepsList = LinkedList<DailySteps>();
 
   User(this.username, this.uniqueNumber); //constructor
@@ -14,7 +15,7 @@ class User {
     return {
       'username': username,
       'uniqueNumber': uniqueNumber,
-      'borntimestamp': createdTimeStamp,
+      'joinedTime': joinedTime,
       // 'dailyStepsList': dailyStepsList,
     };
   }
@@ -23,12 +24,12 @@ class User {
   User.fromMap(Map<String, dynamic> map)
       : username = map['username'],
         uniqueNumber = map['uniqueNumber'],
-        createdTimeStamp = map['borntimestamp'];
+        joinedTime = map['joinedTime'];
         // dailyStepsList = map['dailyStepsList'];
 
   // comparing two users
   @override
-  bool operator ==(Object other) {
+  bool operator == (Object other) {
     return (other is User) && other.uniqueNumber == uniqueNumber;
   }
 

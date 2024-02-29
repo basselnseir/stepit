@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stepit/classes/database.dart';
+import 'package:stepit/classes/objects.dart';
 import 'package:stepit/features/globals.dart';
 
 
@@ -15,6 +16,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    DataBase.loadUser();
   }
 
   @override
@@ -73,10 +75,20 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
             ),
-              
-            Text(
-              'ID: ${user.uniqueNumber}',
-              style: const TextStyle(fontSize: 16),
+            FutureBuilder<User>(
+              future: Future.value(user),
+              builder: (BuildContext context, AsyncSnapshot<User> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                } else {
+                  return Text(
+                    'ID: ${snapshot.data!.uniqueNumber}',
+                    style: const TextStyle(fontSize: 16),
+                  );
+                }
+              },
             ),
             const Text(
               'Level: 1',
