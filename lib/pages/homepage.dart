@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stepit/classes/database.dart';
 import 'package:stepit/classes/objects.dart';
 import 'package:stepit/features/globals.dart';
@@ -40,7 +39,7 @@ class _HomePageState extends State<HomePage> {
       future: DataBase.loadUser(),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator(); // Show loading spinner while waiting for data
+          return const CircularProgressIndicator(); // Show loading spinner while waiting for data
         } else if (snapshot.hasError) {
           return Text(
               'Error: ${snapshot.error}'); // Show error message if any error occurred

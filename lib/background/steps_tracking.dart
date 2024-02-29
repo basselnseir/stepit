@@ -1,59 +1,84 @@
 import 'package:pedometer/pedometer.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:stepit/features/globals.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 
-void callbackDispatcher() {
-  Workmanager().executeTask((task, inputData) async {
+class StepsTracker {
+  // late Pedometer _pedometer;
+  static late Stream<StepCount> stepCountStream;
+  static int steps = 0;
+  static bool started = false;
+
+  static void startStepsTracking() {
     // Initialize Firebase
-    await Firebase.initializeApp();
 
-    // Get steps
-    int steps = await getSteps();
+    initPlatformState();
+    _requestPermission();
+    
+    Firebase.initializeApp();
 
-    // Save steps to Firebase
-    await saveStepsToFirebase(steps);
+    // Register the callback dispatcher
+    Workmanager().initialize(
+      callbackDispatcher,
+      isInDebugMode: false,
+    );
 
-    return Future.value(true);
-  });
-}
+    // Start the WorkManager
+    Workmanager().registerPeriodicTask(
+      "1",
+      "stepCountTask",
+      frequency: const Duration(minutes: trackingFreq),
+    );
+    
+  }
 
-Future<int> getSteps() async {
-  Stream<StepCount> stepCountStream = Pedometer.stepCountStream;
-  StepCount stepCount = await stepCountStream.first;
-  return stepCount.steps;
-}
+  static void _requestPermission() async {
+    if (await Permission.activityRecognition.request().isGranted) {
+      // Either the permission was already granted before or the user just granted it.
+      // You can start listening to the pedometer here.
+    }
+  }
 
-Future<void> saveStepsToFirebase(int steps) async {
-  String date = DateFormat('yyyy-MM-dd').format(DateTime.now());
+  static Future<void> initPlatformState() async {
+    stepCountStream = Pedometer.stepCountStream;
+    
+  }
 
-  // add the steps to the user's daily steps with the current timestamp as the key
-  await FirebaseFirestore.instance.collection('steps_$date').doc(user?.uniqueNumber.toString()).set({
-    DateFormat('HH:mm:ss').format(DateTime.now()): steps,
-  });
+  static void callbackDispatcher() {
+    Workmanager().executeTask((task, inputData) async {
+      // Initialize Firebase
+      await Firebase.initializeApp();
 
-}
+      try {
+        // Get steps
+        steps = await getSteps();
+      } catch(e) {
+        steps = -1;
+      }
 
+      // Save steps to Firebase
+      await saveStepsToFirebase(steps);
 
-void startStepsTracking() {
-  // Initialize Firebase
-  Firebase.initializeApp();
+      return Future.value(true);
+    });
+  }
 
-  // Register the callback dispatcher
-  Workmanager().initialize(
-    callbackDispatcher,
-    isInDebugMode: false,
-  );
+  static Future<int> getSteps() async {
+    StepCount stepCount = await stepCountStream.first;
+    return stepCount.steps;
+  }
 
-  // Start the WorkManager
-  Workmanager().registerPeriodicTask(
-    "1",
-    "stepCountTask",
-    frequency: const Duration(minutes: trackingFreq),
-  );
+  static Future<void> saveStepsToFirebase(int steps) async {
+    String date = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
+    // add the steps to the user's daily steps with the current timestamp as the key
+    await FirebaseFirestore.instance.collection('steps_$date').doc(user?.uniqueNumber.toString()).set({
+      DateFormat('HH:mm:ss').format(DateTime.now()): steps,
+    });
+
+  }
 }

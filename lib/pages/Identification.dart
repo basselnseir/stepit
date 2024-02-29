@@ -19,14 +19,11 @@ class _IdentificationPageState extends State<IdentificationPage> {
   void initState() {
     super.initState();
     _uniqueNumber = _generateUniqueNumber();
-    _uniqueNumber.then((int value) {
-      print('\n\n\n\nhereeeeeeeeeeeeeeeeeee: $value\n\n\n\n');
-    });
   }
 
   Future<int> _generateUniqueNumber() async {
-    // return the number of user in the database + 1
-    return await DataBase.getNumberOfUsers() + 1;
+    // return the number of user in the database
+    return await DataBase.getNumberOfUsers();
   }
 
   // Future<int> _generateUniqueNumber() async {
@@ -100,7 +97,7 @@ class _IdentificationPageState extends State<IdentificationPage> {
                 onPressed: connectionState
                     ? () {
                         _saveToFirestore();
-                        // startStepsTracking();
+                        DataBase.loadUser().then((_) => StepsTracker.startStepsTracking());
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => HomePage()),

@@ -6,20 +6,6 @@ import 'globals.dart';
 import 'dart:async';
 
 
-// class MyApp extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       home: Scaffold(
-//         appBar: AppBar(
-//           title: Text('Step Counter'),
-//         ),
-//         body: StepCounter(),
-//       ),
-//     );
-//   }
-// }
-
 class StepCounter extends StatefulWidget {
   const StepCounter({Key? key}) : super(key: key);
 
