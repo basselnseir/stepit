@@ -17,6 +17,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     DataBase.loadUser();
+    print('\n\n\n$user\n\n\n');
   }
 
   @override

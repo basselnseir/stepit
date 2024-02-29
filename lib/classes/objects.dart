@@ -36,6 +36,13 @@ class User {
   // hashCode for the user
   @override
   int get hashCode => uniqueNumber.hashCode;
+
+  @override
+  String toString() {
+    return 'User{username: $username, uniqueNumber: $uniqueNumber, joinedTime: $joinedTime}';
+  }
+
+  
 }
 
 final class DailySteps extends LinkedListEntry<DailySteps>{
