@@ -170,8 +170,7 @@ class _StepCounterState extends State<StepCounter> {
                         });
                       },
                       style: ElevatedButton.styleFrom(
-                        primary: _buttonPressed ? Colors.red : Colors.green, // background
-                        onPrimary: Colors.white, // foreground
+                        foregroundColor: Colors.white, backgroundColor: _buttonPressed ? Colors.red : Colors.green, // foreground
                       ),
                       child: Text(_buttonPressed ? 'RESET' : 'START!'),
                     ),
