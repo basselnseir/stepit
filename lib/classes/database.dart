@@ -42,4 +42,7 @@ class DataBase {
     return result.docs.length;
   }
 
+  // a static method that returns sets the user id
+  
+
 }
