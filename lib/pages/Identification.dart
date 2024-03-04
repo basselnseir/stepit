@@ -4,6 +4,7 @@ import "package:stepit/background/steps_tracking.dart";
 import 'package:stepit/classes/database.dart';
 import 'package:stepit/classes/objects.dart';
 import 'package:stepit/pages/homepage.dart';
+import 'package:stepit/classes/user.dart';
 
 class IdentificationPage extends StatefulWidget {
   @override
@@ -13,12 +14,14 @@ class IdentificationPage extends StatefulWidget {
 class _IdentificationPageState extends State<IdentificationPage> {
   String _username = '';
   late Future<int> _uniqueNumber;
+  late String _gameType;
   bool connectionState = false;
 
   @override
   void initState() {
     super.initState();
     _uniqueNumber = _generateUniqueNumber();
+    _gameType = _generateGameType();
   }
 
   Future<int> _generateUniqueNumber() async {
@@ -26,6 +29,14 @@ class _IdentificationPageState extends State<IdentificationPage> {
     return await DataBase.getNumberOfUsers();
   }
 
+
+  String _generateGameType()  {
+    if(Random().nextInt(2) == 0) {
+      return 'Challenge';
+    }
+    return 'Influence';
+  }
+  
   // Future<int> _generateUniqueNumber() async {
     //     Random().nextInt(
     //         900000); // Generates a random number between 100000 and 999999
@@ -41,9 +52,10 @@ class _IdentificationPageState extends State<IdentificationPage> {
   //   return DataBase.userExists(uniqueNumber);
   // }
 
-  void _saveToFirestore() async {
+  void _saveToFirestore(BuildContext context) async {
     int uniqueNumber = await _uniqueNumber;
-    DataBase.addUser(User(_username, uniqueNumber));
+    String gameType =  _gameType;
+    saveUser(context, _username, uniqueNumber, gameType);
   }
 
   @override
@@ -96,8 +108,8 @@ class _IdentificationPageState extends State<IdentificationPage> {
               ElevatedButton(
                 onPressed: connectionState
                     ? () {
-                        _saveToFirestore();
-                        DataBase.loadUser().then((_) => StepsTracker.startStepsTracking());
+                        _saveToFirestore(context);
+                        loadUser(context).then((_) => StepsTracker.startStepsTracking());
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => HomePage()),

@@ -1,3 +1,4 @@
+import 'package:flutter/src/widgets/framework.dart';
 import 'package:pedometer/pedometer.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:workmanager/workmanager.dart';
@@ -5,7 +6,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:stepit/features/globals.dart';
-
+import 'package:provider/provider.dart';
+import 'package:stepit/classes/user.dart';
 
 class StepsTracker {
   // late Pedometer _pedometer;
@@ -48,7 +50,7 @@ class StepsTracker {
     
   }
 
-  static void callbackDispatcher() {
+  static void callbackDispatcher(BuildContext context) {
     Workmanager().executeTask((task, inputData) async {
       // Initialize Firebase
       await Firebase.initializeApp();
@@ -61,7 +63,7 @@ class StepsTracker {
       }
 
       // Save steps to Firebase
-      await saveStepsToFirebase(steps);
+      await saveStepsToFirebase(context, steps);
 
       return Future.value(true);
     });
@@ -72,9 +74,10 @@ class StepsTracker {
     return stepCount.steps;
   }
 
-  static Future<void> saveStepsToFirebase(int steps) async {
+  static Future<void> saveStepsToFirebase(BuildContext context, int steps) async {
     String date = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
+    User? user = Provider.of<UserProvider>(context, listen: false).user;
     // add the steps to the user's daily steps with the current timestamp as the key
     await FirebaseFirestore.instance.collection('steps_$date').doc(user?.uniqueNumber.toString()).set({
       DateFormat('HH:mm:ss').format(DateTime.now()): steps,
