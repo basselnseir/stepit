@@ -1,8 +1,10 @@
 import "dart:collection";
 import "dart:ffi";
 import "package:cloud_firestore/cloud_firestore.dart";
+import "package:flutter/cupertino.dart";
 import "package:flutter/foundation.dart";
 import 'package:intl/intl.dart';
+import "package:provider/provider.dart";
 
 class Game {
   String title;
@@ -90,7 +92,7 @@ class Influence extends Game {
   // a static method to create a influence game from a map
   @override
   Influence.fromMap(super.map)
-      : world = map['world'],
+      : world = 'world',
         super.fromMap();
 
   // comparing two influence games
@@ -110,39 +112,47 @@ class GameProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> loadGames(String playerType) async {
+  Future<void> loadGames(String playerType, BuildContext context) async {
     DocumentReference docRef;
     if (playerType == 'Challenge') {
-      docRef =  FirebaseFirestore.instance.collection('Challenges').doc('AV6AQgJ6FsHrkBLBV2PI');
+      docRef = FirebaseFirestore.instance
+          .collection('Challenges')
+          .doc('AV6AQgJ6FsHrkBLBV2PI');
     } else if (playerType == 'Influence') {
-      docRef =  FirebaseFirestore.instance.collection('Challenges').doc('ug9QUS1APtqoK6DosPWY');
+      docRef = FirebaseFirestore.instance
+          .collection('Challenges')
+          .doc('ug9QUS1APtqoK6DosPWY');
     } else {
       throw Exception('Invalid player type');
     }
-   
+
     DocumentSnapshot docSnapshot = await docRef.get();
-    // List<Game> games = [];
-    Object? games = docSnapshot.data();
-    /*for (var doc in querySnapshot) {
-      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-      List<dynamic> values = data.values.toList();
-      Map<String, dynamic> gameMap = values[0] as Map<String, dynamic>;
+    Map<String, dynamic>? data = docSnapshot.data() as Map<String, dynamic>?;
+    List<Game> games = [];
 
-      String title = gameMap['title'];
-      String description = gameMap['description'];
-      int level = 0;
-      String world = 'Safe and accessible';
 
+
+    /* 
+    Data of games from type Challenge is a map where the keys are Challenge{i} as a string and the values are List<dynamic>
+    Data of games from type Influence is a map where the keys are "world name" as a string and the values are List<dynamic>
+    Maybe i need to change the data in Firebase so for the two types of games it is saved by level and not 
+    by game type so ill get the same keys and values in both ways.
+    */
+    if (data != null) {
       if (playerType == 'Challenge') {
-        level = gameMap['level'];
-        games.add(Challenge(title: title, description: description, level: level));
-      } else {
-        world ='Safe and accessible';
-        games.add(Influence(title: title, description: description, world: world));
+        data.forEach((key, value) {
+          games.add(Challenge.fromMap(value));
+        });
+      } else if (playerType == 'Influence') {
+        data.forEach((key, value) {
+          value.forEach((element) {
+          games.add(Influence.fromMap(element));
+          });
+        });
       }
-    }*/
+    }
 
-    //this.games = games as List<Game>;
+    Provider.of<GameProvider>(context, listen: false).setGames(games);
     notifyListeners();
   }
 }

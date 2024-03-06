@@ -66,25 +66,26 @@ class _HomePageState extends State<HomePage> {
       );
     }
 
+    GameProvider? gameProvider = Provider.of<GameProvider>(context);
 
-  // GameProvider? gameProvider = Provider.of<GameProvider>(context);
-    
-    FutureBuilder(
-      future: FirebaseFirestore.instance.collection('Challenges').doc('AV6AQgJ6FsHrkBLBV2PI').get(),
-      builder: (BuildContext context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const CircularProgressIndicator();
-        } else if (snapshot.hasError) {
-          return Text('Error: ${snapshot.error}');
-        } else {
-          // Get the GameProvider from the context
-          //gameProvider = Provider.of<GameProvider>(context);
-          final gamesData = snapshot.data?.data();
-          final games = (gamesData as Map<String, dynamic>).values.toList() as List<Map<String, dynamic>>;
-          // Access the games list
-          //List<Game> games = gameProvider!.games;
-          // Use the games list in a widget
-          return ListView.builder(
+    if (gameProvider.games.isEmpty) {
+      FutureBuilder(
+        future: gameProvider.loadGames(user.gameType, context),
+        builder: (BuildContext context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const CircularProgressIndicator();
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else {
+            // Get the GameProvider from the context
+            //gameProvider = Provider.of<GameProvider>(context);
+            return const Text("data");
+            // final gamesData = snapshot.data?.data();
+            //final games = (gamesData as Map<String, dynamic>).values.toList() as List<Map<String, dynamic>>;
+            // Access the games list
+            //List<Game> games = gameProvider!.games;
+            // Use the games list in a widget
+            /*return ListView.builder(
             itemCount: games.length,
             itemBuilder: (context, index) {
               return ListTile(
@@ -92,11 +93,11 @@ class _HomePageState extends State<HomePage> {
                 subtitle: Text(gamesData[index].description),
               );
             },
-          );
-        }
-      },
-    );
-
+          );*/
+          }
+        },
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -127,7 +128,8 @@ class _HomePageState extends State<HomePage> {
                         onPressed: () {
                           // Navigate to the challenge page
                         },
-                        child: const Text('Challenge 1'), //Text(games[0].title),
+                        child:
+                            const Text('Challenge 1'), //Text(games[0].title),
                       ),
                       const SizedBox(height: 20),
                       ElevatedButton(
@@ -151,31 +153,32 @@ class _HomePageState extends State<HomePage> {
                         onPressed: () {
                           // Navigate to the game page
                         },
-                        child: const Text('Game 1'),
+                        child: Text(gameProvider.games[0].title),
                       ),
                       const SizedBox(height: 20),
                       ElevatedButton(
                         onPressed: () {
                           // Navigate to the game page
                         },
-                        child: const Text('Game 2'),
+                        child:  Text(gameProvider.games[1].title),
                       ),
                       const SizedBox(height: 20),
                       ElevatedButton(
                         onPressed: () {
                           // Navigate to the game page
                         },
-                        child: const Text('Game 3'),
+                        child:  Text(gameProvider.games[3].title),
                       ),
                     ],
                   ),
-                  const Spacer(),
-                  Text('ID: ${user.uniqueNumber.toString().padLeft(6, '0')}', 
-                  style: const TextStyle(
-                    fontSize: 20,
-                    color: Colors.black,
-                  ),
-                  ),
+            const Spacer(),
+            Text(
+              'ID: ${user.uniqueNumber.toString().padLeft(6, '0')}',
+              style: const TextStyle(
+                fontSize: 20,
+                color: Colors.black,
+              ),
+            ),
           ],
         ),
       ),
