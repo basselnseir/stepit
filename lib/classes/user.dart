@@ -12,6 +12,7 @@ class User {
   String username;
   int uniqueNumber;
   String gameType;
+  int level;
   Timestamp joinedTime = Timestamp.now();
 
   // subcollection to save daily steps every 15 minutes.
@@ -19,13 +20,14 @@ class User {
   User(
       {required this.username,
       required this.uniqueNumber,
-      required this.gameType});
+      required this.gameType, required this.level});
 
   Map<String, dynamic> toMap() {
     return {
       'username': username,
       'uniqueNumber': uniqueNumber,
       'gameType': gameType,
+      'level' : level,
       'joinedTime': joinedTime,
       // 'dailyStepsList': dailyStepsList,
     };
@@ -36,6 +38,7 @@ class User {
       : username = map['username'],
         uniqueNumber = map['uniqueNumber'],
         gameType = map['gameType'],
+        level = map['level'],
         joinedTime = map['joinedTime'];
   // dailyStepsList = map['dailyStepsList'];
 
@@ -72,8 +75,8 @@ class UserProvider with ChangeNotifier {
   }
 }
 
-void saveUser(BuildContext context, String username, int uniqueNumber, String gameType) async {
-  User user = User(username: username, uniqueNumber: uniqueNumber, gameType: gameType);
+void saveUser(BuildContext context, String username, int uniqueNumber, String gameType, int level) async {
+  User user = User(username: username, uniqueNumber: uniqueNumber, gameType: gameType, level: level);
 
   // Save to Firebase
   await FirebaseFirestore.instance.collection('users').doc(uniqueNumber.toString().padLeft(6, '0')).set(user.toMap());
@@ -83,6 +86,7 @@ void saveUser(BuildContext context, String username, int uniqueNumber, String ga
   await prefs.setString('username', username);
   await prefs.setInt('uniqueNumber', user.uniqueNumber);
   await prefs.setString('gameType', user.gameType);
+  await prefs.setInt('level', user.level);
 
   // Update user provider
   Provider.of<UserProvider>(context, listen: false).setUser(user);
@@ -95,9 +99,10 @@ Future<User?> loadUser(BuildContext context) async {
   String? username = prefs.getString('username');
   int? uniqueNumber = prefs.getInt('uniqueNumber');
   String? gameType = prefs.getString('gameType');
+  int? level = prefs.getInt('level');
 
-  if (username != null && uniqueNumber != null && gameType != null) {
-    User user = User(username: username, uniqueNumber: uniqueNumber, gameType: gameType);
+  if (username != null && uniqueNumber != null && gameType != null && level != null) {
+    User user = User(username: username, uniqueNumber: uniqueNumber, gameType: gameType, level: level);
     Provider.of<UserProvider>(context, listen: false).setUser(user);
     return user;
   } else {

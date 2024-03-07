@@ -61,8 +61,8 @@ class Challenge extends Game {
 
   // a static method to create a challenge from a map
   @override
-  Challenge.fromMap(super.map)
-      : level = map['level'],
+  Challenge.fromMap(super.map, int playerLevel)
+      : level = playerLevel,
         super.fromMap();
 
   // comparing two challenges
@@ -91,8 +91,8 @@ class Influence extends Game {
 
   // a static method to create a influence game from a map
   @override
-  Influence.fromMap(super.map)
-      : world = 'world',
+  Influence.fromMap(super.map, String playerWorld)
+      : world = playerWorld,
         super.fromMap();
 
   // comparing two influence games
@@ -112,16 +112,38 @@ class GameProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> loadGames(String playerType, BuildContext context) async {
+  Future<void> loadGames(String playerType, int level, BuildContext context) async {
     DocumentReference docRef;
+    docRef = FirebaseFirestore.instance.collection('Games').doc(playerType);
+    String collectionKey;
     if (playerType == 'Challenge') {
-      docRef = FirebaseFirestore.instance
-          .collection('Challenges')
-          .doc('AV6AQgJ6FsHrkBLBV2PI');
+      switch (level) {
+        case 1:
+          collectionKey = 'Level_1';
+          break;
+        case 2:
+          collectionKey = 'Level_2';
+          break;
+        case 3:
+          collectionKey = 'Level_3';
+          break;
+        default:
+          throw Exception('Invalid level');
+      }
     } else if (playerType == 'Influence') {
-      docRef = FirebaseFirestore.instance
-          .collection('Challenges')
-          .doc('ug9QUS1APtqoK6DosPWY');
+      switch (level) {
+        case 1:
+          collectionKey = 'Safe and Accessible';
+          break;
+        case 2:
+          collectionKey = 'Pleasant and Green';
+          break;
+        case 3:
+          collectionKey = 'Urban and Lively';
+          break;
+        default:
+          throw Exception('Invalid level');
+      }
     } else {
       throw Exception('Invalid player type');
     }
@@ -131,24 +153,17 @@ class GameProvider extends ChangeNotifier {
     List<Game> games = [];
 
 
-
-    /* 
-    Data of games from type Challenge is a map where the keys are Challenge{i} as a string and the values are List<dynamic>
-    Data of games from type Influence is a map where the keys are "world name" as a string and the values are List<dynamic>
-    Maybe i need to change the data in Firebase so for the two types of games it is saved by level and not 
-    by game type so ill get the same keys and values in both ways.
-    */
     if (data != null) {
       if (playerType == 'Challenge') {
-        data.forEach((key, value) {
-          games.add(Challenge.fromMap(value));
-        });
-      } else if (playerType == 'Influence') {
-        data.forEach((key, value) {
-          value.forEach((element) {
-          games.add(Influence.fromMap(element));
+          data[collectionKey].forEach((element) {
+          games.add(Challenge.fromMap(element, level));
           });
-        });
+        
+      } else if (playerType == 'Influence') {
+          data[collectionKey].forEach((element) {
+          games.add(Influence.fromMap(element, collectionKey));
+          });
+     
       }
     }
 

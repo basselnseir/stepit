@@ -55,7 +55,7 @@ class _IdentificationPageState extends State<IdentificationPage> {
   void _saveToFirestore(BuildContext context) async {
     int uniqueNumber = await _uniqueNumber;
     String gameType =  _gameType;
-    saveUser(context, _username, uniqueNumber, gameType);
+    saveUser(context, _username, uniqueNumber, gameType, 1);
   }
 
   @override

@@ -48,7 +48,7 @@ class _HomePageState extends State<HomePage> {
         future: loadUser(context),
         builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator();
+            return CircularProgressIndicator();
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else {
@@ -68,12 +68,12 @@ class _HomePageState extends State<HomePage> {
 
     GameProvider? gameProvider = Provider.of<GameProvider>(context);
 
-    if (gameProvider.games.isEmpty) {
+    if (gameProvider.games.isEmpty && user != null) {
       FutureBuilder(
-        future: gameProvider.loadGames(user.gameType, context),
+        future: gameProvider.loadGames(user.gameType, user.level, context),
         builder: (BuildContext context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator();
+            return CircularProgressIndicator();
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else {
@@ -99,90 +99,68 @@ class _HomePageState extends State<HomePage> {
       );
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        centerTitle: true,
-        automaticallyImplyLeading: false,
-        title: const Text('StepIt'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            const SizedBox(height: 30),
-            const Center(
-              child: Text(
-                'Choose one of the following challenges',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 30,
+    if (user == null || gameProvider.games.isEmpty) {
+      return const CircularProgressIndicator();
+    } else {
+      return Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          automaticallyImplyLeading: false,
+          title: const Text('StepIt'),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              const SizedBox(height: 30),
+              const Center(
+                child: Text(
+                  'Choose one of the following challenges',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 30,
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 70),
-            user.gameType == 'Challenge'
-                ? Column(
-                    children: <Widget>[
-                      ElevatedButton(
-                        onPressed: () {
-                          // Navigate to the challenge page
-                        },
-                        child:
-                            const Text('Challenge 1'), //Text(games[0].title),
-                      ),
-                      const SizedBox(height: 20),
-                      ElevatedButton(
-                        onPressed: () {
-                          // Navigate to the challenge page
-                        },
-                        child: const Text('Challenge 2'),
-                      ),
-                      const SizedBox(height: 20),
-                      ElevatedButton(
-                        onPressed: () {
-                          // Navigate to the challenge page
-                        },
-                        child: const Text('Challenge 3'),
-                      ),
-                    ],
-                  )
-                : Column(
-                    children: <Widget>[
-                      ElevatedButton(
-                        onPressed: () {
-                          // Navigate to the game page
-                        },
-                        child: Text(gameProvider.games[0].title),
-                      ),
-                      const SizedBox(height: 20),
-                      ElevatedButton(
-                        onPressed: () {
-                          // Navigate to the game page
-                        },
-                        child:  Text(gameProvider.games[1].title),
-                      ),
-                      const SizedBox(height: 20),
-                      ElevatedButton(
-                        onPressed: () {
-                          // Navigate to the game page
-                        },
-                        child:  Text(gameProvider.games[3].title),
-                      ),
-                    ],
+              const SizedBox(height: 70),
+              Column(
+                children: <Widget>[
+                  ElevatedButton(
+                    onPressed: () {
+                      // Navigate to the game page
+                    },
+                    child: Text(gameProvider.games[0].title),
                   ),
-            const Spacer(),
-            Text(
-              'ID: ${user.uniqueNumber.toString().padLeft(6, '0')}',
-              style: const TextStyle(
-                fontSize: 20,
-                color: Colors.black,
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      // Navigate to the game page
+                    },
+                    child: Text(gameProvider.games[1].title),
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      // Navigate to the game page
+                    },
+                    child: Text(gameProvider.games[3].title),
+                  ),
+                ],
               ),
-            ),
-          ],
+              const Spacer(),
+              Text(
+                'ID: ${user.uniqueNumber.toString().padLeft(6, '0')}',
+                style: const TextStyle(
+                  fontSize: 20,
+                  color: Colors.black,
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    }
   }
 }
 
