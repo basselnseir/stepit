@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:stepit/classes/game.dart';
+import 'package:stepit/classes/user.dart';
 import 'package:stepit/pages/agreement.dart';
 import 'package:stepit/pages/homepage.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+//final userProviderKey = GlobalKey();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,7 +19,14 @@ void main() async {
   bool isFirstTime = prefs.getBool('first_time') ?? true;
   //bool isFirstTime = true;
 
-  runApp(MyApp(isFirstTime: isFirstTime));
+  
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (context) => UserProvider()),
+      ChangeNotifierProvider(create: (context) => GameProvider()),
+    ],
+    child: MyApp(isFirstTime: isFirstTime),
+  ));
 }
 
 class MyApp extends StatelessWidget {

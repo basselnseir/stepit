@@ -3,7 +3,7 @@ import 'package:stepit/classes/objects.dart';
 
 FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
-User? user;
+//User? user;
 
 const int trackingFreq = 15; // in minutes, needs to be larger than 15
 
