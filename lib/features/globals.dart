@@ -5,7 +5,7 @@ FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
 User? user;
 
-const int trackingFreq = 1; // in minutes
+const int trackingFreq = 15; // in minutes, needs to be larger than 15
 
 void logEvent_(String eventName) {
   analytics.logEvent(

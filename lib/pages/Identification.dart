@@ -41,9 +41,9 @@ class _IdentificationPageState extends State<IdentificationPage> {
   //   return DataBase.userExists(uniqueNumber);
   // }
 
-  void _saveToFirestore() async {
+  Future<void> _saveToFirestore() async {
     int uniqueNumber = await _uniqueNumber;
-    DataBase.addUser(User(_username, uniqueNumber));
+    await DataBase.addUser(User(_username, uniqueNumber));
   }
 
   @override
@@ -93,24 +93,34 @@ class _IdentificationPageState extends State<IdentificationPage> {
                 },
               ),
               const SizedBox(height: 30),
-              ElevatedButton(
-                onPressed: connectionState
-                    ? () {
-                        _saveToFirestore();
-                        DataBase.loadUser().then((_) => StepsTracker.startStepsTracking());
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => HomePage()),
-                        );
-                      }
-                    : null,
-                child: const Text(
-                  "Continue",
-                  style: TextStyle(
-                    color: Color.fromARGB(
-                        255, 0, 0, 0), // Set the desired text color here
-                  ),
-                ),
+              FutureBuilder<int>(
+                future: _uniqueNumber,
+                builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const CircularProgressIndicator();
+                  } else {
+                    connectionState = true;
+                    return ElevatedButton(
+                            onPressed: connectionState
+                                ? () {
+                                    // _saveToFirestore();
+                                    _saveToFirestore().then((_) => startStepsTracking());
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => HomePage()),
+                                    );
+                                  }
+                                : null,
+                            child: const Text(
+                              "Continue",
+                              style: TextStyle(
+                                color: Color.fromARGB(
+                                    255, 0, 0, 0), // Set the desired text color here
+                              ),
+                            ),
+                          ) ;
+                  }
+                },
               ),
             ],
           ),
