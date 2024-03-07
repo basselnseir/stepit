@@ -37,6 +37,7 @@ class DataBase {
         .where('uniqueNumber', isEqualTo: uniqueNumber)
         .get();
     user = User.fromMap(result.docs.first.data());
+    print('!!!!! loadUser() executed, user: $user !!!!!');
   }
 */
 /*static Future<void> loadGames(String url) async {
@@ -66,7 +67,12 @@ class DataBase {
     return result.docs.length;
   }
 
-  // a static method that returns sets the user id
+  // a static method that returns the user id
+  static Future<int> getUserId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    int uniqueNumber = prefs.getInt('uniqueNumber') ?? 0;
+    return uniqueNumber;
+  }
   
 
 }

@@ -1,87 +1,132 @@
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:pedometer/pedometer.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:stepit/classes/database.dart';
+import 'package:stepit/firebase_options.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:stepit/features/globals.dart';
-import 'package:provider/provider.dart';
-import 'package:stepit/classes/user.dart';
+import 'package:geolocator/geolocator.dart';
+
+
 
 class StepsTracker {
   // late Pedometer _pedometer;
-  static late Stream<StepCount> stepCountStream;
+  // static Stream<StepCount> stepCountStream = Pedometer.stepCountStream;
   static int steps = 0;
-  static bool started = false;
+  static late int initialSteps;
+  static Workmanager wm = Workmanager();
+  static bool firstTime = true;
+}
 
-  static void startStepsTracking() {
-    // Initialize Firebase
+void startStepsTracking () async {
+  
+  // Initialize Firebase
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
-    initPlatformState();
-    _requestPermission();
-    
-    Firebase.initializeApp();
-
-    // Register the callback dispatcher
-    Workmanager().initialize(
-      callbackDispatcher,
-      isInDebugMode: false,
-    );
-
-    // Start the WorkManager
-    Workmanager().registerPeriodicTask(
-      "1",
-      "stepCountTask",
-      frequency: const Duration(minutes: trackingFreq),
-    );
-    
-  }
-
-  static void _requestPermission() async {
-    if (await Permission.activityRecognition.request().isGranted) {
-      // Either the permission was already granted before or the user just granted it.
-      // You can start listening to the pedometer here.
+  bool permissionsDenied = true;
+  while (permissionsDenied) {
+    bool stepsPermission = await Permission.activityRecognition.request().isGranted;
+    bool locationPermission = await Permission.location.request().isGranted;
+    if (stepsPermission && locationPermission) {
+      permissionsDenied = false;
     }
   }
 
-  static Future<void> initPlatformState() async {
-    stepCountStream = Pedometer.stepCountStream;
-    
+  // Save steps the first time
+  // await setAndSaveSteps(firstTime: true);
+
+  // Register the callback dispatcher
+  StepsTracker.wm.initialize(
+    callbackDispatcher,
+    isInDebugMode: true,
+  );
+
+  // Start the WorkManager
+  // Save steps each 15 mins
+  StepsTracker.wm.registerPeriodicTask(
+    "1",
+    "stepCountTask",
+    frequency: const Duration(minutes: trackingFreq),
+  );
+  
+}
+
+
+// Future<void> initPlatformState() async {
+//   StepsTracker.stepCountStream = Pedometer.stepCountStream;
+  
+// }
+
+void callbackDispatcher() {
+  StepsTracker.wm.executeTask((task, inputData) async {
+    await setAndSaveSteps();
+    return Future.value(true);
+  });
+}
+
+Future<void> setAndSaveSteps () async {
+  // Initialize Firebase
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  
+  try {
+    // Get steps
+    StepsTracker.steps = await getSteps();
+  } catch(e) {
+    print('!!!!! Error caught in setAndSaveSteps: $e !!!!!');
+    StepsTracker.steps = -1;
   }
 
-  static void callbackDispatcher(BuildContext context) {
-    Workmanager().executeTask((task, inputData) async {
-      // Initialize Firebase
-      await Firebase.initializeApp();
+  // Save steps to Firebase
 
-      try {
-        // Get steps
-        steps = await getSteps();
-      } catch(e) {
-        steps = -1;
-      }
+  await saveStepsToFirebase(StepsTracker.steps);
 
-      // Save steps to Firebase
-      await saveStepsToFirebase(context, steps);
+  print('!!!!! steps: ${StepsTracker.steps} !!!!!');
 
-      return Future.value(true);
-    });
-  }
+}
 
-  static Future<int> getSteps() async {
-    StepCount stepCount = await stepCountStream.first;
-    return stepCount.steps;
-  }
+Future<int> getSteps() async {
+  int steps = 0;
+  // StepCount stepCount = await Pedometer.stepCountStream.first;
+  await Pedometer.stepCountStream.first.then((StepCount event) { steps = event.steps;});
+  return steps;
+}
 
-  static Future<void> saveStepsToFirebase(BuildContext context, int steps) async {
-    String date = DateFormat('yyyy-MM-dd').format(DateTime.now());
+Future<void> saveStepsToFirebase(int steps) async {
+  String date = DateFormat('yyyy-MM-dd').format(DateTime.now());
+  String time = DateFormat('HH:mm:ss').format(DateTime.now());
+  int un = await DataBase.getUserId();
 
-    User? user = Provider.of<UserProvider>(context, listen: false).user;
-    // add the steps to the user's daily steps with the current timestamp as the key
-    await FirebaseFirestore.instance.collection('steps_$date').doc(user?.uniqueNumber.toString()).set({
-      DateFormat('HH:mm:ss').format(DateTime.now()): steps,
-    });
+  // Get the location
+  Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
 
-  }
+  // Create a GeoPoint with the location
+  GeoPoint geoPoint = GeoPoint(position.latitude, position.longitude);
+
+
+  // add the steps to the user's daily steps with the current timestamp as the key
+  print('!!!!! unique number: $un !!!!!');
+  
+  // FirebaseFirestore.instance.collection('steps_$date').doc(un.toString().padLeft(6, '0')).set({
+  //   DateFormat('HH:mm:ss').format(DateTime.now()): {
+  //     'steps': steps,
+  //     'location': geoPoint,
+  //   },
+  // }, SetOptions(merge: true));
+
+  FirebaseFirestore.instance.collection('users').doc(un.toString().padLeft(6, '0')).set({
+    'steps and location': {
+      '$date $time': {
+        'steps': steps,
+        'location': geoPoint,
+      },
+    }
+  }, SetOptions(merge: true));
+
 }
