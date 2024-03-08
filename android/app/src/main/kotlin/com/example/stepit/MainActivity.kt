@@ -1,4 +1,4 @@
-package com.example.stepit
+package com.project.stepit
 
 import io.flutter.embedding.android.FlutterActivity
 

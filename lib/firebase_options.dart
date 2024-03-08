@@ -54,7 +54,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyDZgNFdjHqAuuaiLJRVfgiQgVDcJKkdTn0',
-    appId: '1:790943271641:android:9d9065feba8f252fcd8cc8',
+    appId: '1:790943271641:android:1ea23c8084013c73cd8cc8',
     messagingSenderId: '790943271641',
     projectId: 'stepit-2de8f',
     storageBucket: 'stepit-2de8f.appspot.com',
@@ -66,7 +66,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '790943271641',
     projectId: 'stepit-2de8f',
     storageBucket: 'stepit-2de8f.appspot.com',
-    iosBundleId: 'com.example.stepit',
+    iosBundleId: 'com.project.stepit',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -75,6 +75,6 @@ class DefaultFirebaseOptions {
     messagingSenderId: '790943271641',
     projectId: 'stepit-2de8f',
     storageBucket: 'stepit-2de8f.appspot.com',
-    iosBundleId: 'com.example.stepit.RunnerTests',
+    iosBundleId: 'com.project.stepit.RunnerTests',
   );
 }
