@@ -35,20 +35,33 @@ class _StatusPageState extends State<StatusPage> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Text("Loading");
           }
+          if (snapshot.data?.data() != null) {
+            Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
+            if (data['steps and location'] != null) {
+              Map<String, dynamic> stepsAndLocation = data['steps and location'] as Map<String, dynamic>;
 
-          Map<String, dynamic> data = snapshot.data?.data() as Map<String, dynamic>;
-          Map<String, dynamic> stepsAndLocation = data['steps and location'] as Map<String, dynamic>;
-
-          return ListView(
-            children: stepsAndLocation.entries.map((entry) {
-              String time = entry.key;
-              Map<String, dynamic> details = entry.value;
-              return ListTile(
-                title: Text('Time: $time'),
-                subtitle: Text('Steps: ${details['steps']}, Location: ${details['location'].latitude}, ${details['location'].longitude}'),
+              return ListView(
+                children: stepsAndLocation.entries.map((entry) {
+                  String time = entry.key;
+                  Map<String, dynamic> details = entry.value;
+                  return ListTile(
+                    title: Text('Time: $time'),
+                    subtitle: Text('Steps: ${details['steps']}, Location: ${details['location'].latitude}, ${details['location'].longitude}'),
+                  );
+                }).toList(),
               );
-            }).toList(),
-          );
+            }
+          }
+          return const Center(
+            child: Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Text(
+                'No data yet. Start walking to see your steps and location.',
+                style: TextStyle(fontSize: 20),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          );        
         },
       ),
     );
