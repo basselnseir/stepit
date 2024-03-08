@@ -7,6 +7,8 @@ import 'package:stepit/classes/objects.dart';
 import 'package:stepit/classes/user.dart';
 import 'package:stepit/features/globals.dart';
 import 'package:stepit/classes/game.dart';
+import 'package:stepit/pages/agreement.dart';
+import 'package:stepit/pages/status.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -77,23 +79,7 @@ class _HomePageState extends State<HomePage> {
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else {
-            // Get the GameProvider from the context
-            //gameProvider = Provider.of<GameProvider>(context);
             return const Text("data");
-            // final gamesData = snapshot.data?.data();
-            //final games = (gamesData as Map<String, dynamic>).values.toList() as List<Map<String, dynamic>>;
-            // Access the games list
-            //List<Game> games = gameProvider!.games;
-            // Use the games list in a widget
-            /*return ListView.builder(
-            itemCount: games.length,
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Text(gamesData[index].title),
-                subtitle: Text(gamesData[index].description),
-              );
-            },
-          );*/
           }
         },
       );
@@ -104,9 +90,42 @@ class _HomePageState extends State<HomePage> {
     } else {
       return Scaffold(
         appBar: AppBar(
+          leading: Builder(
+            builder: (BuildContext context) {
+              return IconButton(
+                icon: const Icon(Icons.menu),
+                onPressed: () => Scaffold.of(context).openDrawer(),
+              );
+            },
+          ),
           centerTitle: true,
           automaticallyImplyLeading: false,
           title: const Text('StepIt'),
+        ),
+        drawer: Drawer(
+          backgroundColor: const Color.fromARGB(255, 184, 239, 186),
+          child: Container(
+            margin:
+                const EdgeInsets.only(top: 50.0), // Start the drawer 50 pixels lower
+            width: MediaQuery.of(context).size.width * 0.8, // Set the width to 80% of the screen width
+
+            color: Colors.white,
+            child: ListView(
+              padding: EdgeInsets.zero,
+              children: <Widget>[
+                ListTile(
+                  title: Text('Status'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => StatusPage()),
+                    );
+                  },
+                ),
+                // Add more ListTiles for more pages
+              ],
+            ),
+          ),
         ),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
