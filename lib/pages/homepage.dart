@@ -1,13 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+// ignore_for_file: library_private_types_in_public_api
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stepit/classes/database.dart';
-import 'package:stepit/classes/objects.dart';
 import 'package:stepit/classes/user.dart';
-import 'package:stepit/features/globals.dart';
 import 'package:stepit/classes/game.dart';
-import 'package:stepit/pages/agreement.dart';
 import 'package:stepit/pages/status.dart';
 
 class HomePage extends StatefulWidget {
