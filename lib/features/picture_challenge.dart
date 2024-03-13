@@ -13,9 +13,11 @@ import 'globals.dart';
 class TakePictureScreen extends StatefulWidget {
   final List<String> imagePaths;
 
-  TakePictureScreen({Key? key, required this.imagePaths}) : super(key: key);
+  // ignore: prefer_const_constructors_in_immutables
+  TakePictureScreen({super.key, required this.imagePaths});
 
   @override
+  // ignore: library_private_types_in_public_api, no_logic_in_create_state
   _TakePictureScreenState createState() => _TakePictureScreenState(imagePaths);
 }
 
@@ -74,7 +76,6 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
   }
 
   void onError(error) {
-    print('Flutter Pedometer Error: $error');
     if (error is PlatformException && error.code == '1') {
       setState(() {
         _steps = 'Step counter not available on this device';
@@ -87,7 +88,7 @@ Future<void> _takePicture() async {
   logEvent_('user took a picture in take_picture_challenge');
   if (pickedFile != null) {
     final timestamp = DateTime.now().millisecondsSinceEpoch;
-    final targetPath = "images/image_${timestamp}.jpg";
+    final targetPath = "images/image_$timestamp.jpg";
     final file = File(pickedFile.path);
     try {
       
@@ -111,7 +112,7 @@ Future<void> _takePicture() async {
         'url': downloadUrl,
         'timestamp': timestamp,
       });
-    } on firebase_storage.FirebaseException catch (e){
+    } on firebase_storage.FirebaseException {
       // Handle any errors
     }
   }
@@ -153,7 +154,7 @@ Future<void> _takePicture() async {
                       Card(
                         child: Row(
                           children: [
-                            Container(
+                            SizedBox(
                               height: 100, // Set the height of the image
                               width: 100, // Set the width of the image
                               child: Image.network(url, fit: BoxFit.contain),

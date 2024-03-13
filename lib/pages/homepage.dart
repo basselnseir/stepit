@@ -26,13 +26,6 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     User? user = Provider.of<UserProvider>(context).user;
     GameProvider? gameProvider = Provider.of<GameProvider>(context);
-    var rng = Random(user?.uniqueNumber ?? DateTime.now().millisecondsSinceEpoch);
-    Set<int> indices = {};
-    while (indices.length < 3) {
-      indices.add(rng.nextInt(gameProvider.games.length));
-    }
-
-    List<int> uniqueIndices = indices.toList();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
@@ -147,21 +140,21 @@ class _HomePageState extends State<HomePage> {
                     onPressed: () {
                       // Navigate to the game page
                     },
-                    child: Text(gameProvider.games[uniqueIndices[0]].title),
+                    child: Text(gameProvider.games[0].title),
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
                       // Navigate to the game page
                     },
-                    child: Text(gameProvider.games[uniqueIndices[1]].title),
+                    child: Text(gameProvider.games[1].title),
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
                       // Navigate to the game page
                     },
-                    child: Text(gameProvider.games[uniqueIndices[2]].title),
+                    child: Text(gameProvider.games[2].title),
                   ),
                 ],
               ),
