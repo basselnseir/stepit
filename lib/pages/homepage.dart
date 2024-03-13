@@ -26,12 +26,14 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     User? user = Provider.of<UserProvider>(context).user;
     GameProvider? gameProvider = Provider.of<GameProvider>(context);
+    var rng = Random(user?.uniqueNumber ?? DateTime.now().millisecondsSinceEpoch);
     Set<int> indices = {};
     while (indices.length < 3) {
-      indices.add(Random().nextInt(5)); // Generates a random integer from 0 to 4
+      indices.add(rng.nextInt(gameProvider.games.length));
     }
 
-List<int> uniqueIndices = indices.toList();
+    List<int> uniqueIndices = indices.toList();
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
         final double screenWidth = MediaQuery.of(context).size.width;
