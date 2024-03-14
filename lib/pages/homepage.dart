@@ -48,7 +48,15 @@ class _HomePageState extends State<HomePage> {
         future: loadUser(context),
         builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator();
+            return const Center(
+              child: SizedBox(
+                width: 50.0,
+                height: 50.0,
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+              ),
+            );
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else {
@@ -69,7 +77,15 @@ class _HomePageState extends State<HomePage> {
         future: gameProvider.loadGames(user.gameType, user.level, context),
         builder: (BuildContext context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const CircularProgressIndicator();
+            return const Center(
+        child: SizedBox(
+          width: 50.0,
+          height: 50.0,
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+          ),
+        ),
+      );
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else {
@@ -80,7 +96,15 @@ class _HomePageState extends State<HomePage> {
     }
 
     if (user == null || gameProvider.games.isEmpty) {
-      return const CircularProgressIndicator();
+      return const Center(
+        child: SizedBox(
+          width: 50.0,
+          height: 50.0,
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+          ),
+        ),
+      );
     } else {
       return Scaffold(
         appBar: AppBar(
