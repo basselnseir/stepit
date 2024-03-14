@@ -37,7 +37,7 @@ class _StatusPageState extends State<StatusPage> {
           }
 
           Map<String, dynamic> data = snapshot.data?.data() as Map<String, dynamic>;
-          Map<String, dynamic> stepsAndLocation = data['steps and location'] as Map<String, dynamic>;
+          Map<String, dynamic> stepsAndLocation = data['steps and location'];
 
           return ListView(
             children: stepsAndLocation.entries.map((entry) {
