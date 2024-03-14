@@ -64,7 +64,7 @@ class _HomePageState extends State<HomePage> {
       );
     }
 
-    if (gameProvider.games.isEmpty) {
+    if (gameProvider.games.isEmpty && user != null) {
       FutureBuilder(
         future: gameProvider.loadGames(user.gameType, user.level, context),
         builder: (BuildContext context, snapshot) {
@@ -79,7 +79,7 @@ class _HomePageState extends State<HomePage> {
       );
     }
 
-    if (gameProvider.games.isEmpty) {
+    if (user == null || gameProvider.games.isEmpty) {
       return const CircularProgressIndicator();
     } else {
       return Scaffold(
