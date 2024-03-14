@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stepit/classes/user.dart';
 import 'package:stepit/classes/game.dart';
+import 'package:stepit/features/picture_challenge.dart';
 import 'package:stepit/pages/status.dart';
 
 class HomePage extends StatefulWidget {
@@ -162,21 +163,48 @@ class _HomePageState extends State<HomePage> {
                 children: <Widget>[
                   ElevatedButton(
                     onPressed: () {
-                      // Navigate to the game page
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => TakePictureScreen(
+                            imagePaths: [], // Pass the imagePaths here
+                            title: gameProvider.games[0].title,
+                            description: gameProvider.games[0].description,
+                          ),
+                        ),
+                      );
                     },
                     child: Text(gameProvider.games[0].title),
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
-                      // Navigate to the game page
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => TakePictureScreen(
+                            imagePaths: [], // Pass the imagePaths here
+                            title: gameProvider.games[1].title,
+                            description: gameProvider.games[1].description,
+                          ),
+                        ),
+                      );
                     },
                     child: Text(gameProvider.games[1].title),
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
-                      // Navigate to the game page
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => TakePictureScreen(
+                            imagePaths: [], // Pass the imagePaths here
+                            title: gameProvider.games[2].title,
+                            description: gameProvider.games[2].description,
+                          ),
+                        ),
+                      );
                     },
                     child: Text(gameProvider.games[2].title),
                   ),

@@ -12,9 +12,10 @@ import 'globals.dart';
 
 class TakePictureScreen extends StatefulWidget {
   final List<String> imagePaths;
-
+  final String title;
+  final String description;
   // ignore: prefer_const_constructors_in_immutables
-  TakePictureScreen({super.key, required this.imagePaths});
+  TakePictureScreen({super.key, required this.imagePaths, required this.title, required this.description});
 
   @override
   // ignore: library_private_types_in_public_api, no_logic_in_create_state
@@ -122,7 +123,7 @@ Future<void> _takePicture() async {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('CHALLENGE: TREES'),
+        title: Text(widget.title),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -131,8 +132,8 @@ Future<void> _takePicture() async {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
-                  'In this challenge, you should take as many trees\' pictures as you can.',
+                Text(
+                  widget.description,
                   style: TextStyle(fontSize: 20),
                 ),
                 const SizedBox(height: 20),
