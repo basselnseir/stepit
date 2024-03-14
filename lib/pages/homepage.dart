@@ -79,14 +79,14 @@ class _HomePageState extends State<HomePage> {
         builder: (BuildContext context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
-        child: SizedBox(
-          width: 50.0,
-          height: 50.0,
-          child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-          ),
-        ),
-      );
+              child: SizedBox(
+                width: 50.0,
+                height: 50.0,
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+              ),
+            );
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else {
@@ -162,50 +162,56 @@ class _HomePageState extends State<HomePage> {
               Column(
                 children: <Widget>[
                   ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => TakePictureScreen(
-                            imagePaths: [], // Pass the imagePaths here
-                            title: gameProvider.games[0].title,
-                            description: gameProvider.games[0].description,
-                          ),
-                        ),
-                      );
-                    },
+                    onPressed: gameProvider.games[0] is Influence
+                        ? () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => TakePictureScreen(
+                                  imagePaths: [], // Pass the imagePaths here
+                                  title: gameProvider.games[0].title,
+                                  description: gameProvider.games[0].description,
+                                ),
+                              ),
+                            );
+                          }
+                        : null, // Disable the button if the game is not an instance of Influence
                     child: Text(gameProvider.games[0].title),
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => TakePictureScreen(
-                            imagePaths: [], // Pass the imagePaths here
-                            title: gameProvider.games[1].title,
-                            description: gameProvider.games[1].description,
-                          ),
-                        ),
-                      );
-                    },
+                    onPressed: gameProvider.games[1] is Influence
+                        ? () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => TakePictureScreen(
+                                  imagePaths: [], // Pass the imagePaths here
+                                  title: gameProvider.games[1].title,
+                                  description: gameProvider.games[1].description,
+                                ),
+                              ),
+                            );
+                          }
+                        : null, // Disable the button if the game is not an instance of Influence
                     child: Text(gameProvider.games[1].title),
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => TakePictureScreen(
-                            imagePaths: [], // Pass the imagePaths here
-                            title: gameProvider.games[2].title,
-                            description: gameProvider.games[2].description,
-                          ),
-                        ),
-                      );
-                    },
+                    onPressed: gameProvider.games[2] is Influence
+                        ? () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => TakePictureScreen(
+                                  imagePaths: [], // Pass the imagePaths here
+                                  title: gameProvider.games[2].title,
+                                  description: gameProvider.games[2].description,
+                                ),
+                              ),
+                            );
+                          }
+                        : null, // Disable the button if the game is not an instance of Influence
                     child: Text(gameProvider.games[2].title),
                   ),
                 ],
