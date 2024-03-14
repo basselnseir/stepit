@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 import "package:stepit/background/steps_tracking.dart";
 import 'package:stepit/classes/database.dart';
-import 'package:stepit/classes/objects.dart';
 import 'package:stepit/pages/homepage.dart';
 import 'package:stepit/classes/user.dart';
 
@@ -97,7 +96,15 @@ class _IdentificationPageState extends State<IdentificationPage> {
                 future: _uniqueNumber,
                 builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const CircularProgressIndicator();
+                    return  const Center(
+                      child: SizedBox(
+                        width: 50.0,
+                        height: 50.0,
+                        child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                        ),
+                      ),
+                    );
                   } else {
                     connectionState = true;
                     return Text('Unique number: ${snapshot.data.toString().padLeft(6, '0')}');

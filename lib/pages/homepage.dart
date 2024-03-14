@@ -1,16 +1,16 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+// ignore_for_file: library_private_types_in_public_api
+
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:stepit/classes/database.dart';
-import 'package:stepit/classes/objects.dart';
 import 'package:stepit/classes/user.dart';
-import 'package:stepit/features/globals.dart';
 import 'package:stepit/classes/game.dart';
-import 'package:stepit/pages/agreement.dart';
+import 'package:stepit/features/picture_challenge.dart';
 import 'package:stepit/pages/status.dart';
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -21,18 +21,18 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    //DataBase.loadUser();
-    //SharedPreferences prefs =  SharedPreferences.getInstance() as SharedPreferences;
   }
 
   @override
   Widget build(BuildContext context) {
+    User? user = Provider.of<UserProvider>(context).user;
+    GameProvider? gameProvider = Provider.of<GameProvider>(context);
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
         final double screenWidth = MediaQuery.of(context).size.width;
-        const double tileWidth =
-            210.0; // Assuming each tile has a width of 200.0
-        const double padding = 8.0; // Assuming padding around each tile is 8.0
+        const double tileWidth = 210.0;
+        const double padding = 8.0;
         final double targetOffset =
             tileWidth + 2 * padding + tileWidth / 2 - screenWidth / 2;
 
@@ -43,22 +43,27 @@ class _HomePageState extends State<HomePage> {
         );
       }
     });
-    User? user = Provider.of<UserProvider>(context).user;
 
     if (user == null) {
       return FutureBuilder<User?>(
         future: loadUser(context),
         builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
+            return const Center(
+              child: SizedBox(
+                width: 50.0,
+                height: 50.0,
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+              ),
+            );
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else {
             user = snapshot.data;
             if (user != null) {
               Provider.of<UserProvider>(context, listen: false).setUser(user!);
-              //return Text(
-              //  'Username: ${user?.username}, ID: ${user?.uniqueNumber}, Type: ${user?.gameType}');
             } else {
               return const Text('No user data');
             }
@@ -68,14 +73,20 @@ class _HomePageState extends State<HomePage> {
       );
     }
 
-    GameProvider? gameProvider = Provider.of<GameProvider>(context);
-
     if (gameProvider.games.isEmpty && user != null) {
       FutureBuilder(
         future: gameProvider.loadGames(user.gameType, user.level, context),
         builder: (BuildContext context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
+            return const Center(
+              child: SizedBox(
+                width: 50.0,
+                height: 50.0,
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+              ),
+            );
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else {
@@ -86,7 +97,15 @@ class _HomePageState extends State<HomePage> {
     }
 
     if (user == null || gameProvider.games.isEmpty) {
-      return const CircularProgressIndicator();
+      return const Center(
+        child: SizedBox(
+          width: 50.0,
+          height: 50.0,
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+          ),
+        ),
+      );
     } else {
       return Scaffold(
         appBar: AppBar(
@@ -105,16 +124,14 @@ class _HomePageState extends State<HomePage> {
         drawer: Drawer(
           backgroundColor: const Color.fromARGB(255, 184, 239, 186),
           child: Container(
-            margin:
-                const EdgeInsets.only(top: 50.0), // Start the drawer 50 pixels lower
-            width: MediaQuery.of(context).size.width * 0.8, // Set the width to 80% of the screen width
-
+            margin: const EdgeInsets.only(top: 50.0),
+            width: MediaQuery.of(context).size.width * 0.8,
             color: Colors.white,
             child: ListView(
               padding: EdgeInsets.zero,
               children: <Widget>[
                 ListTile(
-                  title: Text('Status'),
+                  title: const Text('Status'),
                   onTap: () {
                     Navigator.push(
                       context,
@@ -122,7 +139,6 @@ class _HomePageState extends State<HomePage> {
                     );
                   },
                 ),
-                // Add more ListTiles for more pages
               ],
             ),
           ),
@@ -146,24 +162,57 @@ class _HomePageState extends State<HomePage> {
               Column(
                 children: <Widget>[
                   ElevatedButton(
-                    onPressed: () {
-                      // Navigate to the game page
-                    },
+                    onPressed: gameProvider.games[0] is Influence
+                        ? () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => TakePictureScreen(
+                                  imagePaths: [], // Pass the imagePaths here
+                                  title: gameProvider.games[0].title,
+                                  description: gameProvider.games[0].description,
+                                ),
+                              ),
+                            );
+                          }
+                        : null, // Disable the button if the game is not an instance of Influence
                     child: Text(gameProvider.games[0].title),
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: () {
-                      // Navigate to the game page
-                    },
+                    onPressed: gameProvider.games[1] is Influence
+                        ? () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => TakePictureScreen(
+                                  imagePaths: [], // Pass the imagePaths here
+                                  title: gameProvider.games[1].title,
+                                  description: gameProvider.games[1].description,
+                                ),
+                              ),
+                            );
+                          }
+                        : null, // Disable the button if the game is not an instance of Influence
                     child: Text(gameProvider.games[1].title),
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: () {
-                      // Navigate to the game page
-                    },
-                    child: Text(gameProvider.games[3].title),
+                    onPressed: gameProvider.games[2] is Influence
+                        ? () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => TakePictureScreen(
+                                  imagePaths: [], // Pass the imagePaths here
+                                  title: gameProvider.games[2].title,
+                                  description: gameProvider.games[2].description,
+                                ),
+                              ),
+                            );
+                          }
+                        : null, // Disable the button if the game is not an instance of Influence
+                    child: Text(gameProvider.games[2].title),
                   ),
                 ],
               ),
