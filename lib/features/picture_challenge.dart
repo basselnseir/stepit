@@ -14,18 +14,20 @@ class TakePictureScreen extends StatefulWidget {
   final List<String> imagePaths;
   final String title;
   final String description;
+  final String userID;
   // ignore: prefer_const_constructors_in_immutables
-  TakePictureScreen({super.key, required this.imagePaths, required this.title, required this.description});
+  TakePictureScreen({super.key, required this.imagePaths, required this.title, required this.description, required this.userID});
 
   @override
   // ignore: library_private_types_in_public_api, no_logic_in_create_state
-  _TakePictureScreenState createState() => _TakePictureScreenState(imagePaths);
+  _TakePictureScreenState createState() => _TakePictureScreenState(imagePaths, userID);
 }
 
 class _TakePictureScreenState extends State<TakePictureScreen> {
   List<String> imagePaths;
+  String userID;
 
-  _TakePictureScreenState(this.imagePaths);
+  _TakePictureScreenState(this.imagePaths, this.userID);
 
   late Stream<StepCount> _stepCountStream;
   String _steps = '0';
@@ -37,16 +39,18 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
     super.initState();
     initPlatformState();
     _requestPermission();
+        userID = userID.padLeft(6, '0');
+
     _loadImagePaths();
   }
 
-  void _loadImagePaths() async {
-    final querySnapshot = await FirebaseFirestore.instance.collection('images').get();
-    final urls = querySnapshot.docs.map((doc) => doc['url']).toList();
-    setState(() {
-      imagePaths = List<String>.from(urls);
-    });
-  }
+void _loadImagePaths() async {
+  final querySnapshot = await FirebaseFirestore.instance.collection('users').doc(userID).collection('images').get();
+  final urls = querySnapshot.docs.map((doc) => doc.data()['url']).toList();
+  setState(() {
+    imagePaths = List<String>.from(urls);
+  });
+}
 
   void _requestPermission() async {
     if (await Permission.activityRecognition.request().isGranted) {
@@ -84,40 +88,41 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
     }
   }
 
-Future<void> _takePicture() async {
-  final pickedFile = await ImagePicker().pickImage(source: ImageSource.camera);
-  logEvent_('user took a picture in take_picture_challenge');
-  if (pickedFile != null) {
-    final timestamp = DateTime.now().millisecondsSinceEpoch;
-    final targetPath = "images/image_$timestamp.jpg";
-    final file = File(pickedFile.path);
-    try {
-      
-      // Upload the file to Firebase Storage
-      await firebase_storage.FirebaseStorage.instance
-          .ref(targetPath)
-          .putFile(file);
-      // Add a delay before getting the download URL
+  Future<void> _takePicture() async {
+    final pickedFile = await ImagePicker().pickImage(source: ImageSource.camera);
+    logEvent_('user took a picture in take_picture_challenge');
+    if (pickedFile != null) {
+      final timestamp = DateTime.now().millisecondsSinceEpoch;
+      final targetPath = "images/image_$timestamp.jpg";
+      final file = File(pickedFile.path);
+      try {
+        
+        // Upload the file to Firebase Storage
+        await firebase_storage.FirebaseStorage.instance
+            .ref(targetPath)
+            .putFile(file);
+        // Add a delay before getting the download URL
 
-      // Once the file upload is complete, get the download URL
-      final downloadUrl = await firebase_storage.FirebaseStorage.instance
-          .ref(targetPath)
-          .getDownloadURL();
+        // Once the file upload is complete, get the download URL
+        final downloadUrl = await firebase_storage.FirebaseStorage.instance
+            .ref(targetPath)
+            .getDownloadURL();
 
 
-      setState(() {
-        imagePaths.add(downloadUrl);
-      });
+        setState(() {
+          imagePaths.add(downloadUrl);
+        });
 
-      await FirebaseFirestore.instance.collection('images').add({
-        'url': downloadUrl,
-        'timestamp': timestamp,
-      });
-    } on firebase_storage.FirebaseException {
-      // Handle any errors
+        await FirebaseFirestore.instance.collection('users').doc(userID).collection('images').add({
+        // await FirebaseFirestore.instance.collection('images').add({
+          'url': downloadUrl,
+          'timestamp': timestamp,
+        });
+      } on firebase_storage.FirebaseException {
+        // Handle any errors
+      }
     }
   }
-}
   
   @override
   Widget build(BuildContext context) {

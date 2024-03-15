@@ -170,7 +170,8 @@ class _HomePageState extends State<HomePage> {
                                 builder: (context) => TakePictureScreen(
                                   imagePaths: [], // Pass the imagePaths here
                                   title: gameProvider.games[0].title,
-                                  description: gameProvider.games[0].description,
+                                    description: gameProvider.games[0].description,
+                                    userID: user!.uniqueNumber.toString(),
                                 ),
                               ),
                             );
@@ -189,6 +190,8 @@ class _HomePageState extends State<HomePage> {
                                   imagePaths: [], // Pass the imagePaths here
                                   title: gameProvider.games[1].title,
                                   description: gameProvider.games[1].description,
+                                  userID: user!.uniqueNumber.toString(),
+
                                 ),
                               ),
                             );
@@ -207,6 +210,8 @@ class _HomePageState extends State<HomePage> {
                                   imagePaths: [], // Pass the imagePaths here
                                   title: gameProvider.games[2].title,
                                   description: gameProvider.games[2].description,
+                                  userID: user!.uniqueNumber.toString(),
+
                                 ),
                               ),
                             );
