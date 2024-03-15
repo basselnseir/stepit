@@ -6,29 +6,53 @@ import "package:flutter/foundation.dart";
 import "package:provider/provider.dart";
 
 class Game {
+  String id;
   String title;
   String description;
+  int level;
+  String type;
+  
 
   //constructor
-  Game({required this.title, required this.description});
+  Game({required this.id, required this.title, required this.description, required this.level, required this.type});
 
   // a method to convert a game to a map
   Map<String, dynamic> toMap() {
     return {
+      'id': id,
       'title': title,
       'description': description,
+      'level': level,
+      'type': type,
     };
   }
 
   // a static method to create a game from a map
   Game.fromMap(Map<String, dynamic> map)
-      : title = map['title'],
-        description = map['description'];
+      : id = map['id'],
+        title = map['title'],
+        description = map['description'], 
+        level = map['level'],
+        type = map['type'];
+
+
+  static int stringLevelToInt(String level) {
+    switch (level) {
+      case '1':
+        return 1;
+      case '2':
+        return 2;
+      case '3':
+        return 3;
+      default:
+        throw Exception('Invalid level');
+    }
+  }
 
   // comparing two games
   @override
   bool operator ==(Object other) {
-    return (other is Game) && other.title == title;
+    return (other is Game) && other.id == id;
   }
 
   // hashCode for the game
@@ -37,11 +61,22 @@ class Game {
 
   @override
   String toString() {
-    return 'Game{title: $title, description: $description}';
+    return 'Game{id: $id, title: $title, description: $description, level: $level, type: $type}';
+  }
+  
+  static fromDocument(DocumentSnapshot<Object?> doc) {
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+    return Game(
+      id: doc.id,
+      title: data['title'],
+      description: data['description'],
+      level: stringLevelToInt(data['level']),
+      type: data['type'],
+    );
   }
 }
 
-class Challenge extends Game {
+/* class Challenge extends Game {
   int level;
 
   // constructor
@@ -100,7 +135,7 @@ class Influence extends Game {
     return (other is Influence) && other.title == title && other.world == world;
   }
 }
-
+*/
 class GameProvider extends ChangeNotifier {
   List<Game> _games = [];
 
@@ -112,8 +147,8 @@ class GameProvider extends ChangeNotifier {
   }
 
   Future<void> loadGames(String playerType, int level, BuildContext context) async {
-    DocumentReference docRef;
-    docRef = FirebaseFirestore.instance.collection('Games').doc(playerType);
+   // DocumentReference docRef;
+    // docRef = FirebaseFirestore.instance.collection('Games').doc(playerType);
     String collectionKey;
     if (playerType == 'Challenge') {
       switch (level) {
@@ -147,12 +182,18 @@ class GameProvider extends ChangeNotifier {
       throw Exception('Invalid player type');
     }
 
-    DocumentSnapshot docSnapshot = await docRef.get();
-    Map<String, dynamic>? data = docSnapshot.data() as Map<String, dynamic>?;
-    List<Game> games = [];
+   // DocumentSnapshot docSnapshot = await docRef.get();
+    //Map<String, dynamic>? data = docSnapshot.data() as Map<String, dynamic>?; 
+     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+    .collection('games')
+    .where('type', isEqualTo: playerType).where('level', isEqualTo: level.toString())
+    .get();
+    List<DocumentSnapshot> docs = querySnapshot.docs;
+    List<Game>? games = [];
+    games = docs.map((doc) => Game.fromDocument(doc)).cast<Game>().toList();
 
 
-    if (data != null) {
+   /* if (data != null) {
       if (playerType == 'Challenge') {
           data[collectionKey].forEach((element) {
           games.add(Challenge.fromMap(element, level));
@@ -164,8 +205,8 @@ class GameProvider extends ChangeNotifier {
           });
      
       }
-    }
-    games.shuffle(Random());
+    }*/
+    // games.shuffle(Random());
     Provider.of<GameProvider>(context, listen: false).setGames(games);
     notifyListeners();
   }

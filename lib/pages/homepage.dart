@@ -162,8 +162,8 @@ class _HomePageState extends State<HomePage> {
               Column(
                 children: <Widget>[
                   ElevatedButton(
-                    onPressed: gameProvider.games[0] is Influence
-                        ? () {
+                    onPressed:
+                         () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -174,14 +174,14 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ),
                             );
-                          }
-                        : null, // Disable the button if the game is not an instance of Influence
+                          },
+                         
                     child: Text(gameProvider.games[0].title),
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: gameProvider.games[1] is Influence
-                        ? () {
+                    onPressed:
+                         () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -192,14 +192,14 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ),
                             );
-                          }
-                        : null, // Disable the button if the game is not an instance of Influence
+                          },
+                        
                     child: Text(gameProvider.games[1].title),
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: gameProvider.games[2] is Influence
-                        ? () {
+                    onPressed: 
+                        () {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
@@ -210,8 +210,8 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               ),
                             );
-                          }
-                        : null, // Disable the button if the game is not an instance of Influence
+                          },
+                        
                     child: Text(gameProvider.games[2].title),
                   ),
                 ],
