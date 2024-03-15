@@ -39,6 +39,18 @@ class _StatusPageState extends State<StatusPage> {
             if (data['steps and location'] != null) {
               Map<String, dynamic> stepsAndLocation = data['steps and location'] as Map<String, dynamic>;
 
+<<<<<<< HEAD
+          Map<String, dynamic> data = snapshot.data?.data() as Map<String, dynamic>;
+          Map<String, dynamic> stepsAndLocation = data['steps and location'];
+
+          return ListView(
+            children: stepsAndLocation.entries.map((entry) {
+              String time = entry.key;
+              Map<String, dynamic> details = entry.value;
+              return ListTile(
+                title: Text('Time: $time'),
+                subtitle: Text('Steps: ${details['steps']}, Location: ${details['location'].latitude}, ${details['location'].longitude}'),
+=======
               return ListView(
                 children: stepsAndLocation.entries.map((entry) {
                   String time = entry.key;
@@ -48,6 +60,7 @@ class _StatusPageState extends State<StatusPage> {
                     subtitle: Text('Steps: ${details['steps']}, Location: ${details['location'].latitude}, ${details['location'].longitude}'),
                   );
                 }).toList(),
+>>>>>>> c1e4a96c33486a47259419d4ee97e07bd35fbc47
               );
             }
           }
