@@ -15,19 +15,26 @@ class TakePictureScreen extends StatefulWidget {
   final String title;
   final String description;
   final String userID;
+  final String gameID;
+  
   // ignore: prefer_const_constructors_in_immutables
-  TakePictureScreen({super.key, required this.imagePaths, required this.title, required this.description, required this.userID});
+  TakePictureScreen({super.key, 
+                    required this.imagePaths, 
+                    required this.title, 
+                    required this.description, 
+                    required this.userID, 
+                    required this.gameID});
 
   @override
   // ignore: library_private_types_in_public_api, no_logic_in_create_state
-  _TakePictureScreenState createState() => _TakePictureScreenState(imagePaths, userID);
+  _TakePictureScreenState createState() => _TakePictureScreenState(imagePaths, userID, gameID);
 }
 
 class _TakePictureScreenState extends State<TakePictureScreen> {
   List<String> imagePaths;
   String userID;
-
-  _TakePictureScreenState(this.imagePaths, this.userID);
+  final String gameID;
+  _TakePictureScreenState(this.imagePaths, this.userID, this.gameID);
 
   late Stream<StepCount> _stepCountStream;
   String _steps = '0';
@@ -45,7 +52,12 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
   }
 
 void _loadImagePaths() async {
-  final querySnapshot = await FirebaseFirestore.instance.collection('users').doc(userID).collection('images').get();
+  final querySnapshot = await FirebaseFirestore.instance.collection('users')
+                                                          .doc(userID)
+                                                          .collection('images')
+                                                          .doc(gameID)
+                                                          .collection('game_images')
+                                                          .get();
   final urls = querySnapshot.docs.map((doc) => doc.data()['url']).toList();
   setState(() {
     imagePaths = List<String>.from(urls);
@@ -113,8 +125,12 @@ void _loadImagePaths() async {
           imagePaths.add(downloadUrl);
         });
 
-        await FirebaseFirestore.instance.collection('users').doc(userID).collection('images').add({
-        // await FirebaseFirestore.instance.collection('images').add({
+        await FirebaseFirestore.instance.collection('users')
+                                          .doc(userID)
+                                          .collection('images')
+                                          .doc(gameID)
+                                          .collection('game_images')
+                                          .add({
           'url': downloadUrl,
           'timestamp': timestamp,
         });

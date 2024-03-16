@@ -171,7 +171,8 @@ class _HomePageState extends State<HomePage> {
                                   imagePaths: [], // Pass the imagePaths here
                                   title: gameProvider.games[0].title,
                                     description: gameProvider.games[0].description,
-                                    userID: user!.uniqueNumber.toString(),
+                                    userID: user!.uniqueNumber.toString(), 
+                                    gameID: gameProvider.games[0].id,
                                 ),
                               ),
                             );
@@ -190,7 +191,8 @@ class _HomePageState extends State<HomePage> {
                                   imagePaths: [], // Pass the imagePaths here
                                   title: gameProvider.games[1].title,
                                   description: gameProvider.games[1].description,
-                                  userID: user!.uniqueNumber.toString(),
+                                  userID: user!.uniqueNumber.toString(), 
+                                  gameID: gameProvider.games[1].id,
 
                                 ),
                               ),
@@ -210,7 +212,8 @@ class _HomePageState extends State<HomePage> {
                                   imagePaths: [], // Pass the imagePaths here
                                   title: gameProvider.games[2].title,
                                   description: gameProvider.games[2].description,
-                                  userID: user!.uniqueNumber.toString(),
+                                  userID: user!.uniqueNumber.toString(), 
+                                  gameID: gameProvider.games[2].id,
 
                                 ),
                               ),
