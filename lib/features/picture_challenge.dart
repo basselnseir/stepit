@@ -8,7 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'globals.dart';
-
+import 'package:intl/intl.dart';
 
 class TakePictureScreen extends StatefulWidget {
   final List<String> imagePaths;
@@ -40,29 +40,29 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
   String _steps = '0';
   int _initialSteps = 0;
   bool started = false;
+  String? enlargedImagePath;
 
   @override
   void initState() {
     super.initState();
     initPlatformState();
     _requestPermission();
-        userID = userID.padLeft(6, '0');
-
+    userID = userID.padLeft(6, '0');
     _loadImagePaths();
   }
 
-void _loadImagePaths() async {
-  final querySnapshot = await FirebaseFirestore.instance.collection('users')
+  void _loadImagePaths() async {
+    final querySnapshot = await FirebaseFirestore.instance.collection('users')
                                                           .doc(userID)
                                                           .collection('images')
                                                           .doc(gameID)
                                                           .collection('game_images')
                                                           .get();
-  final urls = querySnapshot.docs.map((doc) => doc.data()['url']).toList();
-  setState(() {
-    imagePaths = List<String>.from(urls);
-  });
-}
+    final urls = querySnapshot.docs.map((doc) => doc.data()['url']).toList();
+    setState(() {
+      imagePaths = List<String>.from(urls);
+    });
+  }
 
   void _requestPermission() async {
     if (await Permission.activityRecognition.request().isGranted) {
@@ -139,6 +139,33 @@ void _loadImagePaths() async {
       }
     }
   }
+
+void _enlargeImage(String imagePath) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20), // Change this value to change the border radius
+        ),
+        child: GestureDetector(
+          onTap: _closeEnlarged,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Image.network(
+              imagePath,
+              fit: BoxFit.scaleDown,
+            ),
+          ),
+        ),
+      );
+    },
+  );
+}
+
+void _closeEnlarged() {
+  Navigator.of(context).pop();
+}
   
   @override
   Widget build(BuildContext context) {
@@ -173,22 +200,43 @@ void _loadImagePaths() async {
                     var dateTime = DateTime.fromMillisecondsSinceEpoch(int.parse(url.split('_').last.split('.').first));
 
                     return TableRow(children: [
-                      Card(
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              height: 100, // Set the height of the image
-                              width: 100, // Set the width of the image
-                              child: Image.network(url, fit: BoxFit.contain),
-                            ),
-                            const SizedBox(width: 10),
-                            Text(dateTime.toString()), // Display the date and time
-                          ],
+                      GestureDetector(
+                        onTap: () => _enlargeImage(url),
+                        child: Card(
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                height: 100, // Set the height of the image
+                                width: 100, // Set the width of the image
+                                child: Image.network(url, fit: BoxFit.contain),
+                              ),
+                              const SizedBox(width: 10),
+                              Text(
+                                DateFormat('dd/MM/yyyy').format(dateTime) + '\n' + DateFormat('HH:mm').format(dateTime),
+                                style: TextStyle(fontSize: 20), // Change the value to your desired font size
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ]);
                   }).toList(),
                 ),
+                if (enlargedImagePath != null)
+                  GestureDetector(
+                    onTap: _closeEnlarged,
+                    child: Container(
+                      color: Colors.black.withOpacity(0.7),
+                      child: Center(
+                        child: Image.network(
+                          enlargedImagePath!,
+                          fit: BoxFit.contain,
+                          height: MediaQuery.of(context).size.height * 0.8,
+                          width: MediaQuery.of(context).size.width * 0.8,
+                        ),
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),
