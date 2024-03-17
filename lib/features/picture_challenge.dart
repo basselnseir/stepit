@@ -140,32 +140,32 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
     }
   }
 
-void _enlargeImage(String imagePath) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20), // Change this value to change the border radius
-        ),
-        child: GestureDetector(
-          onTap: _closeEnlarged,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(20),
-            child: Image.network(
-              imagePath,
-              fit: BoxFit.scaleDown,
+  void _enlargeImage(String imagePath) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20), // Change this value to change the border radius
+          ),
+          child: GestureDetector(
+            onTap: _closeEnlarged,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(20),
+              child: Image.network(
+                imagePath,
+                fit: BoxFit.scaleDown,
+              ),
             ),
           ),
-        ),
-      );
-    },
-  );
-}
+        );
+      },
+    );
+  }
 
-void _closeEnlarged() {
-  Navigator.of(context).pop();
-}
+  void _closeEnlarged() {
+    Navigator.of(context).pop();
+  }
   
   @override
   Widget build(BuildContext context) {
