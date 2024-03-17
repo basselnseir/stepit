@@ -45,6 +45,7 @@ class _StatusPageState extends State<StatusPage> {
                   Map<String, dynamic> details = entry.value;
                   return ListTile(
                     title: Text('Time: $time'),
+                    //subtitle: Text('Steps: ${details['steps']}'),
                     subtitle: Text('Steps: ${details['steps']}, Location: ${details['location'].latitude}, ${details['location'].longitude}'),
                   );
                 }).toList(),

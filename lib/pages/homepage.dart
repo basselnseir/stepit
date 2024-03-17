@@ -162,61 +162,83 @@ class _HomePageState extends State<HomePage> {
               Column(
                 children: <Widget>[
                   ElevatedButton(
-                    onPressed:
-                         () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => TakePictureScreen(
-                                  imagePaths: [], // Pass the imagePaths here
-                                  title: gameProvider.games[0].title,
-                                    description: gameProvider.games[0].description,
-                                    userID: user!.uniqueNumber.toString(),
-                                ),
-                              ),
-                            );
-                          },
-                         
+                    onPressed: () {
+                      if (user!.gameType == 'Influence') {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => TakePictureScreen(
+                              imagePaths: [], // Pass the imagePaths here
+                              title: gameProvider.games[0].title,
+                              description: gameProvider.games[0].description,
+                              userID: user!.uniqueNumber.toString(),
+                            ),
+                          ),
+                        );
+                      } else {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                StatusPage(), // Replace with your other screen
+                          ),
+                        );
+                      }
+                    },
                     child: Text(gameProvider.games[0].title),
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed:
-                         () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => TakePictureScreen(
-                                  imagePaths: [], // Pass the imagePaths here
-                                  title: gameProvider.games[1].title,
-                                  description: gameProvider.games[1].description,
-                                  userID: user!.uniqueNumber.toString(),
-
-                                ),
-                              ),
-                            );
-                          },
-                        
+                    onPressed: () {
+                      if (user!.gameType == 'Influence') {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => TakePictureScreen(
+                              imagePaths: [], // Pass the imagePaths here
+                              title: gameProvider.games[1].title,
+                              description: gameProvider.games[1].description,
+                              userID: user!.uniqueNumber.toString(),
+                            ),
+                          ),
+                        );
+                      } else {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                StatusPage(), // Replace with your other screen
+                          ),
+                        );
+                      }
+                    },
                     child: Text(gameProvider.games[1].title),
                   ),
                   const SizedBox(height: 20),
                   ElevatedButton(
-                    onPressed: 
-                        () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => TakePictureScreen(
-                                  imagePaths: [], // Pass the imagePaths here
-                                  title: gameProvider.games[2].title,
-                                  description: gameProvider.games[2].description,
-                                  userID: user!.uniqueNumber.toString(),
-
-                                ),
-                              ),
-                            );
-                          },
-                        
+                    onPressed: () {
+                      if (user!.gameType == 'Influence') {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => TakePictureScreen(
+                              imagePaths: [], // Pass the imagePaths here
+                              title: gameProvider.games[2].title,
+                              description: gameProvider.games[2].description,
+                              userID: user!.uniqueNumber.toString(),
+                            ),
+                          ),
+                        );
+                      } else {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                StatusPage(), // Replace with your other screen
+                          ),
+                        );
+                      }
+                    },
                     child: Text(gameProvider.games[2].title),
                   ),
                 ],

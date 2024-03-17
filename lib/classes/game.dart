@@ -4,6 +4,7 @@ import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/cupertino.dart";
 import "package:flutter/foundation.dart";
 import "package:provider/provider.dart";
+import "package:shared_preferences/shared_preferences.dart";
 
 class Game {
   String id;
@@ -76,6 +77,52 @@ class Game {
   }
 }
 
+class GameProvider extends ChangeNotifier {
+  List<Game> _games = [];
+
+  List<Game> get games => _games;
+
+  void setGames(List<Game> games) {
+    _games = games;
+    notifyListeners();
+  }
+
+  Future<void> loadGames(String playerType, int level, BuildContext context) async {
+     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+    .collection('games')
+    .where('type', isEqualTo: playerType).where('level', isEqualTo: level.toString())
+    .get();
+    List<DocumentSnapshot> docs = querySnapshot.docs;
+    List<Game>? games = [];
+    games = docs.map((doc) => Game.fromDocument(doc)).cast<Game>().toList();
+
+    // Get today's games
+    List<Game> todaysGames = await getTodaysGames(games);
+
+    Provider.of<GameProvider>(context, listen: false).setGames(todaysGames);
+    notifyListeners();
+  }
+
+    Future<List<Game>> getTodaysGames(List<Game> allGames) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? storedDate = prefs.getString('date');
+    String today = DateTime.now().toIso8601String().split('T')[0];
+
+    if (storedDate != today) {
+      allGames.shuffle();
+      List<Game> games = allGames.take(3).toList();
+      List<String> gameIds = games.map((game) => game.id).toList();
+      await prefs.setString('date', today);
+      await prefs.setStringList('gameIds', gameIds);
+      return games;
+    } else {
+      List<String> storedGameIds = prefs.getStringList('gameIds') ?? [];
+      return allGames.where((game) => storedGameIds.contains(game.id)).toList();
+    }
+  }
+}
+
+
 /* class Challenge extends Game {
   int level;
 
@@ -136,20 +183,12 @@ class Influence extends Game {
   }
 }
 */
-class GameProvider extends ChangeNotifier {
-  List<Game> _games = [];
 
-  List<Game> get games => _games;
 
-  void setGames(List<Game> games) {
-    _games = games;
-    notifyListeners();
-  }
-
-  Future<void> loadGames(String playerType, int level, BuildContext context) async {
+  /*Future<void> loadGames(String playerType, int level, BuildContext context) async {
    // DocumentReference docRef;
     // docRef = FirebaseFirestore.instance.collection('Games').doc(playerType);
-    String collectionKey;
+   /* String collectionKey;
     if (playerType == 'Challenge') {
       switch (level) {
         case 1:
@@ -180,7 +219,7 @@ class GameProvider extends ChangeNotifier {
       }
     } else {
       throw Exception('Invalid player type');
-    }
+    }*/
 
    // DocumentSnapshot docSnapshot = await docRef.get();
     //Map<String, dynamic>? data = docSnapshot.data() as Map<String, dynamic>?; 
@@ -210,4 +249,4 @@ class GameProvider extends ChangeNotifier {
     Provider.of<GameProvider>(context, listen: false).setGames(games);
     notifyListeners();
   }
-}
+}*/

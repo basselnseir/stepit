@@ -12,6 +12,8 @@ import 'package:geolocator/geolocator.dart';
 
 
 
+
+
 class StepsTracker {
   // late Pedometer _pedometer;
   // static Stream<StepCount> stepCountStream = Pedometer.stepCountStream;
@@ -38,7 +40,7 @@ void startStepsTracking () async {
   }
 
   // Save steps the first time
-  // await setAndSaveSteps(firstTime: true);
+   await setAndSaveSteps();
 
   // Register the callback dispatcher
   StepsTracker.wm.initialize(
@@ -100,7 +102,8 @@ Future<int> getSteps() async {
 
 Future<void> saveStepsToFirebase(int steps) async {
   String date = DateFormat('yyyy-MM-dd').format(DateTime.now());
-  String time = DateFormat('HH:mm:ss').format(DateTime.now());
+  //String time = DateFormat('HH:mm:ss').format(DateTime.now());
+  String time = FieldValue.serverTimestamp().toString();
   int un = await DataBase.getUserId();
 
   // Get the location
@@ -130,3 +133,14 @@ Future<void> saveStepsToFirebase(int steps) async {
   }, SetOptions(merge: true));
 
 }
+
+
+
+
+
+
+
+
+
+
+

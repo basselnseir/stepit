@@ -116,7 +116,8 @@ class _IdentificationPageState extends State<IdentificationPage> {
                 onPressed: connectionState
                     ? () {
                         _saveToFirestore(context);
-                        loadUser(context).then((_) => startStepsTracking());
+                        startStepsTracking();
+                        //loadUser(context).then((_) => startStepsTracking());
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => HomePage()),
