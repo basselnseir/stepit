@@ -105,7 +105,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
     logEvent_('user took a picture in take_picture_challenge');
     if (pickedFile != null) {
       final timestamp = DateTime.now().millisecondsSinceEpoch;
-      final targetPath = "images/image_$timestamp.jpg";
+      final targetPath = "images/$userID/image_$timestamp.jpg";
       final file = File(pickedFile.path);
       try {
         
