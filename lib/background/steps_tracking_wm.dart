@@ -23,6 +23,8 @@ final class MapEntryLinkedList extends LinkedListEntry<MapEntryLinkedList> {
 }
 
 
+
+
 class StepsTracker {
   // late Pedometer _pedometer;
   // static Stream<StepCount> stepCountStream = Pedometer.stepCountStream;
@@ -51,7 +53,7 @@ void startStepsTracking () async {
   }
 
   // Save steps the first time
-  // await setAndSaveSteps(firstTime: true);
+   await setAndSaveSteps();
 
   // Register the callback dispatcher
   StepsTracker.wm.initialize(

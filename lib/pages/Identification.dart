@@ -96,7 +96,15 @@ class _IdentificationPageState extends State<IdentificationPage> {
                 future: _uniqueNumber,
                 builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const CircularProgressIndicator();
+                    return  const Center(
+                      child: SizedBox(
+                        width: 50.0,
+                        height: 50.0,
+                        child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                        ),
+                      ),
+                    );
                   } else {
                     connectionState = true;
                     return Text('Unique number: ${snapshot.data.toString().padLeft(6, '0')}');
@@ -108,7 +116,8 @@ class _IdentificationPageState extends State<IdentificationPage> {
                 onPressed: connectionState
                     ? () {
                         _saveToFirestore(context);
-                        loadUser(context).then((_) => startStepsTracking());
+                        startStepsTracking();
+                        //loadUser(context).then((_) => startStepsTracking());
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => HomePage()),

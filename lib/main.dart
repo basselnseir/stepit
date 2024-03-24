@@ -9,17 +9,28 @@ import 'package:stepit/classes/user.dart';
 import 'package:stepit/pages/agreement.dart';
 import 'package:stepit/pages/homepage.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:workmanager/workmanager.dart';
 import 'firebase_options.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:floating/floating.dart';
 import 'dart:math';
 
+// import 'package:stepit/background/steps_tracking.dart';
 //final userProviderKey = GlobalKey();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
+  );
+    await Workmanager().initialize(
+    callbackDispatcher,
+    isInDebugMode: true,
+  );
+  await Workmanager().registerPeriodicTask(
+    '1',
+    'stepCountTask',
+    frequency: Duration(minutes: 15),
   );
   SharedPreferences prefs = await SharedPreferences.getInstance();
   bool isFirstTime = prefs.getBool('first_time') ?? true;
