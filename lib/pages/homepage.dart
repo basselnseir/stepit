@@ -1,28 +1,61 @@
-// ignore_for_file: library_private_types_in_public_api
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:stepit/classes/pip_mode_notifier.dart';
 import 'package:stepit/classes/user.dart';
 import 'package:stepit/classes/game.dart';
 import 'package:stepit/pages/status.dart';
+
 
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     //DataBase.loadUser();
     //SharedPreferences prefs =  SharedPreferences.getInstance() as SharedPreferences;
   }
 
   @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    final pipModeNotifier = Provider.of<PipModeNotifier>(context, listen: false);
+    pipModeNotifier.floating.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState lifecycleState) {
+    final pipModeNotifier = Provider.of<PipModeNotifier>(context, listen: false);
+    if (lifecycleState == AppLifecycleState.inactive) {
+      pipModeNotifier.enablePip(context);
+      pipModeNotifier.inPipMode = true;
+    }
+    if (lifecycleState == AppLifecycleState.resumed && pipModeNotifier.inPipMode) {
+      setState(() {
+        pipModeNotifier.inPipMode = false;
+      });
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+
+    final pipModeNotifier = Provider.of<PipModeNotifier>(context, listen: false);
+  // final pipModeNotifier = Provider.of<PipModeNotifier>(context);
+
+
+    if (pipModeNotifier.inPipMode){
+      return pipModeNotifier.setPipModeImg();
+    }
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
         final double screenWidth = MediaQuery.of(context).size.width;
@@ -46,7 +79,7 @@ class _HomePageState extends State<HomePage> {
         future: loadUser(context),
         builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
+            return const CircularProgressIndicator();
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else {
@@ -71,7 +104,7 @@ class _HomePageState extends State<HomePage> {
         future: gameProvider.loadGames(user.gameType, user.level, context),
         builder: (BuildContext context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();
+            return const CircularProgressIndicator();
           } else if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
           } else {
@@ -110,7 +143,7 @@ class _HomePageState extends State<HomePage> {
               padding: EdgeInsets.zero,
               children: <Widget>[
                 ListTile(
-                  title: Text('Status'),
+                  title: const Text('Status'),
                   onTap: () {
                     Navigator.push(
                       context,
@@ -118,6 +151,13 @@ class _HomePageState extends State<HomePage> {
                     );
                   },
                 ),
+                // ListTile(
+                //   title: Text('PiP mode'),
+                //   onTap: () async {
+                //     enablePip(context);
+                //     inPipMode = true;
+                //   },
+                // ),
                 // Add more ListTiles for more pages
               ],
             ),

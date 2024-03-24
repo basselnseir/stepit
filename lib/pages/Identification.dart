@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
-import "package:stepit/background/steps_tracking.dart";
+import "package:stepit/background/steps_tracking_wm.dart";
 import 'package:stepit/classes/database.dart';
 import 'package:stepit/pages/homepage.dart';
 import 'package:stepit/classes/user.dart';
