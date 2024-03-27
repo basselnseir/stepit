@@ -7,7 +7,7 @@ import 'package:stepit/classes/user.dart';
 import 'package:stepit/classes/game.dart';
 import 'package:stepit/features/picture_challenge.dart';
 import 'package:stepit/pages/status.dart';
-
+import 'package:stepit/features/km_challenge.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -210,7 +210,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                           context,
                           MaterialPageRoute(
                             builder: (context) => TakePictureScreen(
-                              imagePaths: [], // Pass the imagePaths here
+                              imagePaths: [],
                               title: gameProvider.games[0].title,
                               description: gameProvider.games[0].description,
                               userID: user!.uniqueNumber.toString(),
@@ -223,7 +223,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                           context,
                           MaterialPageRoute(
                             builder: (context) =>
-                                StatusPage(), // Replace with your other screen
+                                KMChallengePage(title: gameProvider.games[0].title,
+                                                    description: gameProvider.games[0].description),
                           ),
                         );
                       }
