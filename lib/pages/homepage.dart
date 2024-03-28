@@ -99,7 +99,15 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             if (user != null) {
               Provider.of<UserProvider>(context, listen: false).setUser(user!);
             } else {
-              return const Text('No user data');
+              return const Center(
+              child: SizedBox(
+                width: 50.0,
+                height: 50.0,
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+              ),
+            );
             }
           }
           return Container();
