@@ -54,7 +54,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
   void _loadImagePaths() async {
     final querySnapshot = await FirebaseFirestore.instance.collection('users')
                                                           .doc(userID)
-                                                          .collection('images')
+                                                          .collection('userGames')
                                                           .doc(gameID)
                                                           .collection('game_images')
                                                           .get();
@@ -127,7 +127,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
 
         await FirebaseFirestore.instance.collection('users')
                                           .doc(userID)
-                                          .collection('images')
+                                          .collection('userGames')
                                           .doc(gameID)
                                           .collection('game_images')
                                           .add({

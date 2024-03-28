@@ -109,7 +109,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
     if (gameProvider.games.isEmpty && user != null) {
       FutureBuilder(
-        future: gameProvider.loadGames(user.gameType, user.level, context),
+        future: gameProvider.loadGames(user, context),
         builder: (BuildContext context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
