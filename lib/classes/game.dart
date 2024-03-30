@@ -13,7 +13,12 @@ class Game {
   String description;
   int level;
   String type;
-  
+  /*
+  TODO:
+        Add a field for the date the game was picked.
+        Add a field for checking if the player entered the game.
+        Add a field for checking if the player has finished the game.
+ */
 
   //constructor
   Game({required this.id, required this.title, required this.description, required this.level, required this.type});

@@ -2,9 +2,12 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:stepit/challenges/game_01_steps.dart';
+import 'package:stepit/challenges/game_02_speed.dart';
 import 'package:stepit/classes/pip_mode_notifier.dart';
 import 'package:stepit/classes/user.dart';
 import 'package:stepit/classes/game.dart';
+import 'package:stepit/features/challenge_tile.dart';
 import 'package:stepit/features/picture_challenge.dart';
 import 'package:stepit/pages/status.dart';
 import 'package:stepit/features/km_challenge.dart';
@@ -178,6 +181,27 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                     Navigator.push(
                       context,
                       MaterialPageRoute(builder: (context) => StatusPage()),
+                    );
+                  },
+                ),
+
+              ListTile(
+                  title: const Text('Game_01'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ChallengePage(game: gameProvider.games[0])),
+                      
+                    );
+                  },
+                ),
+                
+                ListTile(
+                  title: const Text('Game_02'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Game_02_speed()),
                     );
                   },
                 ),
