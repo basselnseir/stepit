@@ -12,6 +12,7 @@ class _Game_02_speed extends State<Game_02_speed> {
   Timer? _timer;
   int _timeRemaining = 15 * 60; // 15 minutes in seconds
   int _stepCount = 0;
+  int _initialStepCount = 0;
   double _speed = 0.0;
   bool _challengeStarted = false;
   DateTime? _startTime;
@@ -39,16 +40,28 @@ class _Game_02_speed extends State<Game_02_speed> {
 
     final stepCounter =
         Provider.of<StepCounterProvider>(context, listen: false);
-    print('memormeret');
+    _initialStepCount = stepCounter.stepCount; // Save the initial step count
+
+    int previousStepCount = _initialStepCount;
+    DateTime previousTime = DateTime.now();
     stepCounter.stepCountStream.listen((stepCount) {
-      print('New step count: $stepCount');
-      final timeElapsed = DateTime.now().difference(_startTime!).inSeconds;
+      final challengeStepCount = stepCount - _initialStepCount;
       setState(() {
-        _stepCount = stepCount;
-        if (timeElapsed > 0) {
-          _speed = _stepCount / timeElapsed;
-        }
+        _stepCount = challengeStepCount;
       });
+
+      final currentTime = DateTime.now();
+      final timeInterval = currentTime.difference(previousTime).inSeconds;
+      if (timeInterval > 0) {
+        final currentSpeed =
+            (challengeStepCount - previousStepCount) / timeInterval;
+        setState(() {
+         // _stepCount = challengeStepCount;
+          _speed = currentSpeed;
+        });
+      }
+      previousStepCount = challengeStepCount;
+      previousTime = currentTime;
     });
   }
 

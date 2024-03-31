@@ -11,7 +11,7 @@ class ChallengePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(game.title),
+        title: Text("7500 Steps Challenge"),
       ),
       body:Padding(
         padding: const EdgeInsets.all(20),
@@ -21,7 +21,7 @@ class ChallengePage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  game.description,
+                  "Your challenge is to walk at least 7000 steps today",
                   style: TextStyle(fontSize: 20),
                 ),
                 const SizedBox(height: 20),

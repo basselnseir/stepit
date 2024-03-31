@@ -19,6 +19,7 @@ class StepCounterProvider with ChangeNotifier {
       (StepCount event) {
         print('Received step count event: $event');  // Add this line
         _stepCount = event.steps;
+        _stepCountController.add(_stepCount);
         notifyListeners();
       },
       onError: (error) {

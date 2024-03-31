@@ -205,6 +205,16 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                     );
                   },
                 ),
+                ListTile(
+                  title: const Text('Game_03'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) =>KMChallengePage(title: "3 km Challenge",
+                                                    description: "Your challenge is to walk for 3 kilometers in a row.")),
+                    );
+                  },
+                ),
                 // ListTile(
                 //   title: Text('PiP mode'),
                 //   onTap: () async {
