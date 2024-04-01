@@ -6,6 +6,7 @@ import 'package:stepit/classes/pip_mode_notifier.dart';
 import 'package:stepit/classes/database.dart';
 import 'package:stepit/classes/game.dart';
 import 'package:stepit/classes/user.dart';
+import 'package:stepit/features/step_count.dart';
 import 'package:stepit/pages/agreement.dart';
 import 'package:stepit/pages/homepage.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -39,6 +40,7 @@ void main() async {
   
   runApp(MultiProvider(
     providers: [
+      ChangeNotifierProvider(create: (context) => StepCounterProvider()),
       ChangeNotifierProvider(create: (context) => UserProvider()),
       ChangeNotifierProvider(create: (context) => GameProvider()),
       ChangeNotifierProvider(create: (context) => PipModeNotifier()),

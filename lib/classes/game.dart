@@ -6,6 +6,7 @@ import "package:flutter/foundation.dart";
 import "package:flutter/material.dart";
 import "package:provider/provider.dart";
 import "package:shared_preferences/shared_preferences.dart";
+import "package:stepit/classes/user.dart";
 
 class Game {
   String id;
@@ -13,7 +14,12 @@ class Game {
   String description;
   int level;
   String type;
-  
+  /*
+  TODO:
+        Add a field for the date the game was picked.
+        Add a field for checking if the player entered the game.
+        Add a field for checking if the player has finished the game.
+ */
 
   //constructor
   Game({required this.id, required this.title, required this.description, required this.level, required this.type});
@@ -125,23 +131,26 @@ class GameProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> loadGames(String playerType, int level, BuildContext context) async {
+  Future<void> loadGames(User user, BuildContext context) async {
      QuerySnapshot querySnapshot = await FirebaseFirestore.instance
     .collection('games')
-    .where('type', isEqualTo: playerType).where('level', isEqualTo: level.toString())
+    .where('type', isEqualTo: user.gameType).where('level', isEqualTo: user.level.toString())
     .get();
     List<DocumentSnapshot> docs = querySnapshot.docs;
     List<Game>? games = [];
     games = docs.map((doc) => Game.fromDocument(doc)).cast<Game>().toList();
 
     // Get today's games
-    List<Game> todaysGames = await getTodaysGames(games);
+    List<Game> todaysGames = await getTodaysGames(games, user);
+
+    // Save today's games to the user's collection
+    //await saveTodaysGames(todaysGames, user);
 
     Provider.of<GameProvider>(context, listen: false).setGames(todaysGames);
     notifyListeners();
   }
 
-    Future<List<Game>> getTodaysGames(List<Game> allGames) async {
+    Future<List<Game>> getTodaysGames(List<Game> allGames, User user) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? storedDate = prefs.getString('date');
     String today = DateTime.now().toIso8601String().split('T')[0];
@@ -152,6 +161,7 @@ class GameProvider extends ChangeNotifier {
       List<String> gameIds = games.map((game) => game.id).toList();
       await prefs.setString('date', today);
       await prefs.setStringList('gameIds', gameIds);
+      await saveTodaysGames(games, user);
       return games;
     } else {
       List<String> storedGameIds = prefs.getStringList('gameIds') ?? [];
@@ -160,7 +170,17 @@ class GameProvider extends ChangeNotifier {
   }
 }
 
+Future<void> saveTodaysGames(List<Game> games, User user) async {
+  String today = DateTime.now().toIso8601String().split('T')[0];
+  CollectionReference userGames = FirebaseFirestore.instance.collection('users')
+                                          .doc(user.uniqueNumber.toString().padLeft(6, '0'))
+                                          .collection('userGames');
+                                          
 
+  for (var game in games) {
+    await userGames.doc(game.id).set(game.toMap()..addAll({'Date': today}));
+  }
+}
 /* class Challenge extends Game {
   int level;
 

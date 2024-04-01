@@ -2,12 +2,15 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:stepit/challenges/game_01_steps.dart';
+import 'package:stepit/challenges/game_02_speed.dart';
 import 'package:stepit/classes/pip_mode_notifier.dart';
 import 'package:stepit/classes/user.dart';
 import 'package:stepit/classes/game.dart';
+import 'package:stepit/features/challenge_tile.dart';
 import 'package:stepit/features/picture_challenge.dart';
 import 'package:stepit/pages/status.dart';
-
+import 'package:stepit/features/km_challenge.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -99,7 +102,15 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             if (user != null) {
               Provider.of<UserProvider>(context, listen: false).setUser(user!);
             } else {
-              return const Text('No user data');
+              return const Center(
+              child: SizedBox(
+                width: 50.0,
+                height: 50.0,
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+              ),
+            );
             }
           }
           return Container();
@@ -109,7 +120,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
     if (gameProvider.games.isEmpty && user != null) {
       FutureBuilder(
-        future: gameProvider.loadGames(user.gameType, user.level, context),
+        future: gameProvider.loadGames(user, context),
         builder: (BuildContext context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
@@ -173,6 +184,37 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                     );
                   },
                 ),
+
+              ListTile(
+                  title: const Text('Game_01'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ChallengePage(game: gameProvider.games[0])),
+                      
+                    );
+                  },
+                ),
+                
+                ListTile(
+                  title: const Text('Game_02'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Game_02_speed()),
+                    );
+                  },
+                ),
+                ListTile(
+                  title: const Text('Game_03'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) =>KMChallengePage(title: "3 km Challenge",
+                                                    description: "Your challenge is to walk for 3 kilometers in a row.")),
+                    );
+                  },
+                ),
                 // ListTile(
                 //   title: Text('PiP mode'),
                 //   onTap: () async {
@@ -226,7 +268,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  StatusPage(), // Replace with your other screen
+                                  KMChallengePage(title: gameProvider.games[0].title,
+                                                    description: gameProvider.games[0].description),
                             ),
                           );
                         }
@@ -266,7 +309,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  StatusPage(), // Replace with your other screen
+                                  KMChallengePage(title: gameProvider.games[1].title,
+                                                    description: gameProvider.games[1].description),
                             ),
                           );
                         }
@@ -306,7 +350,8 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  StatusPage(), // Replace with your other screen
+                                  KMChallengePage(title: gameProvider.games[2].title,
+                                                    description: gameProvider.games[2].description),
                             ),
                           );
                         }
