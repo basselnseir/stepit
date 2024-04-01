@@ -78,6 +78,16 @@ flutter:
 
   assets:
       - lib\images\walking_sausage.gif
+      - lib\images\footsteps.png
+      - lib\images\15.png
+      - lib\images\one-hour.png
+      - lib\images\number-3.png
+      - lib\images\stairs.png
+      - lib\images\sidewalk.png
+      - lib\images\students.png
+      - lib\images\bus-stop.png
+      - lib\images\street-light.png
+      - lib\images\park.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
