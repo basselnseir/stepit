@@ -235,10 +235,12 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               const SizedBox(height: 30),
               const Center(
                 child: Text(
-                  'Choose one of the following challenges',
+                  'CHALLENGES',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 30,
+                    fontSize: 40,
+                    fontFamily: 'Roboto', // Change to your preferred font
+                    fontWeight: FontWeight.bold, // Make the text bold
                   ),
                 ),
               ),
@@ -247,7 +249,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 children: <Widget>[
                   Card(
                     margin: const EdgeInsets.all(8.0), // Add some margin if you want
-                    color: const Color.fromARGB(255, 43, 180, 97),
+                    color: Color.fromARGB(255, 103, 187, 136),
                     child: ListTile(
                       onTap: () {
                         if (user!.gameType == 'Influence') {
@@ -288,7 +290,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   const SizedBox(height: 20),
                   Card(
                     margin: const EdgeInsets.all(8.0), // Add some margin if you want
-                    color: const Color.fromARGB(255, 43, 180, 97),
+                    color: Color.fromARGB(255, 53, 182, 105),
                     child: ListTile(
                       onTap: () {
                         if (user!.gameType == 'Influence') {
@@ -329,7 +331,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   const SizedBox(height: 20),
                   Card(
                     margin: const EdgeInsets.all(8.0), // Add some margin if you want
-                    color: const Color.fromARGB(255, 43, 180, 97),
+                    color: Color.fromARGB(255, 16, 181, 82),
                     child: ListTile(
                       onTap: () {
                         if (user!.gameType == 'Influence') {
