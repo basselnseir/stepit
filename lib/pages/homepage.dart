@@ -210,7 +210,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) =>KMChallengePage(title: "3 km Challenge",
+                      MaterialPageRoute(builder: (context) => const KMChallengePage(title: "3 km Challenge",
                                                     description: "Your challenge is to walk for 3 kilometers in a row.")),
                     );
                   },
@@ -235,99 +235,139 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               const SizedBox(height: 30),
               const Center(
                 child: Text(
-                  'Choose one of the following challenges',
+                  'CHALLENGES',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 30,
+                    fontSize: 40,
+                    fontFamily: 'Roboto', // Change to your preferred font
+                    fontWeight: FontWeight.bold, // Make the text bold
                   ),
                 ),
               ),
               const SizedBox(height: 70),
               Column(
                 children: <Widget>[
-                  ElevatedButton(
-                    onPressed: () {
-                      if (user!.gameType == 'Influence') {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => TakePictureScreen(
-                              imagePaths: [],
-                              title: gameProvider.games[0].title,
-                              description: gameProvider.games[0].description,
-                              userID: user!.uniqueNumber.toString(),
-                              gameID: gameProvider.games[0].id,
+                  Card(
+                    margin: const EdgeInsets.all(8.0), // Add some margin if you want
+                    color: Color.fromARGB(255, 103, 187, 136),
+                    child: ListTile(
+                      onTap: () {
+                        if (user!.gameType == 'Influence') {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TakePictureScreen(
+                                imagePaths: [], // Pass the imagePaths here
+                                title: gameProvider.games[0].title,
+                                description: gameProvider.games[0].description,
+                                userID: user!.uniqueNumber.toString(),
+                                gameID: gameProvider.games[0].id,
+                              ),
                             ),
-                          ),
-                        );
-                      } else {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                KMChallengePage(title: gameProvider.games[0].title,
+                          );
+                        } else {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  KMChallengePage(title: gameProvider.games[0].title,
                                                     description: gameProvider.games[0].description),
-                          ),
-                        );
-                      }
-                    },
-                    child: Text(gameProvider.games[0].title),
+                            ),
+                          );
+                        }
+                      },
+                      title: Text(
+                        gameProvider.games[0].title,
+                        style: const TextStyle(
+                          fontSize: 20.0, // Adjust the font size as needed
+                          fontFamily: 'Roboto', // Change to your preferred font
+                          fontWeight: FontWeight.bold, // Make the text bold
+                        ),
+                      ),
+                      trailing: Game.getGameIcon(gameProvider.games[0].title), // Add your icon here
+                    ),
                   ),
                   const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (user!.gameType == 'Influence') {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => TakePictureScreen(
-                              imagePaths: [], // Pass the imagePaths here
-                              title: gameProvider.games[1].title,
-                              description: gameProvider.games[1].description,
-                              userID: user!.uniqueNumber.toString(),
-                              gameID: gameProvider.games[1].id,
+                  Card(
+                    margin: const EdgeInsets.all(8.0), // Add some margin if you want
+                    color: Color.fromARGB(255, 53, 182, 105),
+                    child: ListTile(
+                      onTap: () {
+                        if (user!.gameType == 'Influence') {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TakePictureScreen(
+                                imagePaths: [], // Pass the imagePaths here
+                                title: gameProvider.games[1].title,
+                                description: gameProvider.games[1].description,
+                                userID: user!.uniqueNumber.toString(),
+                                gameID: gameProvider.games[1].id,
+                              ),
                             ),
-                          ),
-                        );
-                      } else {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                StatusPage(), // Replace with your other screen
-                          ),
-                        );
-                      }
-                    },
-                    child: Text(gameProvider.games[1].title),
+                          );
+                        } else {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  KMChallengePage(title: gameProvider.games[1].title,
+                                                    description: gameProvider.games[1].description),
+                            ),
+                          );
+                        }
+                      },
+                      title: Text(
+                        gameProvider.games[1].title,
+                        style: const TextStyle(
+                          fontSize: 20.0, // Adjust the font size as needed
+                          fontFamily: 'Roboto', // Change to your preferred font
+                          fontWeight: FontWeight.bold, // Make the text bold
+                        ),
+                      ),
+                      trailing: Game.getGameIcon(gameProvider.games[1].title), // Add your icon here
+                    ),
                   ),
                   const SizedBox(height: 20),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (user!.gameType == 'Influence') {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => TakePictureScreen(
-                              imagePaths: [], // Pass the imagePaths here
-                              title: gameProvider.games[2].title,
-                              description: gameProvider.games[2].description,
-                              userID: user!.uniqueNumber.toString(),
-                              gameID: gameProvider.games[2].id,
+                  Card(
+                    margin: const EdgeInsets.all(8.0), // Add some margin if you want
+                    color: Color.fromARGB(255, 16, 181, 82),
+                    child: ListTile(
+                      onTap: () {
+                        if (user!.gameType == 'Influence') {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TakePictureScreen(
+                                imagePaths: [], // Pass the imagePaths here
+                                title: gameProvider.games[2].title,
+                                description: gameProvider.games[2].description,
+                                userID: user!.uniqueNumber.toString(),
+                                gameID: gameProvider.games[2].id,
+                              ),
                             ),
-                          ),
-                        );
-                      } else {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                StatusPage(), // Replace with your other screen
-                          ),
-                        );
-                      }
-                    },
-                    child: Text(gameProvider.games[2].title),
+                          );
+                        } else {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  KMChallengePage(title: gameProvider.games[2].title,
+                                                    description: gameProvider.games[2].description),
+                            ),
+                          );
+                        }
+                      },
+                      title: Text(
+                        gameProvider.games[2].title,
+                        style: const TextStyle(
+                          fontSize: 20.0, // Adjust the font size as needed
+                          fontFamily: 'Roboto', // Change to your preferred font
+                          fontWeight: FontWeight.bold, // Make the text bold
+                        ),
+                      ),
+                      trailing: Game.getGameIcon(gameProvider.games[2].title), // Add your icon here
+                    ),
                   ),
                 ],
               ),

@@ -3,6 +3,7 @@ import "dart:math";
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/cupertino.dart";
 import "package:flutter/foundation.dart";
+import "package:flutter/material.dart";
 import "package:provider/provider.dart";
 import "package:shared_preferences/shared_preferences.dart";
 import "package:stepit/classes/user.dart";
@@ -80,6 +81,43 @@ class Game {
       level: stringLevelToInt(data['level']),
       type: data['type'],
     );
+  }
+
+  static getGameIcon(String title){
+    switch (title){
+      case '7500 Steps':
+        return Image.asset('lib\\images\\footsteps.png', // Replace with your image path
+      fit: BoxFit.cover,);
+      case 'Fast 15 min':
+        return Image.asset('lib\\images\\15.png', // Replace with your image path
+      fit: BoxFit.cover,);
+      case '3000 in an hour':
+        return Image.asset('lib\\images\\one-hour.png', // Replace with your image path
+      fit: BoxFit.cover,);
+      case '3 km':
+        return Image.asset('lib\\images\\number-3.png', // Replace with your image path
+      fit: BoxFit.cover,);
+      case '3 Floors':
+        return Image.asset('lib\\images\\stairs.png', // Replace with your image path
+      fit: BoxFit.cover,);
+      case 'Sidewalk Defects':
+        return Image.asset('lib\\images\\sidewalk.png', // Replace with your image path
+      fit: BoxFit.cover,);
+      case 'Risks For Pedestrians':
+        return Image.asset('lib\\images\\students.png', // Replace with your image path
+      fit: BoxFit.cover,);
+      case 'Blocked Bus Stops':
+        return Image.asset('lib\\images\\bus-stop.png', // Replace with your image path
+      fit: BoxFit.cover,);
+      case 'Missing Lightning':
+        return Image.asset('lib\\images\\street-light.png', // Replace with your image path
+      fit: BoxFit.cover,);
+      case 'Blocking Pedestrians':
+        return Image.asset('lib\\images\\park.png', // Replace with your image path
+      fit: BoxFit.cover,);
+      default:
+        throw Exception('Invalid title');
+    }
   }
 }
 
