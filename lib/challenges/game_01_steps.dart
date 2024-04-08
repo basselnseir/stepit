@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:stepit/features/step_count.dart';
 
 class Game_01_steps extends StatelessWidget {
+  //steps = [7500, 10000, 13000];
   @override
   Widget build(BuildContext context) {
     return  Consumer<StepCounterProvider>(
@@ -31,7 +32,7 @@ class Game_01_steps extends StatelessWidget {
                     'Steps: ${stepCounter.stepCount}',
                     style: Theme.of(context).textTheme.headlineMedium,
                   ),
-                  if (stepCounter.stepCount >= 7000)
+                  if (stepCounter.stepCount >= 7500)
                     Text(
                       'Congratulations! You completed the challenge!',
                       style: Theme.of(context).textTheme.headlineSmall,

@@ -20,8 +20,8 @@ class _IdentificationPageState extends State<IdentificationPage> {
   void initState() {
     super.initState();
     _uniqueNumber = _generateUniqueNumber();
-    //_gameType = _generateGameType();
-    _gameType = 'Influence';
+    _gameType = _generateGameType();
+    //_gameType = 'Influence';
   }
 
   Future<int> _generateUniqueNumber() async {
