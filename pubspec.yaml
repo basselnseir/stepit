@@ -88,6 +88,7 @@ flutter:
       - lib\images\bus-stop.png
       - lib\images\street-light.png
       - lib\images\park.png
+      - lib\images\7500_steps.jpg
 
   # To add assets to your application, add an assets section, like this:
   # assets:

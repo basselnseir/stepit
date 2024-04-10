@@ -52,6 +52,84 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     }
   }
 
+  Card challegeButton(int button_index, user, gameProvider, context){
+    Game game = gameProvider.games[button_index];
+    return Card(
+        margin: const EdgeInsets.all(8.0), // Add some margin if you want
+        color: Color.fromARGB(255, 103, 187, 136),
+        child: InkWell(
+          onTap: () {
+            if (user!.gameType == 'Influence') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => TakePictureScreen(
+                    imagePaths: [], // Pass the imagePaths here
+                    title: game.title,
+                    description: game.description,
+                    userID: user!.uniqueNumber.toString(),
+                    gameID: game.id,
+                  ),
+                ),
+              );
+            } else {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      KMChallengePage(title: game.title,
+                                        description: game.description),
+                ),
+              );
+            }
+          },
+          child: Container(
+            height: 220, // Adjust the height as needed
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(
+                      gameProvider.games[button_index].title,
+                      style: const TextStyle(
+                        fontSize: 20.0, // Adjust the font size as needed
+                        fontFamily: 'Roboto', // Change to your preferred font
+                        fontWeight: FontWeight.bold, // Make the text bold
+                      ),
+                    ),
+                    SizedBox(height: 10), // Add some space between the title and the description
+                    Text(
+                      gameProvider.games[button_index].description, // Replace with your description
+                      style: const TextStyle(
+                        fontSize: 16.0, // Adjust the font size as needed
+                        fontFamily: 'Roboto', // Change to your preferred font
+                      ),
+                    ),
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.bottomRight,
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Image.asset(
+                            Game.getGameIcon(gameProvider.games[button_index].title), // Replace with your image path
+                            width: 80,
+                            height: 80,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+  }
+
   @override
   Widget build(BuildContext context) {
 
@@ -229,13 +307,15 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         ),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Column(
+          child: Flex(
+            direction: Axis.vertical,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               const SizedBox(height: 30),
-              const Center(
+              const Flexible(flex: 0,
+              child: Center(
                 child: Text(
-                  'CHALLENGES',
+                  'Choose a Challenge',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 40,
@@ -244,140 +324,30 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   ),
                 ),
               ),
-              const SizedBox(height: 70),
-              Column(
-                children: <Widget>[
-                  Card(
-                    margin: const EdgeInsets.all(8.0), // Add some margin if you want
-                    color: Color.fromARGB(255, 103, 187, 136),
-                    child: ListTile(
-                      onTap: () {
-                        if (user!.gameType == 'Influence') {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => TakePictureScreen(
-                                imagePaths: [], // Pass the imagePaths here
-                                title: gameProvider.games[0].title,
-                                description: gameProvider.games[0].description,
-                                userID: user!.uniqueNumber.toString(),
-                                gameID: gameProvider.games[0].id,
-                              ),
-                            ),
-                          );
-                        } else {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  KMChallengePage(title: gameProvider.games[0].title,
-                                                    description: gameProvider.games[0].description),
-                            ),
-                          );
-                        }
-                      },
-                      title: Text(
-                        gameProvider.games[0].title,
-                        style: const TextStyle(
-                          fontSize: 20.0, // Adjust the font size as needed
-                          fontFamily: 'Roboto', // Change to your preferred font
-                          fontWeight: FontWeight.bold, // Make the text bold
-                        ),
-                      ),
-                      trailing: Game.getGameIcon(gameProvider.games[0].title), // Add your icon here
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Card(
-                    margin: const EdgeInsets.all(8.0), // Add some margin if you want
-                    color: Color.fromARGB(255, 53, 182, 105),
-                    child: ListTile(
-                      onTap: () {
-                        if (user!.gameType == 'Influence') {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => TakePictureScreen(
-                                imagePaths: [], // Pass the imagePaths here
-                                title: gameProvider.games[1].title,
-                                description: gameProvider.games[1].description,
-                                userID: user!.uniqueNumber.toString(),
-                                gameID: gameProvider.games[1].id,
-                              ),
-                            ),
-                          );
-                        } else {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  KMChallengePage(title: gameProvider.games[1].title,
-                                                    description: gameProvider.games[1].description),
-                            ),
-                          );
-                        }
-                      },
-                      title: Text(
-                        gameProvider.games[1].title,
-                        style: const TextStyle(
-                          fontSize: 20.0, // Adjust the font size as needed
-                          fontFamily: 'Roboto', // Change to your preferred font
-                          fontWeight: FontWeight.bold, // Make the text bold
-                        ),
-                      ),
-                      trailing: Game.getGameIcon(gameProvider.games[1].title), // Add your icon here
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  Card(
-                    margin: const EdgeInsets.all(8.0), // Add some margin if you want
-                    color: Color.fromARGB(255, 16, 181, 82),
-                    child: ListTile(
-                      onTap: () {
-                        if (user!.gameType == 'Influence') {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => TakePictureScreen(
-                                imagePaths: [], // Pass the imagePaths here
-                                title: gameProvider.games[2].title,
-                                description: gameProvider.games[2].description,
-                                userID: user!.uniqueNumber.toString(),
-                                gameID: gameProvider.games[2].id,
-                              ),
-                            ),
-                          );
-                        } else {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  KMChallengePage(title: gameProvider.games[2].title,
-                                                    description: gameProvider.games[2].description),
-                            ),
-                          );
-                        }
-                      },
-                      title: Text(
-                        gameProvider.games[2].title,
-                        style: const TextStyle(
-                          fontSize: 20.0, // Adjust the font size as needed
-                          fontFamily: 'Roboto', // Change to your preferred font
-                          fontWeight: FontWeight.bold, // Make the text bold
-                        ),
-                      ),
-                      trailing: Game.getGameIcon(gameProvider.games[2].title), // Add your icon here
-                    ),
-                  ),
-                ],
               ),
-              const Spacer(),
-              Text(
+              const SizedBox(height: 10),
+              Flexible(flex: 10000, child: Expanded( child: SingleChildScrollView(
+                child: Column(
+                  children: <Widget>[
+                    challegeButton(0, user, gameProvider, context),
+                    const SizedBox(height: 20),
+                    challegeButton(1, user, gameProvider, context),
+                    const SizedBox(height: 20),
+                    challegeButton(2, user, gameProvider, context),
+                  ],
+                ),
+              ),
+              ),
+              ),
+              const SizedBox(height: 10),
+              Flexible(flex: 0,
+              child: Text(
                 'ID: ${user.uniqueNumber.toString().padLeft(6, '0')}',
                 style: const TextStyle(
                   fontSize: 20,
                   color: Colors.black,
                 ),
+              ),
               ),
             ],
           ),

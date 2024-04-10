@@ -83,43 +83,41 @@ class Game {
     );
   }
 
-  static getGameIcon(String title){
+  static String getGameIcon(String title){
+    String icon = "";
     switch (title){
       case '7500 Steps':
-        return Image.asset('lib\\images\\footsteps.png', // Replace with your image path
-      fit: BoxFit.cover,);
+        icon = "footsteps.png";
       case 'Fast 15 min':
-        return Image.asset('lib\\images\\15.png', // Replace with your image path
-      fit: BoxFit.cover,);
+        icon = "15.png";
       case '3000 in an hour':
-        return Image.asset('lib\\images\\one-hour.png', // Replace with your image path
-      fit: BoxFit.cover,);
+        icon = "one-hour.png";
       case '3 km':
-        return Image.asset('lib\\images\\number-3.png', // Replace with your image path
-      fit: BoxFit.cover,);
+        icon = "number-3.png";
       case '3 Floors':
-        return Image.asset('lib\\images\\stairs.png', // Replace with your image path
-      fit: BoxFit.cover,);
+        icon = "stairs.png";
       case 'Sidewalk Defects':
-        return Image.asset('lib\\images\\sidewalk.png', // Replace with your image path
-      fit: BoxFit.cover,);
+        icon = "sidewalk.png";
       case 'Risks For Pedestrians':
-        return Image.asset('lib\\images\\students.png', // Replace with your image path
-      fit: BoxFit.cover,);
+        icon = "students.png";
       case 'Blocked Bus Stops':
-        return Image.asset('lib\\images\\bus-stop.png', // Replace with your image path
-      fit: BoxFit.cover,);
+        icon = "bus-stop.png";
       case 'Missing Lightning':
-        return Image.asset('lib\\images\\street-light.png', // Replace with your image path
-      fit: BoxFit.cover,);
+        icon = "street-light.png";
       case 'Blocking Pedestrians':
-        return Image.asset('lib\\images\\park.png', // Replace with your image path
-      fit: BoxFit.cover,);
+        icon = "park.png";
       default:
         throw Exception('Invalid title');
     }
+    // return Image.asset('lib\\images\\$icon', // Replace with your image path
+    //   width: 100.0,
+    //   height: 100.0,
+    //   fit: BoxFit.fill,);
+    return 'lib\\images\\$icon'; // Replace with your image path
   }
+
 }
+
 
 class GameProvider extends ChangeNotifier {
   List<Game> _games = [];
