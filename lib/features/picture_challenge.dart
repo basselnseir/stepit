@@ -7,6 +7,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:stepit/classes/game.dart';
 import 'globals.dart';
 import 'package:intl/intl.dart';
 
@@ -171,7 +172,22 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Row(
+          children: <Widget>[
+            Image.asset(
+              Game.getGameIcon(widget.title), // Replace with your image path
+              width: 30, // Adjust the width as needed
+              height: 30, // Adjust the height as needed
+            ),
+            const SizedBox(width: 15), // Add some space between the title and the icon
+            Text(widget.title,
+                style: const TextStyle(
+                fontSize: 20.0, // Adjust the font size as needed
+                fontFamily: 'Roboto', // Change to your preferred font
+                fontWeight: FontWeight.bold, // Make the text bold
+              )),
+          ],
+        ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20),
@@ -182,19 +198,23 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
               children: [
                 Text(
                   widget.description,
-                  style: TextStyle(fontSize: 20),
+                  style: const TextStyle(
+                        fontSize: 20.0, // Adjust the font size as needed
+                        fontFamily: 'Roboto', // Change to your preferred font
+                      ),
                 ),
                 const SizedBox(height: 20),
-                Text(
-                  'Steps count: $_steps',
-                  style: const TextStyle(fontSize: 18),
-                ),
+                // Text(
+                //   'Steps count: $_steps',
+                //   style: const TextStyle(fontSize: 18),
+                // ),
                 const SizedBox(height: 20),
-                ElevatedButton(
+                FloatingActionButton(
                   onPressed: _takePicture,
-                  child: const Text('Take Picture'),
+                  backgroundColor: const Color.fromARGB(255, 177, 216, 179), // Set the background color as needed
+                  child: const Icon(Icons.camera_alt), // Use the camera icon
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 30),
                 Table(
                   children: imagePaths.map((url) {
                     var dateTime = DateTime.fromMillisecondsSinceEpoch(int.parse(url.split('_').last.split('.').first));
@@ -206,14 +226,18 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
                           child: Row(
                             children: [
                               SizedBox(
-                                height: 100, // Set the height of the image
-                                width: 100, // Set the width of the image
+                                height: 200, // Set the height of the image
+                                width: 200, // Set the width of the image
                                 child: Image.network(url, fit: BoxFit.contain),
                               ),
                               const SizedBox(width: 10),
                               Text(
-                                DateFormat('dd/MM/yyyy').format(dateTime) + '\n' + DateFormat('HH:mm').format(dateTime),
-                                style: TextStyle(fontSize: 20), // Change the value to your desired font size
+                                '${DateFormat('dd/MM/yyyy').format(dateTime)}\n${DateFormat('HH:mm').format(dateTime)}',
+                                style: const TextStyle(
+                                  fontSize: 16.0, // Adjust the font size as needed
+                                  fontFamily: 'Roboto', // Change to your preferred font
+                                  fontWeight: FontWeight.bold,
+                                ), // Change the value to your desired font size
                               ),
                             ],
                           ),

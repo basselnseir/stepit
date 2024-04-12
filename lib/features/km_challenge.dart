@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pedometer/pedometer.dart';
+import 'package:stepit/classes/game.dart';
 
 class KMChallengePage extends StatefulWidget {
   final String title;
@@ -47,7 +48,23 @@ class _KMChallengePageState extends State<KMChallengePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Row(
+          children: <Widget>[
+            Image.asset(
+              Game.getGameIcon("3 km"), // Replace with your image path
+              width: 30, // Adjust the width as needed
+              height: 30, // Adjust the height as needed
+            ),
+            const SizedBox(width: 15), // Add some space between the title and the icon
+            const Text("3 km",
+                style: TextStyle(
+                fontSize: 20.0, // Adjust the font size as needed
+                fontFamily: 'Roboto', // Change to your preferred font
+                fontWeight: FontWeight.bold, // Make the text bold
+              )
+            ),
+          ],
+        ),
       ),
       body: Column(
         children: [

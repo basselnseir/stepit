@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:stepit/classes/game.dart';
 import 'package:stepit/features/step_count.dart';
 
 class Game_02_speed extends StatefulWidget {
@@ -122,8 +123,8 @@ class _Game_02_speed extends State<Game_02_speed> {
           return await showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
-                  title: Text('Warning'),
-                  content: Text(
+                  title: const Text('Warning'),
+                  content: const Text(
                       'The challenge will reset if you leave. Are you sure you want to stop the challenge?'),
                   actions: <Widget>[
                     TextButton(
@@ -149,8 +150,24 @@ class _Game_02_speed extends State<Game_02_speed> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Speed Challenge'),
+        title: Row(
+          children: <Widget>[
+            Image.asset(
+              Game.getGameIcon("Fast 15 min"), // Replace with your image path
+              width: 30, // Adjust the width as needed
+              height: 30, // Adjust the height as needed
+            ),
+            const SizedBox(width: 15), // Add some space between the title and the icon
+            const Text("Fast 15 min",
+                style: TextStyle(
+                fontSize: 20.0, // Adjust the font size as needed
+                fontFamily: 'Roboto', // Change to your preferred font
+                fontWeight: FontWeight.bold, // Make the text bold
+              )
+            ),
+          ],
         ),
+      ),
         body: Center(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
