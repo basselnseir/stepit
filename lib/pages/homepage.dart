@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stepit/challenges/game_01_steps.dart';
 import 'package:stepit/challenges/game_02_speed.dart';
+import 'package:stepit/challenges/game_03_time.dart';
 import 'package:stepit/classes/pip_mode_notifier.dart';
 import 'package:stepit/classes/user.dart';
 import 'package:stepit/classes/game.dart';
@@ -290,6 +291,15 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                       context,
                       MaterialPageRoute(builder: (context) => const KMChallengePage(title: "3 km Challenge",
                                                     description: "Your challenge is to walk for 3 kilometers in a row.")),
+                    );
+                  },
+                ),
+                ListTile(
+                  title: const Text('Time Challenge'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Game_03_time()),
                     );
                   },
                 ),

@@ -15,6 +15,7 @@ import 'firebase_options.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:floating/floating.dart';
 import 'dart:math';
+import 'package:stepit/challenges/game_03_time.dart';
 
 // import 'package:stepit/background/steps_tracking.dart';
 //final userProviderKey = GlobalKey();
@@ -44,6 +45,7 @@ void main() async {
       ChangeNotifierProvider(create: (context) => UserProvider()),
       ChangeNotifierProvider(create: (context) => GameProvider()),
       ChangeNotifierProvider(create: (context) => PipModeNotifier()),
+      ChangeNotifierProvider(create: (context) => ChallengeState()), // Add this line
     ],
     child: MyApp(isFirstTime: isFirstTime),
   ));
