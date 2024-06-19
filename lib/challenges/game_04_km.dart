@@ -27,20 +27,42 @@ class _Game_04_kmState extends State<Game_04_km> {
 
   void setUpPedometer() {
     _stepCountStream = Pedometer.stepCountStream;
-    _stepCountStream!.listen((StepCount event) {
-      if (challengeStarted) {
-        int stepCountDifference = event.steps - previousStepCount;
+_stepCountStream!.listen((StepCount event) {
+  if (challengeStarted) {
+    int stepCountDifference = event.steps - previousStepCount;
 
-        if (stepCountDifference >= 10) {
-          setState(() {
-            distanceTraveled += (stepCountDifference * 0.000762); // Assuming an average step length of 0.762 meters
-            previousStepCount = event.steps;
-          });
-        }
-      } else {
-        previousStepCount = event.steps; // Reset the previous step count when the challenge is not started
+    if (stepCountDifference >= 10) {
+      setState(() {
+        distanceTraveled += (stepCountDifference * 0.000762); // Assuming an average step length of 0.762 meters
+        previousStepCount = event.steps;
+      });
+
+      // Check if the challenge is completed
+      if (distanceTraveled >= 3) {
+        challengeStarted = false; // Stop the challenge
+
+        // Show a dialog to the user
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Congratulations!'),
+            content: const Text('You have completed the 3 km challenge.'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        );
       }
-    });
+    }
+  } else {
+    previousStepCount = event.steps; // Reset the previous step count when the challenge is not started
+  }
+});
 
     _pedestrianStatusStream = Pedometer.pedestrianStatusStream;
   }
@@ -48,7 +70,7 @@ class _Game_04_kmState extends State<Game_04_km> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-            onWillPop: () async {
+        onWillPop: () async {
         if (challengeStarted) {
           return await showDialog(
                 context: context,
