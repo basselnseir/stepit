@@ -17,6 +17,7 @@ class _Game_04_kmState extends State<Game_04_km> {
   bool challengeStarted = false;
   Stream<StepCount>? _stepCountStream;
   Stream<PedestrianStatus>? _pedestrianStatusStream;
+  int previousStepCount = 0; // Move this variable to the class level
 
   @override
   void initState() {
@@ -25,8 +26,6 @@ class _Game_04_kmState extends State<Game_04_km> {
   }
 
   void setUpPedometer() {
-    int previousStepCount = 0;
-
     _stepCountStream = Pedometer.stepCountStream;
     _stepCountStream!.listen((StepCount event) {
       if (challengeStarted) {
@@ -38,6 +37,8 @@ class _Game_04_kmState extends State<Game_04_km> {
             previousStepCount = event.steps;
           });
         }
+      } else {
+        previousStepCount = event.steps; // Reset the previous step count when the challenge is not started
       }
     });
 
