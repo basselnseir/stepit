@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pedometer/pedometer.dart';
+import 'package:provider/provider.dart';
 import 'package:stepit/classes/game.dart';
+import 'package:stepit/features/step_count.dart';
 
 class Game_04_km extends StatefulWidget {
   final String title;
@@ -15,17 +17,65 @@ class Game_04_km extends StatefulWidget {
 class _Game_04_kmState extends State<Game_04_km> {
   double distanceTraveled = 0;
   bool challengeStarted = false;
-  Stream<StepCount>? _stepCountStream;
-  Stream<PedestrianStatus>? _pedestrianStatusStream;
   int previousStepCount = 0; // Move this variable to the class level
+
+
+void startNewChallenge() {
+  final provider = Provider.of<StepCounterProvider>(context, listen: false);
+  provider.stepCountStream.first.then((currentStepCount) {
+    setState(() {
+      challengeStarted = true;
+      previousStepCount = currentStepCount; // Capture the current step count as baseline
+      distanceTraveled = 0; // Reset distance traveled for the new challenge
+    });
+  });
+}
+
 
   @override
   void initState() {
     super.initState();
-    setUpPedometer();
+    //setUpPedometer();
+        Future.delayed(Duration.zero, () {
+      final provider = Provider.of<StepCounterProvider>(context, listen: false);
+      provider.stepCountStream.listen((stepCount) {
+        if (challengeStarted) {
+          int stepCountDifference = stepCount - previousStepCount;
+          if (stepCountDifference >= 10) {
+            setState(() {
+              distanceTraveled += (stepCountDifference * 0.000762); // Assuming an average step length of 0.762 meters
+              previousStepCount = stepCount;
+            });
+            // Check if the challenge is completed
+                  if (distanceTraveled >= 3) {
+        challengeStarted = false; // Stop the challenge
+
+        // Show a dialog to the user
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Congratulations!'),
+            content: const Text('You have completed the 3 km challenge.'),
+            actions: <Widget>[
+              TextButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+        );
+      }
+          }
+        }else {
+    previousStepCount = stepCount; // Reset the previous step count when the challenge is not started
+  }
+      });
+    });
   }
 
-  void setUpPedometer() {
+ /* void setUpPedometer() {
     _stepCountStream = Pedometer.stepCountStream;
 _stepCountStream!.listen((StepCount event) {
   if (challengeStarted) {
@@ -65,7 +115,7 @@ _stepCountStream!.listen((StepCount event) {
 });
 
     _pedestrianStatusStream = Pedometer.pedestrianStatusStream;
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -141,6 +191,7 @@ _stepCountStream!.listen((StepCount event) {
                       setState(() {
                         challengeStarted = true;
                       });
+                      startNewChallenge();    
                     },
               child: Text('Start Challenge'),
               style: ElevatedButton.styleFrom(

@@ -2,11 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:stepit/challenges/game_01_steps.dart';
 import 'package:stepit/classes/game.dart';
 
-class ChallengePage extends StatelessWidget {
+class ChallengePage extends StatefulWidget {
   final Game game;
 
   ChallengePage({required this.game});
 
+  @override
+  _ChallengePageState createState() => _ChallengePageState();
+}
+
+
+class _ChallengePageState extends State<ChallengePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,6 +48,7 @@ class ChallengePage extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
                 Game_01_steps(),
+                
             ],),
           ),
         ),
