@@ -7,7 +7,11 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
+import 'package:stepit/classes/cam_mode_notifier.dart';
 import 'package:stepit/classes/game.dart';
+import 'package:stepit/classes/pip_mode_notifier.dart';
+import 'package:stepit/pages/homepage.dart';
 import 'globals.dart';
 import 'package:intl/intl.dart';
 
@@ -31,7 +35,7 @@ class TakePictureScreen extends StatefulWidget {
   _TakePictureScreenState createState() => _TakePictureScreenState(imagePaths, userID, gameID);
 }
 
-class _TakePictureScreenState extends State<TakePictureScreen> {
+class _TakePictureScreenState extends State<TakePictureScreen> with WidgetsBindingObserver{
   List<String> imagePaths;
   String userID;
   final String gameID;
@@ -46,10 +50,36 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     initPlatformState();
     _requestPermission();
     userID = userID.padLeft(6, '0');
     _loadImagePaths();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    final pipModeNotifier = Provider.of<PipModeNotifier>(context, listen: false);
+    pipModeNotifier.floating.dispose();
+    final camModeNotifier = Provider.of<CamModeNotifier>(context, listen: false);
+    camModeNotifier.floating.dispose();
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState lifecycleState) {
+    final pipModeNotifier = Provider.of<PipModeNotifier>(context, listen: false);
+    final camModeNotifier = Provider.of<CamModeNotifier>(context, listen: false);
+    if (lifecycleState == AppLifecycleState.inactive && !camModeNotifier.inCamMode) {
+      pipModeNotifier.enablePip(context);
+      pipModeNotifier.inPipMode = true;
+    }
+    if (lifecycleState == AppLifecycleState.resumed && pipModeNotifier.inPipMode) {
+      setState(() {
+        pipModeNotifier.inPipMode = false;
+      });
+    }
   }
 
   void _loadImagePaths() async {
@@ -102,6 +132,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
   }
 
   Future<void> _takePicture() async {
+    // camModeNotifier.inCamMode = true;
     final pickedFile = await ImagePicker().pickImage(source: ImageSource.camera);
     logEvent_('user took a picture in take_picture_challenge');
     if (pickedFile != null) {
@@ -139,6 +170,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
         // Handle any errors
       }
     }
+    // camModeNotifier.inCamMode = false;
   }
 
   void _enlargeImage(String imagePath) {
@@ -170,6 +202,13 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
   
   @override
   Widget build(BuildContext context) {
+
+    final pipModeNotifier = Provider.of<PipModeNotifier>(context, listen: false);
+
+    if (pipModeNotifier.inPipMode){
+      return pipModeNotifier.setPipModeImg();
+    }
+    
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -210,7 +249,12 @@ class _TakePictureScreenState extends State<TakePictureScreen> {
                 // ),
                 const SizedBox(height: 20),
                 FloatingActionButton(
-                  onPressed: _takePicture,
+                  onPressed: () {
+                    final camModeNotifier = Provider.of<CamModeNotifier>(context, listen: false);
+                    camModeNotifier.inCamMode = true;
+                    _takePicture();
+                    camModeNotifier.inCamMode = false;
+                  },
                   backgroundColor: const Color.fromARGB(255, 177, 216, 179), // Set the background color as needed
                   child: const Icon(Icons.camera_alt), // Use the camera icon
                 ),

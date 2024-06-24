@@ -134,12 +134,11 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
 
     final pipModeNotifier = Provider.of<PipModeNotifier>(context, listen: false);
-  // final pipModeNotifier = Provider.of<PipModeNotifier>(context);
-
 
     if (pipModeNotifier.inPipMode){
       return pipModeNotifier.setPipModeImg();
     }
+    
     User? user = Provider.of<UserProvider>(context).user;
     GameProvider? gameProvider = Provider.of<GameProvider>(context);
 
