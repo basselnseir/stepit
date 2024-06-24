@@ -8,12 +8,18 @@ if the user steps are more than the game goal steps, the user wins the game.
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:stepit/classes/pip_mode_notifier.dart';
 import 'package:stepit/features/step_count.dart';
 
 class Game_01_steps extends StatelessWidget {
   //steps = [7500, 10000, 13000];
   @override
   Widget build(BuildContext context) {
+    final pipModeNotifier = Provider.of<PipModeNotifier>(context);
+
+    if (pipModeNotifier.inPipMode){
+      return pipModeNotifier.setPipModeImg();
+    }
     return  Consumer<StepCounterProvider>(
         builder: (context, stepCounter, child) {
           if (stepCounter.error != null) {

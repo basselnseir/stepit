@@ -18,7 +18,7 @@ class PipModeNotifier with ChangeNotifier {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('lib/images/walking_sausage.gif'),
+            image: AssetImage('lib/images/stepit_logo.png'),
             fit: BoxFit.cover,
           ),
         ),

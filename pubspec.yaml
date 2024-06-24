@@ -78,6 +78,7 @@ flutter:
 
   assets:
       - lib/images/walking_sausage.gif
+      - lib/images/stepit_logo.png
       - lib/images/footsteps.png
       - lib/images/15.png
       - lib/images/one-hour.png

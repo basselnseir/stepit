@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:stepit/classes/pip_mode_notifier.dart';
 import 'package:stepit/features/step_count.dart';
 import 'dart:async';
 
@@ -66,6 +67,11 @@ void startChallenge(BuildContext context) {
 class Game_03_time extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final pipModeNotifier = Provider.of<PipModeNotifier>(context);
+
+    if (pipModeNotifier.inPipMode){
+      return pipModeNotifier.setPipModeImg();
+    }
     return _Game_03_timeBody();
   }
 }
@@ -73,6 +79,11 @@ class Game_03_time extends StatelessWidget {
 class _Game_03_timeBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final pipModeNotifier = Provider.of<PipModeNotifier>(context);
+
+    if (pipModeNotifier.inPipMode){
+      return pipModeNotifier.setPipModeImg();
+    }
     ChallengeState challengeState = Provider.of<ChallengeState>(context);
     return WillPopScope(
       onWillPop: () async {
