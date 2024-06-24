@@ -202,8 +202,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> with WidgetsBindi
   
   @override
   Widget build(BuildContext context) {
-
-    final pipModeNotifier = Provider.of<PipModeNotifier>(context, listen: false);
+    final pipModeNotifier = Provider.of<PipModeNotifier>(context);
 
     if (pipModeNotifier.inPipMode){
       return pipModeNotifier.setPipModeImg();
