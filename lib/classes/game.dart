@@ -113,7 +113,7 @@ class Game {
     //   width: 100.0,
     //   height: 100.0,
     //   fit: BoxFit.fill,);
-    return 'lib\\images\\$icon'; // Replace with your image path
+    return 'lib/images/$icon'; // Replace with your image path
   }
 
 }

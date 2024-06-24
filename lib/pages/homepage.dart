@@ -4,13 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stepit/challenges/game_01_steps.dart';
 import 'package:stepit/challenges/game_02_speed.dart';
+import 'package:stepit/challenges/game_03_time.dart';
+import 'package:stepit/challenges/game_04_km.dart';
 import 'package:stepit/classes/pip_mode_notifier.dart';
 import 'package:stepit/classes/user.dart';
 import 'package:stepit/classes/game.dart';
 import 'package:stepit/features/challenge_tile.dart';
 import 'package:stepit/features/picture_challenge.dart';
 import 'package:stepit/pages/status.dart';
-import 'package:stepit/features/km_challenge.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -77,7 +78,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 context,
                 MaterialPageRoute(
                   builder: (context) =>
-                      KMChallengePage(title: game.title,
+                      Game_04_km(title: game.title,
                                         description: game.description),
                 ),
               );
@@ -274,7 +275,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 ),
                 
                 ListTile(
-                  title: const Text('Game_02'),
+                  title: const Text('Speed Challenge'),
                   onTap: () {
                     Navigator.push(
                       context,
@@ -283,12 +284,21 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   },
                 ),
                 ListTile(
-                  title: const Text('Game_03'),
+                  title: const Text('KM Challenge'),
                   onTap: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const KMChallengePage(title: "3 km Challenge",
+                      MaterialPageRoute(builder: (context) => const Game_04_km(title: "3 km Challenge",
                                                     description: "Your challenge is to walk for 3 kilometers in a row.")),
+                    );
+                  },
+                ),
+                ListTile(
+                  title: const Text('One Hour Challenge'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Game_03_time()),
                     );
                   },
                 ),

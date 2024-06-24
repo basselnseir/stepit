@@ -69,71 +69,73 @@ class _IdentificationPageState extends State<IdentificationPage> {
       body: Padding(
         padding: const EdgeInsets.all(30.0),
         child: Center(
-          child: Column(
-            children: <Widget>[
-              const SizedBox(height: 50),
-              const Text(
-                'Enter a username to get started',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 20,
-                ),
-              ),
-              const SizedBox(height: 80),
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: TextField(
-                  onChanged: (value) {
-                    setState(() {
-                      _username = value;
-                    });
-                  },
-                  decoration: const InputDecoration(
-                    labelText: 'Enter username',
-                  ),
-                ),
-              ),
-              FutureBuilder<int>(
-                future: _uniqueNumber,
-                builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return  const Center(
-                      child: SizedBox(
-                        width: 50.0,
-                        height: 50.0,
-                        child: CircularProgressIndicator(
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                        ),
-                      ),
-                    );
-                  } else {
-                    connectionState = true;
-                    return Text('Unique number: ${snapshot.data.toString().padLeft(6, '0')}');
-                  }
-                },
-              ),
-              const SizedBox(height: 30),
-              ElevatedButton(
-                onPressed: connectionState
-                    ? () {
-                        _saveToFirestore(context);
-                        startStepsTracking();
-                        //loadUser(context).then((_) => startStepsTracking());
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => HomePage()),
-                        );
-                      }
-                    : null,
-                child: const Text(
-                  "Continue",
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                const SizedBox(height: 50),
+                const Text(
+                  'Enter a username to get started',
+                  textAlign: TextAlign.center,
                   style: TextStyle(
-                    color: Color.fromARGB(
-                        255, 0, 0, 0), // Set the desired text color here
+                    fontSize: 20,
                   ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 50),
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: TextField(
+                    onChanged: (value) {
+                      setState(() {
+                        _username = value;
+                      });
+                    },
+                    decoration: const InputDecoration(
+                      labelText: 'Enter username',
+                    ),
+                  ),
+                ),
+                FutureBuilder<int>(
+                  future: _uniqueNumber,
+                  builder: (BuildContext context, AsyncSnapshot<int> snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return  const Center(
+                        child: SizedBox(
+                          width: 50.0,
+                          height: 50.0,
+                          child: CircularProgressIndicator(
+                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
+                        ),
+                      );
+                    } else {
+                      connectionState = true;
+                      return Text('Unique number: ${snapshot.data.toString().padLeft(6, '0')}');
+                    }
+                  },
+                ),
+                const SizedBox(height: 30),
+                ElevatedButton(
+                  onPressed: connectionState
+                      ? () {
+                          _saveToFirestore(context);
+                          startStepsTracking();
+                          //loadUser(context).then((_) => startStepsTracking());
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => HomePage()),
+                          );
+                        }
+                      : null,
+                  child: const Text(
+                    "Continue",
+                    style: TextStyle(
+                      color: Color.fromARGB(
+                          255, 0, 0, 0), // Set the desired text color here
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

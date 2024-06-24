@@ -15,20 +15,25 @@ class _Game_02_speed extends State<Game_02_speed> {
   int _stepCount = 0;
   int _initialStepCount = 0;
   double _speed = 0.0;
-  bool _challengeStarted = false;
+  bool challengeStarted = false;
   DateTime? _startTime;
+  int previousStepCount = 0; // Move this variable to the class level
 
-  @override
-  void initState() {
-    super.initState();
-  }
 
-  void _startChallenge() {
-    _startTime = DateTime.now();
+
+
+void startNewChallenge() {
+  final provider = Provider.of<StepCounterProvider>(context, listen: false);
+  provider.stepCountStream.first.then((currentStepCount) {
     setState(() {
-      _challengeStarted = true;
+      challengeStarted = true;
+      previousStepCount = currentStepCount; // Capture the current step count as baseline
     });
+  });
+}
 
+  void startChallenge() {
+    _startTime = DateTime.now();
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (_timeRemaining == 0) {
         _endChallenge();
@@ -38,9 +43,37 @@ class _Game_02_speed extends State<Game_02_speed> {
         });
       }
     });
+DateTime previousTime = DateTime.now();
+int previousCurrSteps = 0;
+ Future.delayed(Duration.zero, () {
+      final provider = Provider.of<StepCounterProvider>(context, listen: false);
+      provider.stepCountStream.listen((stepCount) {
+        if (challengeStarted) {
+      final challengeStepCount = stepCount - previousStepCount;
+      setState(() {
+        _stepCount = challengeStepCount;
+      });
 
-    final stepCounter =
-        Provider.of<StepCounterProvider>(context, listen: false);
+      final currentTime = DateTime.now();
+      final timeInterval = currentTime.difference(previousTime).inSeconds;
+      if (timeInterval >= 3) {
+        double distance = (challengeStepCount - previousCurrSteps) * 0.762; // Distance in meters (assuming average step length of 0.762m)
+        final currentSpeed =
+            distance / timeInterval;
+        setState(() {
+          _stepCount = challengeStepCount;
+          _speed = currentSpeed;
+        });
+      previousCurrSteps = challengeStepCount;
+      previousTime = currentTime;
+      }
+        }else {
+      previousStepCount = stepCount; // Reset the previous step count when the challenge is not started
+  }
+      });
+    });
+
+ /*  final stepCounter = Provider.of<StepCounterProvider>(context);
     _initialStepCount = stepCounter.stepCount; // Save the initial step count
 
     int previousStepCount = _initialStepCount;
@@ -54,8 +87,9 @@ class _Game_02_speed extends State<Game_02_speed> {
       final currentTime = DateTime.now();
       final timeInterval = currentTime.difference(previousTime).inSeconds;
       if (timeInterval > 0) {
+        double distance = (challengeStepCount - previousStepCount) * 0.762; // Distance in meters (assuming average step length of 0.762m)
         final currentSpeed =
-            (challengeStepCount - previousStepCount) / timeInterval;
+            distance / timeInterval;
         setState(() {
          // _stepCount = challengeStepCount;
           _speed = currentSpeed;
@@ -63,7 +97,7 @@ class _Game_02_speed extends State<Game_02_speed> {
       }
       previousStepCount = challengeStepCount;
       previousTime = currentTime;
-    });
+    });*/
   }
 
   void _endChallenge() {
@@ -86,7 +120,13 @@ class _Game_02_speed extends State<Game_02_speed> {
   }
 
   @override
-  void didChangeDependencies() {
+  void initState() {
+    super.initState();
+    startChallenge();
+  }
+
+  //@override
+  /*void didChangeDependencies() {
     if (_challengeStarted) {
       showDialog(
         context: context,
@@ -113,13 +153,13 @@ class _Game_02_speed extends State<Game_02_speed> {
       );
     }
     super.didChangeDependencies();
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        if (_challengeStarted) {
+        if (challengeStarted) {
           return await showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
@@ -180,7 +220,7 @@ class _Game_02_speed extends State<Game_02_speed> {
                 ),
                 SizedBox(height: 10),
                 Text(
-                  'Speed: $_speed steps per second',
+                  'Speed: $_speed meters per second',
                   style: TextStyle(fontSize: 18),
                 ),
                 SizedBox(height: 10),
@@ -189,10 +229,20 @@ class _Game_02_speed extends State<Game_02_speed> {
                   style: TextStyle(fontSize: 18),
                 ),
                 SizedBox(height: 20),
-                ElevatedButton(
-                  child: Text('Start', style: TextStyle(fontSize: 18)),
-                  onPressed: _challengeStarted ? null : _startChallenge,
-                ),
+            ElevatedButton(
+              onPressed: challengeStarted
+                  ? null
+                  : () {
+                      setState(() {
+                        challengeStarted = true;
+                      });
+                      startNewChallenge();    
+                    },
+              child: Text('Start Challenge'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: challengeStarted ? Colors.grey : null,
+              ),
+            )
               ],
             ),
           ),
