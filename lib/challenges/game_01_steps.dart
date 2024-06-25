@@ -10,6 +10,7 @@ import 'package:flutter/widgets.dart';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:stepit/classes/pip_mode_notifier.dart';
 import 'package:stepit/features/step_count.dart';
 
 class Game_01_steps extends StatelessWidget {
@@ -43,6 +44,11 @@ void _showCompletionDialog(BuildContext context) {
 
   @override
   Widget build(BuildContext context) {
+    final pipModeNotifier = Provider.of<PipModeNotifier>(context);
+
+    if (pipModeNotifier.inPipMode){
+      return pipModeNotifier.setPipModeImg();
+    }
     return  Consumer<StepCounterProvider>(
         builder: (context, stepCounter, child) {
           if (stepCounter.error != null) {

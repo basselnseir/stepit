@@ -202,8 +202,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> with WidgetsBindi
   
   @override
   Widget build(BuildContext context) {
-
-    final pipModeNotifier = Provider.of<PipModeNotifier>(context, listen: false);
+    final pipModeNotifier = Provider.of<PipModeNotifier>(context);
 
     if (pipModeNotifier.inPipMode){
       return pipModeNotifier.setPipModeImg();
@@ -214,7 +213,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> with WidgetsBindi
         title: Row(
           children: <Widget>[
             Image.asset(
-              Game.getGameIcon(widget.title), // Replace with your image path
+              Game.getGameIcon(widget.title), // Replace with your
               width: 30, // Adjust the width as needed
               height: 30, // Adjust the height as needed
             ),
@@ -250,10 +249,10 @@ class _TakePictureScreenState extends State<TakePictureScreen> with WidgetsBindi
                 const SizedBox(height: 20),
                 FloatingActionButton(
                   onPressed: () {
-                    final camModeNotifier = Provider.of<CamModeNotifier>(context, listen: false);
-                    camModeNotifier.inCamMode = true;
+                    // final camModeNotifier = Provider.of<CamModeNotifier>(context, listen: false);
+                    // camModeNotifier.inCamMode = true;
                     _takePicture();
-                    camModeNotifier.inCamMode = false;
+                    // camModeNotifier.inCamMode = false;
                   },
                   backgroundColor: const Color.fromARGB(255, 177, 216, 179), // Set the background color as needed
                   child: const Icon(Icons.camera_alt), // Use the camera icon

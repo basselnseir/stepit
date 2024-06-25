@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:stepit/challenges/game_01_steps.dart';
 import 'package:stepit/classes/game.dart';
+import 'package:stepit/classes/pip_mode_notifier.dart';
 
 class ChallengePage extends StatefulWidget {
   final Game game;
@@ -15,6 +17,11 @@ class ChallengePage extends StatefulWidget {
 class _ChallengePageState extends State<ChallengePage> {
   @override
   Widget build(BuildContext context) {
+    final pipModeNotifier = Provider.of<PipModeNotifier>(context);
+
+    if (pipModeNotifier.inPipMode){
+      return pipModeNotifier.setPipModeImg();
+    }
     return Scaffold(
       appBar: AppBar(
         title: Row(

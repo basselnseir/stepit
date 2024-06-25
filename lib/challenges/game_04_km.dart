@@ -1,14 +1,17 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:pedometer/pedometer.dart';
 import 'package:provider/provider.dart';
 import 'package:stepit/classes/game.dart';
+import 'package:stepit/classes/pip_mode_notifier.dart';
 import 'package:stepit/features/step_count.dart';
 
 class Game_04_km extends StatefulWidget {
   final String title;
   final String description;
 
-  const Game_04_km({Key? key, required this.title, required this.description}) : super(key: key);
+  const Game_04_km({Key? key, required this.title, required this.description})
+      : super(key: key);
 
   @override
   _Game_04_kmState createState() => _Game_04_kmState();
@@ -17,65 +20,117 @@ class Game_04_km extends StatefulWidget {
 class _Game_04_kmState extends State<Game_04_km> {
   double distanceTraveled = 0;
   bool challengeStarted = false;
-  int previousStepCount = 0; // Move this variable to the class level
+  int previousStepCount = 0;
+  int stepsTakenSinceChallengeStarted = 0;
+  StreamSubscription<int>? stepCountSubscription;
 
-
-void startNewChallenge() {
-  final provider = Provider.of<StepCounterProvider>(context, listen: false);
-  provider.stepCountStream.first.then((currentStepCount) {
-    setState(() {
-      challengeStarted = true;
-      previousStepCount = currentStepCount; // Capture the current step count as baseline
-      distanceTraveled = 0; // Reset distance traveled for the new challenge
+  void startNewChallenge() {
+    final provider = Provider.of<StepCounterProvider>(context, listen: false);
+    provider.stepCountStream.first.then((currentStepCount) {
+      setState(() {
+        challengeStarted = true;
+        previousStepCount = currentStepCount;
+        distanceTraveled = 0;
+        stepsTakenSinceChallengeStarted = 0;
+      });
     });
-  });
-}
+    subscribeToStepCountStream();
+  }
 
-
+  void subscribeToStepCountStream() {
+    final provider = Provider.of<StepCounterProvider>(context, listen: false);
+    stepCountSubscription?.cancel(); // Cancel existing subscription if any
+    stepCountSubscription = provider.stepCountStream.listen((stepCount) {
+      if (challengeStarted) {
+        int stepCountDifference = stepCount - previousStepCount;
+        if (stepCountDifference >= 10) {
+          setState(() {
+            distanceTraveled += (stepCountDifference * 0.000762);
+            previousStepCount = stepCount;
+            stepsTakenSinceChallengeStarted += stepCountDifference;
+          });
+          if (distanceTraveled >= 3) {
+            challengeStarted = false;
+            showDialog(
+              context: context,
+              builder: (context) => AlertDialog(
+                title: const Text('Congratulations!'),
+                content: const Text('You have completed the 3 km challenge.'),
+                actions: <Widget>[
+                  TextButton(
+                    child: Text('OK'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              ),
+            );
+          }
+        }
+      } else {
+        previousStepCount = stepCount;
+      }
+    });
+  }
   @override
   void initState() {
     super.initState();
-    //setUpPedometer();
-        Future.delayed(Duration.zero, () {
-      final provider = Provider.of<StepCounterProvider>(context, listen: false);
-      provider.stepCountStream.listen((stepCount) {
-        if (challengeStarted) {
-          int stepCountDifference = stepCount - previousStepCount;
-          if (stepCountDifference >= 10) {
-            setState(() {
-              distanceTraveled += (stepCountDifference * 0.000762); // Assuming an average step length of 0.762 meters
-              previousStepCount = stepCount;
-            });
-            // Check if the challenge is completed
-                  if (distanceTraveled >= 3) {
-        challengeStarted = false; // Stop the challenge
-
-        // Show a dialog to the user
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Congratulations!'),
-            content: const Text('You have completed the 3 km challenge.'),
-            actions: <Widget>[
-              TextButton(
-                child: Text('OK'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          ),
-        );
-      }
-          }
-        }else {
-    previousStepCount = stepCount; // Reset the previous step count when the challenge is not started
-  }
-      });
-    });
+    subscribeToStepCountStream(); // Subscribe to the stream when the widget initializes
   }
 
- /* void setUpPedometer() {
+  @override
+  void dispose() {
+    stepCountSubscription?.cancel(); // Don't forget to cancel the subscription when the widget is disposed
+    super.dispose();
+  }
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   //setUpPedometer();
+  //   Future.delayed(Duration.zero, () {
+  //     final provider = Provider.of<StepCounterProvider>(context, listen: false);
+  //     provider.stepCountStream.listen((stepCount) {
+  //       if (challengeStarted) {
+  //         int stepCountDifference = stepCount - previousStepCount;
+  //         if (stepCountDifference >= 10) {
+  //           setState(() {
+  //             distanceTraveled += (stepCountDifference *
+  //                 0.000762); // Assuming an average step length of 0.762 meters
+  //             previousStepCount = stepCount;
+  //             stepsTakenSinceChallengeStarted += stepCountDifference;
+  //           });
+  //           // Check if the challenge is completed
+  //           if (distanceTraveled >= 3) {
+  //             challengeStarted = false; // Stop the challenge
+
+  //             // Show a dialog to the user
+  //             showDialog(
+  //               context: context,
+  //               builder: (context) => AlertDialog(
+  //                 title: const Text('Congratulations!'),
+  //                 content: const Text('You have completed the 3 km challenge.'),
+  //                 actions: <Widget>[
+  //                   TextButton(
+  //                     child: Text('OK'),
+  //                     onPressed: () {
+  //                       Navigator.of(context).pop();
+  //                     },
+  //                   ),
+  //                 ],
+  //               ),
+  //             );
+  //           }
+  //         }
+  //       } else {
+  //         previousStepCount =
+  //             stepCount; // Reset the previous step count when the challenge is not started
+  //       }
+  //     });
+  //   });
+  // }
+
+  /* void setUpPedometer() {
     _stepCountStream = Pedometer.stepCountStream;
 _stepCountStream!.listen((StepCount event) {
   if (challengeStarted) {
@@ -119,8 +174,13 @@ _stepCountStream!.listen((StepCount event) {
 
   @override
   Widget build(BuildContext context) {
+    final pipModeNotifier = Provider.of<PipModeNotifier>(context);
+
+    if (pipModeNotifier.inPipMode) {
+      return pipModeNotifier.setPipModeImg();
+    }
     return WillPopScope(
-        onWillPop: () async {
+      onWillPop: () async {
         if (challengeStarted) {
           return await showDialog(
                 context: context,
@@ -159,14 +219,14 @@ _stepCountStream!.listen((StepCount event) {
                 width: 30, // Adjust the width as needed
                 height: 30, // Adjust the height as needed
               ),
-              const SizedBox(width: 15), // Add some space between the title and the icon
+              const SizedBox(
+                  width: 15), // Add some space between the title and the icon
               const Text("3 km",
                   style: TextStyle(
-                  fontSize: 20.0, // Adjust the font size as needed
-                  fontFamily: 'Roboto', // Change to your preferred font
-                  fontWeight: FontWeight.bold, // Make the text bold
-                )
-              ),
+                    fontSize: 20.0, // Adjust the font size as needed
+                    fontFamily: 'Roboto', // Change to your preferred font
+                    fontWeight: FontWeight.bold, // Make the text bold
+                  )),
             ],
           ),
         ),
@@ -183,6 +243,10 @@ _stepCountStream!.listen((StepCount event) {
               'Distance Traveled: ${distanceTraveled.toStringAsFixed(2)} km',
               style: TextStyle(fontSize: 24),
             ),
+            Text(
+              'Steps Taken: $stepsTakenSinceChallengeStarted',
+              style: TextStyle(fontSize: 24),
+            ),
             SizedBox(height: 16),
             ElevatedButton(
               onPressed: challengeStarted
@@ -191,7 +255,7 @@ _stepCountStream!.listen((StepCount event) {
                       setState(() {
                         challengeStarted = true;
                       });
-                      startNewChallenge();    
+                      startNewChallenge();
                     },
               child: Text('Start Challenge'),
               style: ElevatedButton.styleFrom(
