@@ -13,6 +13,7 @@ import 'package:stepit/features/challenge_tile.dart';
 import 'package:stepit/features/picture_challenge.dart';
 import 'package:stepit/pages/status.dart';
 
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 

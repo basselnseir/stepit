@@ -6,12 +6,41 @@ and the steps should always be updated to the database.
 if the user steps are more than the game goal steps, the user wins the game.
 */
 
+import 'package:flutter/widgets.dart';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stepit/features/step_count.dart';
 
 class Game_01_steps extends StatelessWidget {
   //steps = [7500, 10000, 13000];
+
+void _checkStepCountAndShowDialog(int stepCounter, BuildContext context) {
+  if (stepCounter>= 5) {
+    _showCompletionDialog(context);
+  }
+}
+
+void _showCompletionDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Congratulations!'),
+        content: Text('You have completed the challenge.'),
+        actions: <Widget>[
+          TextButton(
+            child: Text('OK'),
+            onPressed: () {
+              Navigator.of(context).pop(); // Close the dialog
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
   @override
   Widget build(BuildContext context) {
     return  Consumer<StepCounterProvider>(
@@ -24,7 +53,7 @@ class Game_01_steps extends StatelessWidget {
               ),
             );
           } else {
-            return Center(
+             return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -33,10 +62,12 @@ class Game_01_steps extends StatelessWidget {
                     style: Theme.of(context).textTheme.headlineMedium,
                   ),
                   if (stepCounter.stepCount >= 7500)
-                    Text(
-                      'Congratulations! You completed the challenge!',
-                      style: Theme.of(context).textTheme.headlineSmall,
-                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        _showCompletionDialog(context);
+                      },
+                      child: Text('Complete Challenge'),)
+                   
                 ],
               ),
             );
