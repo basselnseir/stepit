@@ -50,37 +50,37 @@ class _TakePictureScreenState extends State<TakePictureScreen> with WidgetsBindi
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addObserver(this);
+    // WidgetsBinding.instance.addObserver(this);
     initPlatformState();
     _requestPermission();
     userID = userID.padLeft(6, '0');
     _loadImagePaths();
   }
 
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    final pipModeNotifier = Provider.of<PipModeNotifier>(context, listen: false);
-    pipModeNotifier.floating.dispose();
-    final camModeNotifier = Provider.of<CamModeNotifier>(context, listen: false);
-    camModeNotifier.floating.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   WidgetsBinding.instance.removeObserver(this);
+  //   final pipModeNotifier = Provider.of<PipModeNotifier>(context, listen: false);
+  //   pipModeNotifier.floating.dispose();
+  //   final camModeNotifier = Provider.of<CamModeNotifier>(context, listen: false);
+  //   camModeNotifier.floating.dispose();
+  //   super.dispose();
+  // }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState lifecycleState) {
-    final pipModeNotifier = Provider.of<PipModeNotifier>(context, listen: false);
-    final camModeNotifier = Provider.of<CamModeNotifier>(context, listen: false);
-    if (lifecycleState == AppLifecycleState.inactive && !camModeNotifier.inCamMode) {
-      pipModeNotifier.enablePip(context);
-      pipModeNotifier.inPipMode = true;
-    }
-    if (lifecycleState == AppLifecycleState.resumed && pipModeNotifier.inPipMode) {
-      setState(() {
-        pipModeNotifier.inPipMode = false;
-      });
-    }
-  }
+  // @override
+  // void didChangeAppLifecycleState(AppLifecycleState lifecycleState) {
+  //   final pipModeNotifier = Provider.of<PipModeNotifier>(context, listen: false);
+  //   final camModeNotifier = Provider.of<CamModeNotifier>(context, listen: false);
+  //   if (lifecycleState == AppLifecycleState.inactive && !camModeNotifier.inCamMode) {
+  //     pipModeNotifier.enablePip(context);
+  //     pipModeNotifier.inPipMode = true;
+  //   }
+  //   if (lifecycleState == AppLifecycleState.resumed && pipModeNotifier.inPipMode) {
+  //     setState(() {
+  //       pipModeNotifier.inPipMode = false;
+  //     });
+  //   }
+  // }
 
   void _loadImagePaths() async {
     final querySnapshot = await FirebaseFirestore.instance.collection('users')
@@ -202,11 +202,11 @@ class _TakePictureScreenState extends State<TakePictureScreen> with WidgetsBindi
   
   @override
   Widget build(BuildContext context) {
-    final pipModeNotifier = Provider.of<PipModeNotifier>(context);
+    // final pipModeNotifier = Provider.of<PipModeNotifier>(context);
 
-    if (pipModeNotifier.inPipMode){
-      return pipModeNotifier.setPipModeImg();
-    }
+    // if (pipModeNotifier.inPipMode){
+    //   return pipModeNotifier.setPipModeImg();
+    // }
     
     return Scaffold(
       appBar: AppBar(
