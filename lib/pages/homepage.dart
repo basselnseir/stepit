@@ -6,6 +6,7 @@ import 'package:stepit/challenges/game_01_steps.dart';
 import 'package:stepit/challenges/game_02_speed.dart';
 import 'package:stepit/challenges/game_03_time.dart';
 import 'package:stepit/challenges/game_04_km.dart';
+import 'package:stepit/challenges/tmp_game_01.dart';
 import 'package:stepit/classes/pip_mode_notifier.dart';
 import 'package:stepit/classes/user.dart';
 import 'package:stepit/classes/game.dart';
@@ -275,6 +276,17 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   },
                 ),
                 
+                ListTile(
+                  title: const Text('Temp Game_01'),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ChallengePageTemp()),
+                      
+                    );
+                  },
+                ),
+
                 ListTile(
                   title: const Text('Speed Challenge'),
                   onTap: () {

@@ -16,13 +16,13 @@ import 'package:stepit/features/step_count.dart';
 class Game_01_steps extends StatelessWidget {
   //steps = [7500, 10000, 13000];
 
-void _checkStepCountAndShowDialog(int stepCounter, BuildContext context) {
-  if (stepCounter>= 5) {
-    _showCompletionDialog(context);
-  }
-}
+final VoidCallback onChallengeCompleted;
 
-void _showCompletionDialog(BuildContext context) {
+int stepsTaken = 0;
+
+Game_01_steps({Key? key, required this.onChallengeCompleted}) : super(key: key);
+
+void showCompletionDialog(BuildContext context) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -46,12 +46,18 @@ void _showCompletionDialog(BuildContext context) {
   Widget build(BuildContext context) {
     final pipModeNotifier = Provider.of<PipModeNotifier>(context);
 
+    if(stepsTaken >= 7500){
+      onChallengeCompleted();
+      showCompletionDialog(context);
+    }
+
     if (pipModeNotifier.inPipMode){
       return pipModeNotifier.setPipModeImg();
     }
     return  Consumer<StepCounterProvider>(
         builder: (context, stepCounter, child) {
           if (stepCounter.error != null) {
+            
             return Center(
               child: Text(
                 stepCounter.error!,
@@ -59,6 +65,7 @@ void _showCompletionDialog(BuildContext context) {
               ),
             );
           } else {
+            stepsTaken = stepCounter.stepCount;
              return Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -67,15 +74,19 @@ void _showCompletionDialog(BuildContext context) {
                     'Steps: ${stepCounter.stepCount}',
                     style: Theme.of(context).textTheme.headlineMedium,
                   ),
-                  if (stepCounter.stepCount >= 7500)
+      
+                  if (stepCounter.stepCount >= 7500) 
+                    //onChallengeCompleted();
                     ElevatedButton(
                       onPressed: () {
-                        _showCompletionDialog(context);
+                       // _showCompletionDialog(context);
+                       onChallengeCompleted();
                       },
                       child: Text('Complete Challenge'),)
                    
                 ],
               ),
+              
             );
           }
         },

@@ -21,6 +21,7 @@ class _Game_04_kmState extends State<Game_04_km> {
   double distanceTraveled = 0;
   bool challengeStarted = false;
   int previousStepCount = 0;
+  int initialStepCount = 0;
   int stepsTakenSinceChallengeStarted = 0;
   StreamSubscription<int>? stepCountSubscription;
 
@@ -30,6 +31,7 @@ class _Game_04_kmState extends State<Game_04_km> {
       setState(() {
         challengeStarted = true;
         previousStepCount = currentStepCount;
+        initialStepCount = currentStepCount;
         distanceTraveled = 0;
         stepsTakenSinceChallengeStarted = 0;
       });
@@ -43,11 +45,14 @@ class _Game_04_kmState extends State<Game_04_km> {
     stepCountSubscription = provider.stepCountStream.listen((stepCount) {
       if (challengeStarted) {
         int stepCountDifference = stepCount - previousStepCount;
+        setState(() {
+          stepsTakenSinceChallengeStarted = stepCount - initialStepCount;
+        });
         if (stepCountDifference >= 10) {
           setState(() {
             distanceTraveled += (stepCountDifference * 0.000762);
             previousStepCount = stepCount;
-            stepsTakenSinceChallengeStarted += stepCountDifference;
+            //stepsTakenSinceChallengeStarted += stepCountDifference;
           });
           if (distanceTraveled >= 3) {
             challengeStarted = false;

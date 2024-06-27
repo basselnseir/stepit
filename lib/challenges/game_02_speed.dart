@@ -58,7 +58,8 @@ class _Game_02_speed extends State<Game_02_speed> {
       _speed = 0;
     } else {
       double distance = (challengeStepCount - previousCurrSteps) * 0.762; // Assuming each step is 0.762 meters
-      _speed = distance / 3;
+      _speed = distance / 3; // Speed in meters per second
+      _speed = double.parse(_speed.toStringAsFixed(3));
     }
 
     if (_speed > max_speed) {

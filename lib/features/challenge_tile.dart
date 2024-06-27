@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stepit/challenges/game_01_steps.dart';
+import 'package:stepit/challenges/tmp_game_01.dart';
 import 'package:stepit/classes/game.dart';
 import 'package:stepit/classes/pip_mode_notifier.dart';
 
@@ -15,6 +16,36 @@ class ChallengePage extends StatefulWidget {
 
 
 class _ChallengePageState extends State<ChallengePage> {
+
+bool checkChallengeCompleted = false;
+
+void updateParameter() {
+  setState(() {
+    // Update the parameter here
+    checkChallengeCompleted = true;
+  });
+}
+
+void _showCompletionDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Congratulations!'),
+        content: Text('You have completed the challenge.'),
+        actions: <Widget>[
+          TextButton(
+            child: Text('OK'),
+            onPressed: () {
+              Navigator.of(context).pop(); // Close the dialog
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
   @override
   Widget build(BuildContext context) {
     final pipModeNotifier = Provider.of<PipModeNotifier>(context);
@@ -22,6 +53,12 @@ class _ChallengePageState extends State<ChallengePage> {
     if (pipModeNotifier.inPipMode){
       return pipModeNotifier.setPipModeImg();
     }
+
+    if (checkChallengeCompleted) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showCompletionDialog(context);
+    });
+  }
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -53,10 +90,13 @@ class _ChallengePageState extends State<ChallengePage> {
                   "Your challenge is to walk at least 7500 steps today",
                   style: TextStyle(fontSize: 20),
                 ),
-                const SizedBox(height: 20),
-                Game_01_steps(),
                 
-            ],),
+                Game_01_steps(onChallengeCompleted: updateParameter),
+                //ChallengePageTemp(),
+               
+              ],
+            ),
+            
           ),
         ),
       ),

@@ -42,7 +42,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> with WidgetsBindi
   _TakePictureScreenState(this.imagePaths, this.userID, this.gameID);
 
   late Stream<StepCount> _stepCountStream;
-  String _steps = '0';
+  //String _steps = '0';
   int _initialSteps = 0;
   bool started = false;
   String? enlargedImagePath;
@@ -51,7 +51,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> with WidgetsBindi
   void initState() {
     super.initState();
     // WidgetsBinding.instance.addObserver(this);
-    initPlatformState();
+    //initPlatformState();
     _requestPermission();
     userID = userID.padLeft(6, '0');
     _loadImagePaths();
@@ -102,7 +102,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> with WidgetsBindi
     }
   }
 
-  Future<void> initPlatformState() async {
+ /* Future<void> initPlatformState() async {
     // _pedometer = Pedometer();
     _stepCountStream = Pedometer.stepCountStream;
     _stepCountStream.listen(onData).onError(onError);
@@ -129,7 +129,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> with WidgetsBindi
         _steps = 'Step counter not available on this device';
       });
     }
-  }
+  }*/
 
   Future<void> _takePicture() async {
     // camModeNotifier.inCamMode = true;
