@@ -59,10 +59,21 @@ void showCompletionDialog(BuildContext context) {
           if (stepCounter.error != null) {
             
             return Center(
-              child: Text(
-                stepCounter.error!,
-                style: Theme.of(context).textTheme.headlineMedium,
-              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    'Your challenge is to walk at least 7500 steps today',
+                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 40), // Add some space between the description and the time remaining
+                  Text(
+                    stepCounter.error!,
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
+                ],
+            ),
             );
           } else {
             stepsTaken = stepCounter.stepCount;
@@ -70,6 +81,12 @@ void showCompletionDialog(BuildContext context) {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  Text(
+                    'Your challenge is to walk at least 7500 steps today',
+                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 40), // Add some space between the description and the time remaining
                   Text(
                     'Steps: ${stepCounter.stepCount}',
                     style: Theme.of(context).textTheme.headlineMedium,

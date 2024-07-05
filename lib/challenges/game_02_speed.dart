@@ -178,12 +178,18 @@ class _Game_02_speed extends State<Game_02_speed> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  'Time remaining: ${_timeRemaining ~/ 60} minutes ${_timeRemaining % 60} seconds',
+                  'Your challenge is to walk for 15 minutes with your maximal speed',
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 40), // Add some space between the description and the time remaining
+                Text(
+                  'Time remaining: ${(_timeRemaining ~/ 60).toString().padLeft(2, '0')}:${(_timeRemaining % 60).toString().padLeft(2, '0')}',
                   style: TextStyle(fontSize: 18),
                 ),
                 SizedBox(height: 10),
                 Text(
-                  'Speed: $_speed meters per second',
+                  'Speed: $_speed m/s',
                   style: TextStyle(fontSize: 18),
                 ),
                 SizedBox(height: 10),
