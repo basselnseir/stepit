@@ -244,7 +244,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
           ),
           centerTitle: true,
           automaticallyImplyLeading: false,
-          title: const Text('StepIt'),
+          title: const Text('Choose a Challenge'),
         ),
         drawer: Drawer(
           backgroundColor: const Color.fromARGB(255, 184, 239, 186),
@@ -334,19 +334,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               const SizedBox(height: 30),
-              const Flexible(flex: 0,
-              child: Center(
-                child: Text(
-                  'Choose a Challenge',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 40,
-                    fontFamily: 'Roboto', // Change to your preferred font
-                    fontWeight: FontWeight.bold, // Make the text bold
-                  ),
-                ),
-              ),
-              ),
+              
               const SizedBox(height: 10),
               Flexible(flex: 10000, child: Expanded( child: SingleChildScrollView(
                 child: Column(
