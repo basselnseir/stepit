@@ -162,204 +162,232 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     });
 
     if (user == null) {
-      return FutureBuilder<User?>(
-        future: loadUser(context),
-        builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: SizedBox(
-                width: 50.0,
-                height: 50.0,
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                ),
-              ),
-            );
-          } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          } else {
-            user = snapshot.data;
-            if (user != null) {
-              Provider.of<UserProvider>(context, listen: false).setUser(user!);
-            } else {
+      return PopScope(
+          canPop: false,
+          onPopInvoked: (bool didPop) async {
+            // Call your method to enter PiP mode here
+            pipModeNotifier.inPipMode = true; // Assuming this is how you trigger PiP mode
+            return pipModeNotifier.enablePip(context); // Prevents the app from exiting or going back
+          }, child: FutureBuilder<User?>(
+          future: loadUser(context),
+          builder: (BuildContext context, AsyncSnapshot<User?> snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(
-              child: SizedBox(
-                width: 50.0,
-                height: 50.0,
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                child: SizedBox(
+                  width: 50.0,
+                  height: 50.0,
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  ),
                 ),
-              ),
-            );
+              );
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else {
+              user = snapshot.data;
+              if (user != null) {
+                Provider.of<UserProvider>(context, listen: false).setUser(user!);
+              } else {
+                return const Center(
+                child: SizedBox(
+                  width: 50.0,
+                  height: 50.0,
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  ),
+                ),
+              );
+              }
             }
-          }
-          return Container();
-        },
+            return Container();
+          },
+        ),
       );
     }
 
     if (gameProvider.games.isEmpty && user != null) {
-      FutureBuilder(
-        future: gameProvider.loadGames(user, context),
-        builder: (BuildContext context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: SizedBox(
-                width: 50.0,
-                height: 50.0,
-                child: CircularProgressIndicator(
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+      return PopScope(
+          canPop: false,
+          onPopInvoked: (bool didPop) async {
+            // Call your method to enter PiP mode here
+            pipModeNotifier.inPipMode = true; // Assuming this is how you trigger PiP mode
+            return pipModeNotifier.enablePip(context); // Prevents the app from exiting or going back
+          }, child: FutureBuilder(
+          future: gameProvider.loadGames(user, context),
+          builder: (BuildContext context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: SizedBox(
+                  width: 50.0,
+                  height: 50.0,
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                  ),
                 ),
-              ),
-            );
-          } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          } else {
-            return const Text("data");
-          }
-        },
+              );
+            } else if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            } else {
+              return const Text("data");
+            }
+          },
+        ),
       );
     }
 
     if (user == null || gameProvider.games.isEmpty) {
-      return const Center(
-        child: SizedBox(
-          width: 50.0,
-          height: 50.0,
-          child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+      return PopScope(
+          canPop: false,
+          onPopInvoked: (bool didPop) async {
+            // Call your method to enter PiP mode here
+            pipModeNotifier.inPipMode = true; // Assuming this is how you trigger PiP mode
+            return pipModeNotifier.enablePip(context); // Prevents the app from exiting or going back
+          }, child: const Center(
+          child: SizedBox(
+            width: 50.0,
+            height: 50.0,
+            child: CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+            ),
           ),
         ),
       );
     } else {
-      return Scaffold(
-        appBar: AppBar(
-          leading: Builder(
-            builder: (BuildContext context) {
-              return IconButton(
-                icon: const Icon(Icons.menu),
-                onPressed: () => Scaffold.of(context).openDrawer(),
-              );
-            },
+      return PopScope(
+          canPop: false,
+          onPopInvoked: (bool didPop) async {
+            // Call your method to enter PiP mode here
+            pipModeNotifier.inPipMode = true; // Assuming this is how you trigger PiP mode
+            return pipModeNotifier.enablePip(context); // Prevents the app from exiting or going back
+          }, child:  Scaffold(
+          appBar: AppBar(
+            leading: Builder(
+              builder: (BuildContext context) {
+                return IconButton(
+                  icon: const Icon(Icons.menu),
+                  onPressed: () => Scaffold.of(context).openDrawer(),
+                );
+              },
+            ),
+            centerTitle: true,
+            automaticallyImplyLeading: false,
+            title: const Text('Choose a Challenge'),
           ),
-          centerTitle: true,
-          automaticallyImplyLeading: false,
-          title: const Text('Choose a Challenge'),
-        ),
-        drawer: Drawer(
-          backgroundColor: const Color.fromARGB(255, 184, 239, 186),
-          child: Container(
-            margin: const EdgeInsets.only(top: 50.0),
-            width: MediaQuery.of(context).size.width * 0.8,
-            color: Colors.white,
-            child: ListView(
-              padding: EdgeInsets.zero,
-              children: <Widget>[
-                ListTile(
-                  title: const Text('Status'),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => StatusPage()),
-                    );
-                  },
-                ),
-
-              ListTile(
-                  title: const Text('Game_01'),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => ChallengePage(game: gameProvider.games[0])),
-                      
-                    );
-                  },
-                ),
-                
-                ListTile(
-                  title: const Text('Temp Game_01'),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => ChallengePageTemp()),
-                      
-                    );
-                  },
-                ),
+          drawer: Drawer(
+            backgroundColor: const Color.fromARGB(255, 184, 239, 186),
+            child: Container(
+              margin: const EdgeInsets.only(top: 50.0),
+              width: MediaQuery.of(context).size.width * 0.8,
+              color: Colors.white,
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: <Widget>[
+                  ListTile(
+                    title: const Text('Status'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => StatusPage()),
+                      );
+                    },
+                  ),
 
                 ListTile(
-                  title: const Text('Speed Challenge'),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Game_02_speed()),
-                    );
-                  },
-                ),
-                ListTile(
-                  title: const Text('KM Challenge'),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const Game_04_km(title: "3 km Challenge",
-                                                    description: "Your challenge is to walk for 3 kilometers in a row.")),
-                    );
-                  },
-                ),
-                ListTile(
-                  title: const Text('One Hour Challenge'),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Game_03_time()),
-                    );
-                  },
-                ),
-                // ListTile(
-                //   title: Text('PiP mode'),
-                //   onTap: () async {
-                //     enablePip(context);
-                //     inPipMode = true;
-                //   },
-                // ),
-                // Add more ListTiles for more pages
-              ],
+                    title: const Text('Game_01'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ChallengePage(game: gameProvider.games[0])),
+                        
+                      );
+                    },
+                  ),
+                  
+                  ListTile(
+                    title: const Text('Temp Game_01'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ChallengePageTemp()),
+                        
+                      );
+                    },
+                  ),
+
+                  ListTile(
+                    title: const Text('Speed Challenge'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Game_02_speed()),
+                      );
+                    },
+                  ),
+                  ListTile(
+                    title: const Text('KM Challenge'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const Game_04_km(title: "3 km Challenge",
+                                                      description: "Your challenge is to walk for 3 kilometers in a row.")),
+                      );
+                    },
+                  ),
+                  ListTile(
+                    title: const Text('One Hour Challenge'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Game_03_time()),
+                      );
+                    },
+                  ),
+                  // ListTile(
+                  //   title: Text('PiP mode'),
+                  //   onTap: () async {
+                  //     enablePip(context);
+                  //     inPipMode = true;
+                  //   },
+                  // ),
+                  // Add more ListTiles for more pages
+                ],
+              ),
             ),
           ),
-        ),
-        body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Flex(
-            direction: Axis.vertical,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              const SizedBox(height: 30),
-              
-              const SizedBox(height: 10),
-              Flexible(flex: 10000, child: Expanded( child: SingleChildScrollView(
-                child: Column(
-                  children: <Widget>[
-                    challegeButton(0, user, gameProvider, context),
-                    const SizedBox(height: 20),
-                    challegeButton(1, user, gameProvider, context),
-                    const SizedBox(height: 20),
-                    challegeButton(2, user, gameProvider, context),
-                  ],
+          body: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Flex(
+              direction: Axis.vertical,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                const SizedBox(height: 30),
+                
+                const SizedBox(height: 10),
+                Flexible(flex: 10000, child: Expanded( child: SingleChildScrollView(
+                  child: Column(
+                    children: <Widget>[
+                      challegeButton(0, user, gameProvider, context),
+                      const SizedBox(height: 20),
+                      challegeButton(1, user, gameProvider, context),
+                      const SizedBox(height: 20),
+                      challegeButton(2, user, gameProvider, context),
+                    ],
+                  ),
                 ),
-              ),
-              ),
-              ),
-              const SizedBox(height: 10),
-              Flexible(flex: 0,
-              child: Text(
-                'ID: ${user.uniqueNumber.toString().padLeft(6, '0')}',
-                style: const TextStyle(
-                  fontSize: 20,
-                  color: Colors.black,
                 ),
-              ),
-              ),
-            ],
+                ),
+                const SizedBox(height: 10),
+                Flexible(flex: 0,
+                child: Text(
+                  'ID: ${user.uniqueNumber.toString().padLeft(6, '0')}',
+                  style: const TextStyle(
+                    fontSize: 20,
+                    color: Colors.black,
+                  ),
+                ),
+                ),
+              ],
+            ),
           ),
         ),
       );
