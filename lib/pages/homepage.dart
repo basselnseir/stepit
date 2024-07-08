@@ -24,6 +24,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   final ScrollController _scrollController = ScrollController();
+  bool inPausedState = false;
 
   @override
   void initState() {
@@ -45,13 +46,25 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState lifecycleState) {
     final pipModeNotifier = Provider.of<PipModeNotifier>(context, listen: false);
     if (lifecycleState == AppLifecycleState.inactive) {
+      if(inPausedState){
+        inPausedState = false;
+        return;
+      }
+      print('App is in inactive state!!!');
       pipModeNotifier.enablePip(context);
       pipModeNotifier.inPipMode = true;
     }
     if (lifecycleState == AppLifecycleState.resumed && pipModeNotifier.inPipMode) {
+      if(inPausedState){
+        inPausedState = false;
+      }
       setState(() {
         pipModeNotifier.inPipMode = false;
       });
+    }
+    if (lifecycleState == AppLifecycleState.paused) {
+      print('App is in background!!!');
+      inPausedState = true;
     }
   }
 
