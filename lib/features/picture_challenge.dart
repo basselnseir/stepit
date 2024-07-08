@@ -132,9 +132,11 @@ class _TakePictureScreenState extends State<TakePictureScreen> with WidgetsBindi
   }*/
 
   Future<void> _takePicture() async {
-    // camModeNotifier.inCamMode = true;
+    final camModeNotifier = Provider.of<CamModeNotifier>(context, listen: false);
+    camModeNotifier.inCamMode = true;
     final pickedFile = await ImagePicker().pickImage(source: ImageSource.camera);
     logEvent_('user took a picture in take_picture_challenge');
+    camModeNotifier.inCamMode = false;
     if (pickedFile != null) {
       final timestamp = DateTime.now().millisecondsSinceEpoch;
       final targetPath = "images/$userID/image_$timestamp.jpg";
@@ -169,8 +171,9 @@ class _TakePictureScreenState extends State<TakePictureScreen> with WidgetsBindi
       } on firebase_storage.FirebaseException {
         // Handle any errors
       }
+    } else{
+      print("*************** take picture failed !!!!!!!!!!!!!!!!!!!!!!");
     }
-    // camModeNotifier.inCamMode = false;
   }
 
   void _enlargeImage(String imagePath) {
@@ -202,11 +205,11 @@ class _TakePictureScreenState extends State<TakePictureScreen> with WidgetsBindi
   
   @override
   Widget build(BuildContext context) {
-    // final pipModeNotifier = Provider.of<PipModeNotifier>(context);
+    final pipModeNotifier = Provider.of<PipModeNotifier>(context);
 
-    // if (pipModeNotifier.inPipMode){
-    //   return pipModeNotifier.setPipModeImg();
-    // }
+    if (pipModeNotifier.inPipMode){
+      return pipModeNotifier.setPipModeImg();
+    }
     
     return Scaffold(
       appBar: AppBar(
@@ -249,7 +252,6 @@ class _TakePictureScreenState extends State<TakePictureScreen> with WidgetsBindi
                 const SizedBox(height: 20),
                 FloatingActionButton(
                   onPressed: () {
-                    // final camModeNotifier = Provider.of<CamModeNotifier>(context, listen: false);
                     // camModeNotifier.inCamMode = true;
                     _takePicture();
                     // camModeNotifier.inCamMode = false;

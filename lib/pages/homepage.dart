@@ -291,7 +291,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                       );
                     },
                   ),
-
                 ListTile(
                     title: const Text('Game_01'),
                     onTap: () {
@@ -302,7 +301,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                       );
                     },
                   ),
-                  
                   ListTile(
                     title: const Text('Temp Game_01'),
                     onTap: () {
@@ -313,7 +311,6 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                       );
                     },
                   ),
-
                   ListTile(
                     title: const Text('Speed Challenge'),
                     onTap: () {

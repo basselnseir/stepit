@@ -1,6 +1,8 @@
 import 'dart:math';
 import 'package:floating/floating.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:stepit/classes/cam_mode_notifier.dart';
 
 class PipModeNotifier with ChangeNotifier {
   bool _inPipMode = false;
@@ -27,6 +29,10 @@ class PipModeNotifier with ChangeNotifier {
   }
 
   Future<void> enablePip(BuildContext context) async {
+    final camModeNotifier = Provider.of<CamModeNotifier>(context, listen: false);
+    if (camModeNotifier.inCamMode) {
+      return;
+    }
     // const rational = Rational.landscape();
     // const rational = Rational(38, 39);
     const rational = Rational(1, 1);

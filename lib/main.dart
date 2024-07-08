@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stepit/background/steps_tracking_wm.dart';
+import 'package:stepit/classes/cam_mode_notifier.dart';
 import 'package:stepit/classes/pip_mode_notifier.dart';
 import 'package:stepit/classes/database.dart';
 import 'package:stepit/classes/game.dart';
@@ -45,7 +46,8 @@ void main() async {
       ChangeNotifierProvider(create: (context) => UserProvider()),
       ChangeNotifierProvider(create: (context) => GameProvider()),
       ChangeNotifierProvider(create: (context) => PipModeNotifier()),
-      ChangeNotifierProvider(create: (context) => ChallengeState()), // Add this line
+      ChangeNotifierProvider(create: (context) => ChallengeState()), 
+      ChangeNotifierProvider(create: (context) => CamModeNotifier())// Add this line
     ],
     child: MyApp(isFirstTime: isFirstTime),
   ));

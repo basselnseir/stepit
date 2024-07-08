@@ -1,9 +1,7 @@
-import 'package:floating/floating.dart';
 import 'package:flutter/material.dart';
 
 class CamModeNotifier with ChangeNotifier {
   bool _inCamMode = false;
-  final floating = Floating();
 
   bool get inCamMode => _inCamMode;
 
