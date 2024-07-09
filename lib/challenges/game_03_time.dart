@@ -48,8 +48,9 @@ void startChallenge(BuildContext context) {
 
   void updateChallengeSteps(int currentSteps) {
     _challengeSteps = currentSteps - _startSteps;
+  WidgetsBinding.instance.addPostFrameCallback((_) {
     notifyListeners();
-  }
+  });  }
 
   void resetChallenge() {
     _timer?.cancel();

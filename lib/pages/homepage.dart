@@ -296,7 +296,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                 padding: EdgeInsets.zero,
                 children: <Widget>[
                   ListTile(
-                    title: const Text('Status'),
+                    title: const Text('Log'),
                     onTap: () {
                       Navigator.push(
                         context,

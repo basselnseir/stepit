@@ -62,11 +62,11 @@ void showCompletionDialog(BuildContext context) {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  Text(
-                    'Your challenge is to walk at least 7500 steps today',
-                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
-                  ),
+                  // Text(
+                  //   'Your challenge is to walk at least 7500 steps today',
+                  //   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                  //   textAlign: TextAlign.center,
+                  // ),
                   SizedBox(height: 40), // Add some space between the description and the time remaining
                   Text(
                     stepCounter.error!,
