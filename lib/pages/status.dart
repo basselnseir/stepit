@@ -13,18 +13,20 @@ class _StatusPageState extends State<StatusPage> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Stream<DocumentSnapshot> fetchFromFirebase(int userID) {
-    return _firestore.collection('users').doc(userID.toString().padLeft(6, '0')).snapshots();
+    return _firestore
+        .collection('users')
+        .doc(userID.toString().padLeft(6, '0'))
+        .snapshots();
   }
 
   @override
   Widget build(BuildContext context) {
-
     final pipModeNotifier = Provider.of<PipModeNotifier>(context);
 
-    if (pipModeNotifier.inPipMode){
+    if (pipModeNotifier.inPipMode) {
       return pipModeNotifier.setPipModeImg();
     }
-    
+
     User? user = Provider.of<UserProvider>(context).user;
     return Scaffold(
       appBar: AppBar(
@@ -33,7 +35,8 @@ class _StatusPageState extends State<StatusPage> {
       ),
       body: StreamBuilder<DocumentSnapshot>(
         stream: fetchFromFirebase(user!.uniqueNumber),
-        builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        builder:
+            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
           if (snapshot.hasError) {
             return Text('Something went wrong');
           }
@@ -42,18 +45,26 @@ class _StatusPageState extends State<StatusPage> {
             return Text("Loading");
           }
           if (snapshot.data?.data() != null) {
-            Map<String, dynamic> data = snapshot.data!.data() as Map<String, dynamic>;
+            Map<String, dynamic> data =
+                snapshot.data!.data() as Map<String, dynamic>;
             if (data['steps and location'] != null) {
-              Map<String, dynamic> stepsAndLocation = data['steps and location'] as Map<String, dynamic>;
+              Map<String, dynamic> stepsAndLocation =
+                  data['steps and location'] as Map<String, dynamic>;
 
+              // Convert the map entries to a list and sort them by key (date and time)
+              var sortedEntries = stepsAndLocation.entries.toList()
+                ..sort((a, b) =>
+                    b.key.compareTo(a.key)); // Invert the comparison here
+
+              // Now, map the sorted entries to ListTiles
               return ListView(
-                children: stepsAndLocation.entries.map((entry) {
+                children: sortedEntries.map((entry) {
                   String time = entry.key;
                   Map<String, dynamic> details = entry.value;
                   return ListTile(
                     title: Text('Time: $time'),
-                    //subtitle: Text('Steps: ${details['steps']}'),
-                    subtitle: Text('Steps: ${details['steps']}, Location: ${details['location'].latitude}, ${details['location'].longitude}'),
+                    subtitle: Text(
+                        'Steps: ${details['steps']}, Location: ${details['location'].latitude}, ${details['location'].longitude}'),
                   );
                 }).toList(),
               );
@@ -68,7 +79,7 @@ class _StatusPageState extends State<StatusPage> {
                 textAlign: TextAlign.center,
               ),
             ),
-          );        
+          );
         },
       ),
     );
