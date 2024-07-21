@@ -239,10 +239,12 @@ class _TakePictureScreenState extends State<TakePictureScreen> with WidgetsBindi
               children: [
                 Text(
                   widget.description,
-                  style: const TextStyle(
-                        fontSize: 20.0, // Adjust the font size as needed
-                        fontFamily: 'Roboto', // Change to your preferred font
-                      ),
+                  // style: const TextStyle(
+                  //       fontSize: 20.0, // Adjust the font size as needed
+                  //       fontFamily: 'Roboto', // Change to your preferred font
+                  //     ),
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 20),
                 // Text(

@@ -97,6 +97,11 @@ flutter:
       - lib/images/street-light.png
       - lib/images/park.png
       - lib/images/7500_steps.jpg
+      - lib/images/widening.png
+      - lib/images/skyline.png
+      - lib/images/faucet.png
+      - lib/images/crosswalk.png
+      - lib/images/bike.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

@@ -83,9 +83,9 @@ class Game {
     );
   }
 
-  static String getGameIcon(String title){
+  static String getGameIcon(String title) {
     String icon = "";
-    switch (title){
+    switch (title) {
       case '7500 Steps':
         icon = "footsteps.png";
       case 'Fast 15 min':
