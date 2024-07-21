@@ -91,7 +91,7 @@ void _showCompletionDialog(BuildContext context) {
                   style: TextStyle(fontSize: 20),
                 ),
                 
-                Game_01_steps(onChallengeCompleted: updateParameter),
+               // Game_01_steps(onChallengeCompleted: updateParameter),
                 //ChallengePageTemp(),
                
               ],

@@ -189,7 +189,7 @@ class _Game_02_speed extends State<Game_02_speed> {
                 ),
                 SizedBox(height: 10),
                 Text(
-                  'Speed: $_speed m/s',
+                  'Speed: $_speed m/3s',
                   style: TextStyle(fontSize: 18),
                 ),
                 SizedBox(height: 10),

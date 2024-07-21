@@ -106,6 +106,16 @@ class Game {
         icon = "street-light.png";
       case 'Blocking Pedestrians':
         icon = "park.png";
+      case 'Crosswalks':
+        icon = "crosswalk.png";
+      case 'Faucets':
+        icon = "faucet.png";
+      case 'Public Buildings':
+        icon = "skyline.png";
+      case 'Widening The Sidewalk':
+        icon = "widening.png";
+      case 'Conflicts':
+        icon = "bike.png";
       default:
         throw Exception('Invalid title');
     }

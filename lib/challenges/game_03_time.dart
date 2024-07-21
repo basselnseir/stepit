@@ -1,71 +1,111 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:stepit/classes/game.dart';
 import 'package:stepit/classes/pip_mode_notifier.dart';
 import 'package:stepit/features/step_count.dart';
-import 'dart:async';
 
-class ChallengeState extends ChangeNotifier {
+class Game_03_time extends StatefulWidget {
+  @override
+  _Game_03_time createState() => _Game_03_time();
+}
+
+class _Game_03_time extends State<Game_03_time> {
   Timer? _timer;
-  int _startSteps = 0;
-  int _challengeSteps = 0; // New variable to keep track of steps during the challenge
-  int _remainingSeconds = 3600;
-  bool _challengeCompleted = false; // Add this line
+  int _timeRemaining = 60 * 60 ; // 15 minutes in seconds
+  int _stepCount = 0;
+  bool challengeStarted = false;
+  DateTime previousTime = DateTime.now();
+  int previousStepCount = 0; // Move this variable to the class level
+  bool challendgeEnded = false;
 
-void startChallenge(BuildContext context) {
-  resetChallenge();
-  _startSteps = Provider.of<StepCounterProvider>(context, listen: false).stepCount;
-  _challengeSteps = 0; // Reset the challenge steps
-  _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-    _remainingSeconds--;
-    if (_remainingSeconds <= 0 || _challengeSteps >= 3000) {
-      _timer?.cancel();
-      _timer = null;
-      if (_challengeSteps >= 3000) {
-        _challengeCompleted = true; // Mark the challenge as completed
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            title: const Text('Congratulations!'),
-            content: const Text('You completed the challenge!'),
-            actions: <Widget>[
-              TextButton(
-                child: Text('OK'),
-                onPressed: () {
-                  resetChallenge();
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          ),
-        );
+  void startNewChallenge() {
+    final provider = Provider.of<StepCounterProvider>(context, listen: false);
+    provider.stepCountStream.first.then((currentStepCount) {
+      setState(() {
+        challengeStarted = true;
+        previousStepCount =
+            currentStepCount; // Capture the current step count as baseline
+      });
+    });
+    startChallenge();
+  }
+
+
+  void startChallengeTimer() {
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      if (_timeRemaining == 0) {
+        _endChallenge();
       } else {
-        resetChallenge();
+        setState(() {
+          _timeRemaining--;
+        });
       }
-    }
-    notifyListeners();
-  });
-}
+    });
+  }
 
-  void updateChallengeSteps(int currentSteps) {
-    _challengeSteps = currentSteps - _startSteps;
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-    notifyListeners();
-  });  }
 
-  void resetChallenge() {
+  void startChallenge() {
+    startChallengeTimer();
+    int previousCurrSteps = 0;
+    int challengeStepCount = 0;
+    
+
+    Future.delayed(Duration.zero, () {
+      if (challengeStarted) {
+        final provider =
+            Provider.of<StepCounterProvider>(context, listen: false);
+        provider.stepCountStream.listen((stepCount) {
+          challengeStepCount = stepCount - previousStepCount;
+          setState(() {
+            _stepCount = challengeStepCount;
+          });
+        if (challengeStepCount >= 3000) {
+          _endChallenge();
+        }
+        });
+      } else {
+        previousStepCount =
+            challengeStepCount; // Reset the previous step count when the challenge is not started
+      }
+    });
+  }
+
+  
+
+  void _endChallenge() {
     _timer?.cancel();
-    _timer = null;
-    _startSteps = 0;
-    _remainingSeconds = 3600;
+
+    String message;
+    if (_stepCount >= 3000) {
+      message = 'Congratulations! You have completed the challenge.';
+    } else {
+        message = 'You have not completed the challenge. Try again next time.';
+    }
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Challenge Completed!'),
+        content: Text(message),
+        actions: <Widget>[
+          TextButton(
+            child: const Text('OK'),
+            onPressed: () {
+              challendgeEnded = true;
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      ),
+    );
   }
 
-  void dispose() {
-    resetChallenge();
-    super.dispose();
+  @override
+  void initState() {
+    super.initState();
   }
-}
 
-class Game_03_time extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final pipModeNotifier = Provider.of<PipModeNotifier>(context);
@@ -73,116 +113,96 @@ class Game_03_time extends StatelessWidget {
     if (pipModeNotifier.inPipMode){
       return pipModeNotifier.setPipModeImg();
     }
-    return _Game_03_timeBody();
-  }
-}
-
-class _Game_03_timeBody extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final pipModeNotifier = Provider.of<PipModeNotifier>(context);
-
-    if (pipModeNotifier.inPipMode){
-      return pipModeNotifier.setPipModeImg();
-    }
-    ChallengeState challengeState = Provider.of<ChallengeState>(context);
     return WillPopScope(
       onWillPop: () async {
-        if (challengeState._timer != null) {
-          // Show a dialog asking the user if they are sure they want to leave
-          bool leave = await showDialog(
-            context: context,
-            builder: (context) => AlertDialog(
-              title: const Text('Are you sure?'),
-              content: const Text('If you leave, the challenge will be reset.'),
-              actions: <Widget>[
-                TextButton(
-                  child: Text('No'),
-                  onPressed: () {
-                    Navigator.of(context).pop(false);
-                  },
+        if (challengeStarted && !challendgeEnded) {
+          return await showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text('Warning'),
+                  content: const Text(
+                      'The challenge will reset if you leave. Are you sure you want to stop the challenge?'),
+                  actions: <Widget>[
+                    TextButton(
+                      child: Text('No'),
+                      onPressed: () {
+                        Navigator.of(context).pop(false);
+                      },
+                    ),
+                    TextButton(
+                      child: Text('Yes'),
+                      onPressed: () {
+                        _timer?.cancel();
+                        Navigator.of(context).pop(true);
+                      },
+                    ),
+                  ],
                 ),
-                TextButton(
-                  child: Text('Yes'),
-                  onPressed: () {
-                    Navigator.of(context).pop(true);
-                  },
-                ),
-              ],
-            ),
-          ) ?? false;
-
-          if (leave) {
-            // Reset the challenge
-            challengeState._timer?.cancel();
-            challengeState._timer = null;
-            challengeState._startSteps = 0;
-            challengeState._remainingSeconds = 3600;
-            challengeState.notifyListeners();
-          }
-
-          return leave;
+              ) ??
+              false;
         } else {
           return true;
         }
       },
       child: Scaffold(
         appBar: AppBar(
-          title: Text('One Hour Challenge'),
+          title: Row(
+            children: <Widget>[
+              Image.asset(
+                Game.getGameIcon("3000 in an hour"), // Replace with your image path
+                width: 30, // Adjust the width as needed
+                height: 30, // Adjust the height as needed
+              ),
+              const SizedBox(
+                  width: 15), // Add some space between the title and the icon
+              const Text("3000 in an hour",
+                  style: TextStyle(
+                    fontSize: 20.0, // Adjust the font size as needed
+                    fontFamily: 'Roboto', // Change to your preferred font
+                    fontWeight: FontWeight.bold, // Make the text bold
+                  )),
+            ],
+          ),
         ),
-        backgroundColor: Colors.white,
-        body: Consumer2<StepCounterProvider, ChallengeState>(
-          builder: (context, stepCounter, challengeState, child) {
-            if (challengeState._timer != null && challengeState._startSteps == 0) {
-              challengeState._startSteps = stepCounter.stepCount;
-            }
-          challengeState.updateChallengeSteps(stepCounter.stepCount);
-
-            if (stepCounter.error != null) {
-              return Center(
-                child: Text(
-                  stepCounter.error!,
-                  style: Theme.of(context).textTheme.headlineMedium,
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text(
+                  'Your challenge is to walk at least 3000 steps in an hour',
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
                 ),
-              );
-            } else {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    // Always show the challenge description at the top
-                      Text(
-                        'Reach 3000 steps in one hour!',
-                        style: Theme.of(context).textTheme.headlineSmall,
-                      ),
-                    // Then show the timer if it's running
-                    if (challengeState._timer != null)
-                      Text(
-                        'Time remaining: ${challengeState._remainingSeconds ~/ 60}:${challengeState._remainingSeconds % 60}',
-                        style: Theme.of(context).textTheme.headlineMedium,
-                      ),
-                    // Show the current step count
-                    Text(
-                      'Steps: ${challengeState._timer == null ? 0 : stepCounter.stepCount - challengeState._startSteps}',
-                      style: Theme.of(context).textTheme.headlineMedium,
-                    ),
-                    // Show the timeout message if the challenge is failed
-                    if (challengeState._timer == null && challengeState._remainingSeconds == 0 && stepCounter.stepCount - challengeState._startSteps < 3000)
-                      Text(
-                        'Timeout! Try again!',
-                        style: Theme.of(context).textTheme.headlineSmall,
-                      ),
-                    // Show the start button if the timer is not running
-                    if (challengeState._timer == null)
-                      ElevatedButton(
-                        onPressed: () => challengeState.startChallenge(context),
-                        child: Text('Start Challenge'),
-                      ),
-                  ],
+                SizedBox(height: 40), // Add some space between the description and the time remaining
+                Text(
+                  'Time remaining: ${(_timeRemaining ~/ 60).toString().padLeft(2, '0')}:${(_timeRemaining % 60).toString().padLeft(2, '0')}',
+                  style: TextStyle(fontSize: 18),
                 ),
-              );
-            }
-          },
+                SizedBox(height: 10),
+                Text(
+                  'Steps: $_stepCount',
+                  style: TextStyle(fontSize: 18),
+                ),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: challengeStarted
+                      ? null
+                      : () {
+                          setState(() {
+                            challengeStarted = true;
+                          });
+                          startNewChallenge();
+                        },
+                  child: Text('Start Challenge'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: challengeStarted ? Colors.grey : null,
+                  ),
+                )
+              ],
+            ),
+          ),
         ),
       ),
     );

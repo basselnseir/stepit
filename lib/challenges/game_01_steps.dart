@@ -1,112 +1,113 @@
-/* 
-for this game, when the user enters the game for the first time, we should read the pedometer steps 
-and update them to be the user steps for the day, in other words it should not start from 0 if the user already
-walked for the day. And start counting from the current steps.
-and the steps should always be updated to the database.
-if the user steps are more than the game goal steps, the user wins the game.
-*/
-
-import 'package:flutter/widgets.dart';
-
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:stepit/classes/game.dart';
 import 'package:stepit/classes/pip_mode_notifier.dart';
 import 'package:stepit/features/step_count.dart';
 
-class Game_01_steps extends StatelessWidget {
-  //steps = [7500, 10000, 13000];
+class Game_01_steps extends StatefulWidget {
+  @override
+  _Game_01_steps createState() => _Game_01_steps();
+}
 
-final VoidCallback onChallengeCompleted;
+class _Game_01_steps extends State<Game_01_steps> {
+  // 15 minutes in seconds
+  int _stepCount = 0;
 
-int stepsTaken = 0;
+  void startChallenge() {
+    Future.delayed(Duration.zero, () {
+      final provider = Provider.of<StepCounterProvider>(context, listen: false);
+      provider.stepCountStream.listen((stepCount) {
+        setState(() {
+          _stepCount = stepCount;
+        });
+        if (_stepCount >= 7500) {
+          _endChallenge();
+        }
+      });
+    });
+  }
 
-Game_01_steps({Key? key, required this.onChallengeCompleted}) : super(key: key);
+  void _endChallenge() {
+    String message;
+    message = 'Congratulations! You have completed the challenge.';
 
-void showCompletionDialog(BuildContext context) {
-  showDialog(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('Congratulations!'),
-        content: Text('You have completed the challenge.'),
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Challenge Completed!'),
+        content: Text(message),
         actions: <Widget>[
           TextButton(
-            child: Text('OK'),
+            child: const Text('OK'),
             onPressed: () {
-              Navigator.of(context).pop(); // Close the dialog
+              Navigator.of(context).pop();
             },
           ),
         ],
-      );
-    },
-  );
-}
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    startChallenge();
+  }
 
   @override
   Widget build(BuildContext context) {
     final pipModeNotifier = Provider.of<PipModeNotifier>(context);
 
-    if(stepsTaken >= 7500){
-      onChallengeCompleted();
-      showCompletionDialog(context);
-    }
-
-    if (pipModeNotifier.inPipMode){
+    if (pipModeNotifier.inPipMode) {
       return pipModeNotifier.setPipModeImg();
     }
-    return  Consumer<StepCounterProvider>(
-        builder: (context, stepCounter, child) {
-          if (stepCounter.error != null) {
-            
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  // Text(
-                  //   'Your challenge is to walk at least 7500 steps today',
-                  //   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                  //   textAlign: TextAlign.center,
-                  // ),
-                  SizedBox(height: 40), // Add some space between the description and the time remaining
-                  Text(
-                    stepCounter.error!,
-                    style: Theme.of(context).textTheme.headlineMedium,
-                  ),
-                ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Row(
+          children: <Widget>[
+            Image.asset(
+              Game.getGameIcon("7500 Steps"), // Replace with your image path
+              width: 30, // Adjust the width as needed
+              height: 30, // Adjust the height as needed
             ),
-            );
-          } else {
-            stepsTaken = stepCounter.stepCount;
-             return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    'Your challenge is to walk at least 7500 steps today',
-                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(height: 40), // Add some space between the description and the time remaining
-                  Text(
-                    'Steps: ${stepCounter.stepCount}',
-                    style: Theme.of(context).textTheme.headlineMedium,
-                  ),
-      
-                  if (stepCounter.stepCount >= 7500) 
-                    //onChallengeCompleted();
-                    ElevatedButton(
-                      onPressed: () {
-                       // _showCompletionDialog(context);
-                       onChallengeCompleted();
-                      },
-                      child: Text('Complete Challenge'),)
-                   
-                ],
+            const SizedBox(
+                width: 15), // Add some space between the title and the icon
+            const Text("7500 Steps",
+                style: TextStyle(
+                  fontSize: 20.0, // Adjust the font size as needed
+                  fontFamily: 'Roboto', // Change to your preferred font
+                  fontWeight: FontWeight.bold, // Make the text bold
+                )),
+          ],
+        ),
+      ),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'Your challenge is to walk at 7500 steps',
+                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                textAlign: TextAlign.center,
               ),
-              
-            );
-          }
-        },
-      );
+              SizedBox(
+                  height:
+                      40), // Add some space between the description and the time remaining
+              Consumer<StepCounterProvider>(
+                builder: (context, provider, child) {
+                  return Text(
+                    'Steps: ${provider.stepCount}',
+                    style: TextStyle(fontSize: 18),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

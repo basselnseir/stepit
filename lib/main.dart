@@ -46,7 +46,6 @@ void main() async {
       ChangeNotifierProvider(create: (context) => UserProvider()),
       ChangeNotifierProvider(create: (context) => GameProvider()),
       ChangeNotifierProvider(create: (context) => PipModeNotifier()),
-      ChangeNotifierProvider(create: (context) => ChallengeState()), 
       ChangeNotifierProvider(create: (context) => CamModeNotifier())// Add this line
     ],
     child: MyApp(isFirstTime: isFirstTime),

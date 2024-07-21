@@ -3,20 +3,20 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:pedometer/pedometer.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class StepCounterProvider with ChangeNotifier {
-  int _stepCount = 0;
-  int get stepCount => _stepCount;
+  int stepCount = 0;
+  int _previousStepCount = 0;
   DateTime _lastUpdateDate = DateTime.now();
-
   String? _error;
+
   String? get error => _error;
-
   final _stepCountController = StreamController<int>.broadcast();
-
   Stream<int> get stepCountStream => _stepCountController.stream;
 
-    StepCounterProvider() {
+  StepCounterProvider() {
+    _loadSavedData();
     Pedometer.stepCountStream.listen(
       (StepCount event) {
         DateTime now = DateTime.now();
@@ -24,13 +24,14 @@ class StepCounterProvider with ChangeNotifier {
         DateTime lastStepDate = DateTime(_lastUpdateDate.year, _lastUpdateDate.month, _lastUpdateDate.day);
 
         if (today.isAfter(lastStepDate)) {
-          _stepCount = 0; // Reset step count for the new day
+          _previousStepCount = event.steps; // Save the previous step count
           _lastUpdateDate = now; // Update last update date to now
+          _saveData(); // Save the updated data
         }
 
         print('Received step count event: $event');
-        _stepCount = event.steps; // Accumulate steps
-        _stepCountController.add(_stepCount);
+        stepCount = event.steps - _previousStepCount; // Calculate steps for the new day
+        _stepCountController.add(stepCount);
         notifyListeners();
       },
       onError: (error) {
@@ -41,19 +42,24 @@ class StepCounterProvider with ChangeNotifier {
     );
   }
 
+  Future<void> _loadSavedData() async {
+    final prefs = await SharedPreferences.getInstance();
+    _previousStepCount = prefs.getInt('previousStepCount') ?? 0;
+    int? lastUpdateDateMillis = prefs.getInt('lastUpdateDate');
+    if (lastUpdateDateMillis != null) {
+      _lastUpdateDate = DateTime.fromMillisecondsSinceEpoch(lastUpdateDateMillis);
+    }
+  }
+
+  Future<void> _saveData() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('previousStepCount', _previousStepCount);
+    await prefs.setInt('lastUpdateDate', _lastUpdateDate.millisecondsSinceEpoch);
+  }
+
   void updateStepCount(int newStepCount) {
-    _stepCount = newStepCount;
-    _stepCountController.add(_stepCount);
+    stepCount = newStepCount;
+    _stepCountController.add(stepCount);
     notifyListeners();
   }
-
-  @override
-  void dispose() {
-    _stepCountController.close();
-    super.dispose();
-  }
 }
-
-  bool _isSameDay(DateTime date1, DateTime date2) {
-    return date1.year == date2.year && date1.month == date2.month && date1.day == date2.day;
-  }
