@@ -6,17 +6,17 @@ import 'package:stepit/classes/game.dart';
 import 'package:stepit/classes/pip_mode_notifier.dart';
 import 'package:stepit/features/step_count.dart';
 
-class Game_04_km extends StatefulWidget {
+class Game_08_km extends StatefulWidget {
 
 
-  const Game_04_km({Key? key})
+  const Game_08_km({Key? key})
       : super(key: key);
 
   @override
-  _Game_04_kmState createState() => _Game_04_kmState();
+  _Game_08_kmState createState() => _Game_08_kmState();
 }
 
-class _Game_04_kmState extends State<Game_04_km> {
+class _Game_08_kmState extends State<Game_08_km> {
   double distanceTraveled = 0;
   bool challengeStarted = false;
   int previousStepCount = 0;
@@ -53,13 +53,13 @@ class _Game_04_kmState extends State<Game_04_km> {
             previousStepCount = stepCount;
             //stepsTakenSinceChallengeStarted += stepCountDifference;
           });
-          if (distanceTraveled >= 1) {
+          if (distanceTraveled >= 1.5) {
             challengeStarted = false;
             showDialog(
               context: context,
               builder: (context) => AlertDialog(
                 title: const Text('Congratulations!'),
-                content: const Text('You have completed the 1 km challenge.'),
+                content: const Text('You have completed the 1.5 km challenge.'),
                 actions: <Widget>[
                   TextButton(
                     child: Text('OK'),
@@ -140,7 +140,7 @@ class _Game_04_kmState extends State<Game_04_km> {
               ),
               const SizedBox(
                   width: 15), // Add some space between the title and the icon
-              const Text("1 km",
+              const Text("1.5 km",
                   style: TextStyle(
                     fontSize: 20.0, // Adjust the font size as needed
                     fontFamily: 'Roboto', // Change to your preferred font
@@ -156,7 +156,7 @@ class _Game_04_kmState extends State<Game_04_km> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
               Text(
-                "Your challenge is to walk for 1 kilometers in a row.",
+                "Your challenge is to walk for 1.5 kilometers in a row.",
                 style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),

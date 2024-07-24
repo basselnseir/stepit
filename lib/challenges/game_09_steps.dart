@@ -5,12 +5,12 @@ import 'package:stepit/classes/game.dart';
 import 'package:stepit/classes/pip_mode_notifier.dart';
 import 'package:stepit/features/step_count.dart';
 
-class Game_01_steps extends StatefulWidget {
+class Game_09_steps extends StatefulWidget {
   @override
-  _Game_01_steps createState() => _Game_01_steps();
+  _Game_09_steps createState() => _Game_09_steps();
 }
 
-class _Game_01_steps extends State<Game_01_steps> {
+class _Game_09_steps extends State<Game_09_steps> {
   // 15 minutes in seconds
   int _stepCount = 0;
 
@@ -21,7 +21,7 @@ class _Game_01_steps extends State<Game_01_steps> {
         setState(() {
           _stepCount = stepCount;
         });
-        if (_stepCount >= 5000) {
+        if (_stepCount >= 10000) {
           _endChallenge();
         }
       });
@@ -73,7 +73,7 @@ class _Game_01_steps extends State<Game_01_steps> {
             ),
             const SizedBox(
                 width: 15), // Add some space between the title and the icon
-            const Text("5000 Steps",
+            const Text("10000 Steps",
                 style: TextStyle(
                   fontSize: 20.0, // Adjust the font size as needed
                   fontFamily: 'Roboto', // Change to your preferred font
@@ -89,7 +89,7 @@ class _Game_01_steps extends State<Game_01_steps> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
-                'Your challenge is to walk for 5000 steps',
+                'Your challenge is to walk for 10000 steps',
                 style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),

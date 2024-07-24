@@ -5,12 +5,12 @@ import 'package:stepit/classes/game.dart';
 import 'package:stepit/classes/pip_mode_notifier.dart';
 import 'package:stepit/features/step_count.dart';
 
-class Game_03_time extends StatefulWidget {
+class Game_07_time extends StatefulWidget {
   @override
-  _Game_03_time createState() => _Game_03_time();
+  _Game_07_time createState() => _Game_07_time();
 }
 
-class _Game_03_time extends State<Game_03_time> {
+class _Game_07_time extends State<Game_07_time> {
   Timer? _timer;
   int _timeRemaining = 60 * 60 ; // 15 minutes in seconds
   int _stepCount = 0;
@@ -60,7 +60,7 @@ class _Game_03_time extends State<Game_03_time> {
           setState(() {
             _stepCount = challengeStepCount;
           });
-        if (challengeStepCount >= 2000) {
+        if (challengeStepCount >= 4000) {
           _endChallenge();
         }
         });
@@ -77,7 +77,7 @@ class _Game_03_time extends State<Game_03_time> {
     _timer?.cancel();
 
     String message;
-    if (_stepCount >= 2000) {
+    if (_stepCount >= 4000) {
       message = 'Congratulations! You have completed the challenge.';
     } else {
         message = 'You have not completed the challenge. Try again next time.';
@@ -155,7 +155,7 @@ class _Game_03_time extends State<Game_03_time> {
               ),
               const SizedBox(
                   width: 15), // Add some space between the title and the icon
-              const Text("2000 in an hour",
+              const Text("4000 in an hour",
                   style: TextStyle(
                     fontSize: 20.0, // Adjust the font size as needed
                     fontFamily: 'Roboto', // Change to your preferred font
@@ -171,7 +171,7 @@ class _Game_03_time extends State<Game_03_time> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  'Your challenge is to walk at least 2000 steps in an hour',
+                  'Your challenge is to walk at least 4000 steps in an hour',
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
