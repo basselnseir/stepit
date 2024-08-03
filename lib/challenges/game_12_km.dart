@@ -134,7 +134,7 @@ class _Game_12_kmState extends State<Game_12_km> {
           title: Row(
             children: <Widget>[
               Image.asset(
-                Game.getGameIcon("3 km"), // Replace with your image path
+                Game.getGameIcon("2 km"), // Replace with your image path
                 width: 30, // Adjust the width as needed
                 height: 30, // Adjust the height as needed
               ),

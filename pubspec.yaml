@@ -102,6 +102,12 @@ flutter:
       - lib/images/faucet.png
       - lib/images/crosswalk.png
       - lib/images/bike.png
+      - lib/images/playground.png
+      - lib/images/shadow.png
+      - lib/images/beautifultree.png
+      - lib/images/dust.png
+      - lib/images/shovels.png
+      - lib/images/relax.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

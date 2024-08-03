@@ -86,36 +86,65 @@ class Game {
   static String getGameIcon(String title) {
     String icon = "";
     switch (title) {
-      case '7500 Steps':
+      case '5000 Steps':
         icon = "footsteps.png";
       case 'Fast 15 min':
         icon = "15.png";
-      case '3000 in an hour':
+      case '2000 in an hour':
         icon = "one-hour.png";
-      case '3 km':
+      case '1 km':
         icon = "number-3.png";
-      case '3 Floors':
-        icon = "stairs.png";
+      case '7500 Steps':
+        icon = "footsteps.png";
+      case 'Fast 30 min':
+        icon = "15.png";
+      case '4000 in an hour':
+        icon = "one-hour.png";
+      case '1.5 km':
+        icon = "number-3.png";
+      case '10000 Steps':
+        icon = "footsteps.png";
+      case 'Fast 45 min':
+        icon = "15.png";
+      case '6000 in an hour':
+        icon = "one-hour.png";
+      case '2 km':
+        icon = "number-3.png";
+
       case 'Sidewalk Defects':
         icon = "sidewalk.png";
       case 'Risks For Pedestrians':
         icon = "students.png";
-      case 'Blocked Bus Stops':
-        icon = "bus-stop.png";
+      case 'Conflicts':
+        icon = "bike.png";
       case 'Missing Lightning':
         icon = "street-light.png";
       case 'Blocking Pedestrians':
         icon = "park.png";
-      case 'Crosswalks':
-        icon = "crosswalk.png";
-      case 'Faucets':
-        icon = "faucet.png";
-      case 'Public Buildings':
-        icon = "skyline.png";
+      case 'Playgrounds': 
+        icon = "playground.png";
       case 'Widening The Sidewalk':
         icon = "widening.png";
-      case 'Conflicts':
-        icon = "bike.png";
+      case 'Relaxing Spots':
+        icon = "relax.png";
+      case 'Shadow':
+        icon = "shadow.png";
+      case 'Beautiful Trees':
+        icon = "beautifultree.png";
+      case 'Cleanliness':
+        icon = "dust.png";
+      case 'Add Vegetation':
+        icon = "shovel.png";
+
+      // case 'Crosswalks':
+      //   icon = "crosswalk.png";
+      // case 'Faucets':
+      //   icon = "faucet.png";
+      // case 'Public Buildings':
+      //   icon = "skyline.png";
+      // case 'Blocked Bus Stops':
+      //   icon = "bus-stop.png";
+
       default:
         throw Exception('Invalid title');
     }

@@ -149,7 +149,7 @@ class _Game_07_time extends State<Game_07_time> {
           title: Row(
             children: <Widget>[
               Image.asset(
-                Game.getGameIcon("3000 in an hour"), // Replace with your image path
+                Game.getGameIcon("4000 in an hour"), // Replace with your image path
                 width: 30, // Adjust the width as needed
                 height: 30, // Adjust the height as needed
               ),

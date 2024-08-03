@@ -67,7 +67,7 @@ class _Game_01_steps extends State<Game_01_steps> {
         title: Row(
           children: <Widget>[
             Image.asset(
-              Game.getGameIcon("7500 Steps"), // Replace with your image path
+              Game.getGameIcon("5000 Steps"), // Replace with your image path
               width: 30, // Adjust the width as needed
               height: 30, // Adjust the height as needed
             ),

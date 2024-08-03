@@ -156,7 +156,7 @@ class _Game_10_speed extends State<Game_10_speed> {
           title: Row(
             children: <Widget>[
               Image.asset(
-                Game.getGameIcon("Fast 15 min"), // Replace with your image path
+                Game.getGameIcon("Fast 45 min"), // Replace with your image path
                 width: 30, // Adjust the width as needed
                 height: 30, // Adjust the height as needed
               ),

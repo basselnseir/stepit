@@ -1,15 +1,20 @@
-import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stepit/challenges/game_01_steps.dart';
 import 'package:stepit/challenges/game_02_speed.dart';
 import 'package:stepit/challenges/game_03_time.dart';
 import 'package:stepit/challenges/game_04_km.dart';
-import 'package:stepit/challenges/tmp_game_01.dart';
+import 'package:stepit/challenges/game_05_steps.dart';
+import 'package:stepit/challenges/game_06_speed.dart';
+import 'package:stepit/challenges/game_07_time.dart';
+import 'package:stepit/challenges/game_08_km.dart';
+import 'package:stepit/challenges/game_09_steps.dart';
+import 'package:stepit/challenges/game_10_speed.dart';
+import 'package:stepit/challenges/game_11_time.dart';
+import 'package:stepit/challenges/game_12_km.dart';
 import 'package:stepit/classes/pip_mode_notifier.dart';
 import 'package:stepit/classes/user.dart';
 import 'package:stepit/classes/game.dart';
-import 'package:stepit/features/challenge_tile.dart';
 import 'package:stepit/features/picture_challenge.dart';
 import 'package:stepit/pages/status.dart';
 
@@ -118,7 +123,63 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   builder: (context) => Game_04_km(),
                 ),
               );
-            }
+            } else if (game.id == 'game_05') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Game_05_steps(),
+                ),
+              );
+            } else if (game.id == 'game_06') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Game_06_speed(),
+                ),
+              );
+            } else if (game.id == 'game_07') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Game_07_time(),
+                ),
+              );
+            } else if (game.id == 'game_08') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Game_08_km(),
+                ),
+              );
+            } else if (game.id == 'game_09') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Game_09_steps(),
+                ),
+              );
+            } else if (game.id == 'game_10') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Game_10_speed(),
+                ),
+              );
+            } else if (game.id == 'game_11') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Game_11_time(),
+                ),
+              );
+            } else if (game.id == 'game_12') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Game_12_km(),
+                ),
+              );
+            } 
           }
         },
         child: Container(
