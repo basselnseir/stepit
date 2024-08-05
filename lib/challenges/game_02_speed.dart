@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stepit/classes/game.dart';
@@ -6,6 +7,11 @@ import 'package:stepit/classes/pip_mode_notifier.dart';
 import 'package:stepit/features/step_count.dart';
 
 class Game_02_speed extends StatefulWidget {
+  final String gameID;
+  final int userID;
+
+  Game_02_speed({required this.gameID, required this.userID});
+
   @override
   _Game_02_speed createState() => _Game_02_speed();
 }
@@ -13,7 +19,7 @@ class Game_02_speed extends StatefulWidget {
 class _Game_02_speed extends State<Game_02_speed> {
   Timer? _timer;
   Timer? _everyThreeSecondsTimer;
-  int _timeRemaining = 15 * 60 ; // 15 minutes in seconds
+  int _timeRemaining = 15 * 60; // 15 minutes in seconds
   int _stepCount = 0;
   double _speed = 0.0;
   bool challengeStarted = false;
@@ -21,8 +27,19 @@ class _Game_02_speed extends State<Game_02_speed> {
   int previousStepCount = 0; // Move this variable to the class level
   double max_speed = 0;
   bool challendgeEnded = false;
+  DateTime? _challengeStartTime;
+  DateTime? _challengeEndTime;
 
   void startNewChallenge() {
+    // Save start time to Firestore
+    _challengeStartTime = DateTime.now();
+    CollectionReference userGames = FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.userID.toString().padLeft(6, '0'))
+        .collection('userGames');
+    userGames.doc(widget.gameID).update({
+      'Start Time': _challengeStartTime,
+    });
     final provider = Provider.of<StepCounterProvider>(context, listen: false);
     provider.stepCountStream.first.then((currentStepCount) {
       setState(() {
@@ -34,10 +51,19 @@ class _Game_02_speed extends State<Game_02_speed> {
     startChallenge();
   }
 
-
   void startChallengeTimer() {
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
       if (_timeRemaining == 0) {
+        CollectionReference userGames = FirebaseFirestore.instance
+            .collection('users')
+            .doc(widget.userID.toString().padLeft(6, '0'))
+            .collection('userGames');
+        _challengeEndTime = DateTime.now();
+        userGames.doc(widget.gameID).update({
+          'Completed': true,
+          'End Time': _challengeEndTime,
+          'Steps Taken during Challenge': _stepCount,
+        });
         _endChallenge();
       } else {
         setState(() {
@@ -47,26 +73,26 @@ class _Game_02_speed extends State<Game_02_speed> {
     });
   }
 
-
   void startChallenge() {
     startChallengeTimer();
     int previousCurrSteps = 0;
     int challengeStepCount = 0;
-    
+
     _everyThreeSecondsTimer = Timer.periodic(Duration(seconds: 3), (timer) {
-    if (challengeStarted == previousCurrSteps) {
-      _speed = 0;
-    } else {
-      double distance = (challengeStepCount - previousCurrSteps) * 0.762; // Assuming each step is 0.762 meters
-      _speed = distance / 3; // Speed in meters per second
-      _speed = double.parse(_speed.toStringAsFixed(3));
-    }
+      if (challengeStarted == previousCurrSteps) {
+        _speed = 0;
+      } else {
+        double distance = (challengeStepCount - previousCurrSteps) *
+            0.762; // Assuming each step is 0.762 meters
+        _speed = distance / 3; // Speed in meters per second
+        _speed = double.parse(_speed.toStringAsFixed(3));
+      }
 
-    if (_speed > max_speed) {
-      max_speed = _speed;
-    }
+      if (_speed > max_speed) {
+        max_speed = _speed;
+      }
 
-    previousCurrSteps = challengeStepCount;
+      previousCurrSteps = challengeStepCount;
     });
 
     Future.delayed(Duration.zero, () {
@@ -93,7 +119,8 @@ class _Game_02_speed extends State<Game_02_speed> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Challenge Completed!'),
-        content: Text('Congratulations! You completed the challenge. \n your maximum speed was $max_speed meters per second.'),
+        content: Text(
+            'Congratulations! You completed the challenge. \n your maximum speed was $max_speed meters per second.'),
         actions: <Widget>[
           TextButton(
             child: const Text('OK'),
@@ -116,7 +143,7 @@ class _Game_02_speed extends State<Game_02_speed> {
   Widget build(BuildContext context) {
     final pipModeNotifier = Provider.of<PipModeNotifier>(context);
 
-    if (pipModeNotifier.inPipMode){
+    if (pipModeNotifier.inPipMode) {
       return pipModeNotifier.setPipModeImg();
     }
     return WillPopScope(
@@ -182,7 +209,9 @@ class _Game_02_speed extends State<Game_02_speed> {
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 40), // Add some space between the description and the time remaining
+                SizedBox(
+                    height:
+                        40), // Add some space between the description and the time remaining
                 Text(
                   'Time remaining: ${(_timeRemaining ~/ 60).toString().padLeft(2, '0')}:${(_timeRemaining % 60).toString().padLeft(2, '0')}',
                   style: TextStyle(fontSize: 18),

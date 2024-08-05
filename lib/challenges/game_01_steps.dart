@@ -1,11 +1,18 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stepit/classes/game.dart';
 import 'package:stepit/classes/pip_mode_notifier.dart';
+import 'package:stepit/classes/user.dart';
 import 'package:stepit/features/step_count.dart';
 
 class Game_01_steps extends StatefulWidget {
+  final String gameID;
+  final int userID;
+
+  Game_01_steps({required this.gameID, required this.userID});
+
   @override
   _Game_01_steps createState() => _Game_01_steps();
 }
@@ -13,6 +20,10 @@ class Game_01_steps extends StatefulWidget {
 class _Game_01_steps extends State<Game_01_steps> {
   // 15 minutes in seconds
   int _stepCount = 0;
+  DateTime? _challengeStartTime;
+  DateTime? _challengeEndTime;
+  
+
 
   void startChallenge() {
     Future.delayed(Duration.zero, () {
@@ -22,6 +33,16 @@ class _Game_01_steps extends State<Game_01_steps> {
           _stepCount = stepCount;
         });
         if (_stepCount >= 5000) {
+        CollectionReference userGames = FirebaseFirestore.instance
+            .collection('users')
+            .doc(widget.userID.toString().padLeft(6, '0'))
+            .collection('userGames');
+        _challengeEndTime = DateTime.now();
+        userGames.doc(widget.gameID).update({
+          'Completed': true,
+          'End Time': _challengeEndTime,
+          'Steps Taken during Challenge': _stepCount,
+        });
           _endChallenge();
         }
       });

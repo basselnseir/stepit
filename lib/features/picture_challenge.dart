@@ -21,21 +21,24 @@ class TakePictureScreen extends StatefulWidget {
   final String description;
   final String userID;
   final String gameID;
-  
+
   // ignore: prefer_const_constructors_in_immutables
-  TakePictureScreen({super.key, 
-                    required this.imagePaths, 
-                    required this.title, 
-                    required this.description, 
-                    required this.userID, 
-                    required this.gameID});
+  TakePictureScreen(
+      {super.key,
+      required this.imagePaths,
+      required this.title,
+      required this.description,
+      required this.userID,
+      required this.gameID});
 
   @override
   // ignore: library_private_types_in_public_api, no_logic_in_create_state
-  _TakePictureScreenState createState() => _TakePictureScreenState(imagePaths, userID, gameID);
+  _TakePictureScreenState createState() =>
+      _TakePictureScreenState(imagePaths, userID, gameID);
 }
 
-class _TakePictureScreenState extends State<TakePictureScreen> with WidgetsBindingObserver{
+class _TakePictureScreenState extends State<TakePictureScreen>
+    with WidgetsBindingObserver {
   List<String> imagePaths;
   String userID;
   final String gameID;
@@ -83,12 +86,13 @@ class _TakePictureScreenState extends State<TakePictureScreen> with WidgetsBindi
   // }
 
   void _loadImagePaths() async {
-    final querySnapshot = await FirebaseFirestore.instance.collection('users')
-                                                          .doc(userID)
-                                                          .collection('userGames')
-                                                          .doc(gameID)
-                                                          .collection('game_images')
-                                                          .get();
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userID)
+        .collection('userGames')
+        .doc(gameID)
+        .collection('game_images')
+        .get();
     final urls = querySnapshot.docs.map((doc) => doc.data()['url']).toList();
     setState(() {
       imagePaths = List<String>.from(urls);
@@ -102,7 +106,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> with WidgetsBindi
     }
   }
 
- /* Future<void> initPlatformState() async {
+  /* Future<void> initPlatformState() async {
     // _pedometer = Pedometer();
     _stepCountStream = Pedometer.stepCountStream;
     _stepCountStream.listen(onData).onError(onError);
@@ -132,17 +136,19 @@ class _TakePictureScreenState extends State<TakePictureScreen> with WidgetsBindi
   }*/
 
   Future<void> _takePicture() async {
-    final camModeNotifier = Provider.of<CamModeNotifier>(context, listen: false);
+    final camModeNotifier =
+        Provider.of<CamModeNotifier>(context, listen: false);
     camModeNotifier.inCamMode = true;
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.camera);
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.camera);
     logEvent_('user took a picture in take_picture_challenge');
     camModeNotifier.inCamMode = false;
     if (pickedFile != null) {
       final timestamp = DateTime.now().millisecondsSinceEpoch;
+
       final targetPath = "images/$userID/image_$timestamp.jpg";
       final file = File(pickedFile.path);
       try {
-        
         // Upload the file to Firebase Storage
         await firebase_storage.FirebaseStorage.instance
             .ref(targetPath)
@@ -154,24 +160,36 @@ class _TakePictureScreenState extends State<TakePictureScreen> with WidgetsBindi
             .ref(targetPath)
             .getDownloadURL();
 
+        // Convert the timestamp back to a DateTime object
+        final DateTime dateTime =
+            DateTime.fromMillisecondsSinceEpoch(timestamp);
+
+        // Extract the date and time with two digits for hour, minute, and second
+        final String formattedDate =
+            "${dateTime.year}-${dateTime.month.toString().padLeft(2, '0')}-${dateTime.day.toString().padLeft(2, '0')}";
+        final String formattedTime =
+            "${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}:${dateTime.second.toString().padLeft(2, '0')}";
 
         setState(() {
           imagePaths.add(downloadUrl);
         });
 
-        await FirebaseFirestore.instance.collection('users')
-                                          .doc(userID)
-                                          .collection('userGames')
-                                          .doc(gameID)
-                                          .collection('game_images')
-                                          .add({
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userID)
+            .collection('userGames')
+            .doc(gameID)
+            .collection('game_images')
+            .add({
           'url': downloadUrl,
           'timestamp': timestamp,
+          'date': formattedDate,
+          'time': formattedTime,
         });
       } on firebase_storage.FirebaseException {
         // Handle any errors
       }
-    } else{
+    } else {
       print("*************** take picture failed !!!!!!!!!!!!!!!!!!!!!!");
     }
   }
@@ -182,7 +200,8 @@ class _TakePictureScreenState extends State<TakePictureScreen> with WidgetsBindi
       builder: (BuildContext context) {
         return Dialog(
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20), // Change this value to change the border radius
+            borderRadius: BorderRadius.circular(
+                20), // Change this value to change the border radius
           ),
           child: GestureDetector(
             onTap: _closeEnlarged,
@@ -202,15 +221,15 @@ class _TakePictureScreenState extends State<TakePictureScreen> with WidgetsBindi
   void _closeEnlarged() {
     Navigator.of(context).pop();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     final pipModeNotifier = Provider.of<PipModeNotifier>(context);
 
-    if (pipModeNotifier.inPipMode){
+    if (pipModeNotifier.inPipMode) {
       return pipModeNotifier.setPipModeImg();
     }
-    
+
     return Scaffold(
       appBar: AppBar(
         title: Row(
@@ -220,13 +239,14 @@ class _TakePictureScreenState extends State<TakePictureScreen> with WidgetsBindi
               width: 30, // Adjust the width as needed
               height: 30, // Adjust the height as needed
             ),
-            const SizedBox(width: 15), // Add some space between the title and the icon
+            const SizedBox(
+                width: 15), // Add some space between the title and the icon
             Text(widget.title,
                 style: const TextStyle(
-                fontSize: 20.0, // Adjust the font size as needed
-                fontFamily: 'Roboto', // Change to your preferred font
-                fontWeight: FontWeight.bold, // Make the text bold
-              )),
+                  fontSize: 20.0, // Adjust the font size as needed
+                  fontFamily: 'Roboto', // Change to your preferred font
+                  fontWeight: FontWeight.bold, // Make the text bold
+                )),
           ],
         ),
       ),
@@ -244,7 +264,7 @@ class _TakePictureScreenState extends State<TakePictureScreen> with WidgetsBindi
                   //       fontFamily: 'Roboto', // Change to your preferred font
                   //     ),
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
+                  textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 20),
                 // Text(
@@ -258,13 +278,15 @@ class _TakePictureScreenState extends State<TakePictureScreen> with WidgetsBindi
                     _takePicture();
                     // camModeNotifier.inCamMode = false;
                   },
-                  backgroundColor: const Color.fromARGB(255, 177, 216, 179), // Set the background color as needed
+                  backgroundColor: const Color.fromARGB(
+                      255, 177, 216, 179), // Set the background color as needed
                   child: const Icon(Icons.camera_alt), // Use the camera icon
                 ),
                 const SizedBox(height: 30),
                 Table(
                   children: imagePaths.map((url) {
-                    var dateTime = DateTime.fromMillisecondsSinceEpoch(int.parse(url.split('_').last.split('.').first));
+                    var dateTime = DateTime.fromMillisecondsSinceEpoch(
+                        int.parse(url.split('_').last.split('.').first));
 
                     return TableRow(children: [
                       GestureDetector(
@@ -281,8 +303,10 @@ class _TakePictureScreenState extends State<TakePictureScreen> with WidgetsBindi
                               Text(
                                 '${DateFormat('dd/MM/yyyy').format(dateTime)}\n${DateFormat('HH:mm').format(dateTime)}',
                                 style: const TextStyle(
-                                  fontSize: 16.0, // Adjust the font size as needed
-                                  fontFamily: 'Roboto', // Change to your preferred font
+                                  fontSize:
+                                      16.0, // Adjust the font size as needed
+                                  fontFamily:
+                                      'Roboto', // Change to your preferred font
                                   fontWeight: FontWeight.bold,
                                 ), // Change the value to your desired font size
                               ),

@@ -8,7 +8,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 class StepCounterProvider with ChangeNotifier {
   int stepCount = 0;
   int _previousStepCount = 0;
-  DateTime _lastUpdateDate = DateTime.now();
+  int yesterdayLastStepCount = 0;
+  String _lastUpdateDate = DateTime.now().toIso8601String().split('T')[0];
   String? _error;
 
   String? get error => _error;
@@ -19,18 +20,19 @@ class StepCounterProvider with ChangeNotifier {
     _loadSavedData();
     Pedometer.stepCountStream.listen(
       (StepCount event) {
-        DateTime now = DateTime.now();
-        DateTime today = DateTime(now.year, now.month, now.day);
-        DateTime lastStepDate = DateTime(_lastUpdateDate.year, _lastUpdateDate.month, _lastUpdateDate.day);
+        String today = DateTime.now().toIso8601String().split('T')[0];
 
-        if (today.isAfter(lastStepDate)) {
-          _previousStepCount = event.steps; // Save the previous step count
-          _lastUpdateDate = now; // Update last update date to now
-          _saveData(); // Save the updated data
+        if (today != _lastUpdateDate) {
+          yesterdayLastStepCount = _previousStepCount; // Save the previous step count
+          _lastUpdateDate = today; // Update last update date to now
+          _saveNewDate(_lastUpdateDate); // Save the updated data
+        }
+        else {
+          _saveYesterdaySteps(event.steps); // Save the last step count of yesterday
         }
 
         print('Received step count event: $event');
-        stepCount = event.steps - _previousStepCount; // Calculate steps for the new day
+        stepCount = event.steps - yesterdayLastStepCount; // Calculate steps for the new day
         _stepCountController.add(stepCount);
         notifyListeners();
       },
@@ -43,18 +45,22 @@ class StepCounterProvider with ChangeNotifier {
   }
 
   Future<void> _loadSavedData() async {
-    final prefs = await SharedPreferences.getInstance();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     _previousStepCount = prefs.getInt('previousStepCount') ?? 0;
-    int? lastUpdateDateMillis = prefs.getInt('lastUpdateDate');
-    if (lastUpdateDateMillis != null) {
-      _lastUpdateDate = DateTime.fromMillisecondsSinceEpoch(lastUpdateDateMillis);
-    }
+    String? storedDate = prefs.getString('date');
+    _lastUpdateDate = storedDate ?? DateTime.now().toIso8601String().split('T')[0];
+    
   }
 
-  Future<void> _saveData() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('previousStepCount', _previousStepCount);
-    await prefs.setInt('lastUpdateDate', _lastUpdateDate.millisecondsSinceEpoch);
+  Future<void> _saveNewDate(String today) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    //await prefs.setInt('previousStepCount', _previousStepCount);
+    await prefs.setString('date', today);
+  }
+
+    Future<void> _saveYesterdaySteps(int steps) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('previousStepCount', steps);
   }
 
   void updateStepCount(int newStepCount) {

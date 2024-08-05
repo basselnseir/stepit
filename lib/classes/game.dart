@@ -22,7 +22,12 @@ class Game {
  */
 
   //constructor
-  Game({required this.id, required this.title, required this.description, required this.level, required this.type});
+  Game(
+      {required this.id,
+      required this.title,
+      required this.description,
+      required this.level,
+      required this.type});
 
   // a method to convert a game to a map
   Map<String, dynamic> toMap() {
@@ -39,10 +44,9 @@ class Game {
   Game.fromMap(Map<String, dynamic> map)
       : id = map['id'],
         title = map['title'],
-        description = map['description'], 
+        description = map['description'],
         level = map['level'],
         type = map['type'];
-
 
   static int stringLevelToInt(String level) {
     switch (level) {
@@ -71,7 +75,7 @@ class Game {
   String toString() {
     return 'Game{id: $id, title: $title, description: $description, level: $level, type: $type}';
   }
-  
+
   static fromDocument(DocumentSnapshot<Object?> doc) {
     Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
     return Game(
@@ -121,7 +125,7 @@ class Game {
         icon = "street-light.png";
       case 'Blocking Pedestrians':
         icon = "park.png";
-      case 'Playgrounds': 
+      case 'Playgrounds':
         icon = "playground.png";
       case 'Widening The Sidewalk':
         icon = "widening.png";
@@ -154,9 +158,7 @@ class Game {
     //   fit: BoxFit.fill,);
     return 'lib/images/$icon'; // Replace with your image path
   }
-
 }
-
 
 class GameProvider extends ChangeNotifier {
   List<Game> _games = [];
@@ -169,10 +171,11 @@ class GameProvider extends ChangeNotifier {
   }
 
   Future<void> loadGames(User user, BuildContext context) async {
-     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-    .collection('games')
-    .where('type', isEqualTo: user.gameType).where('level', isEqualTo: user.level.toString())
-    .get();
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('games')
+        .where('type', isEqualTo: user.gameType)
+        .where('level', isEqualTo: user.level.toString())
+        .get();
     List<DocumentSnapshot> docs = querySnapshot.docs;
     List<Game>? games = [];
     games = docs.map((doc) => Game.fromDocument(doc)).cast<Game>().toList();
@@ -187,15 +190,33 @@ class GameProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-    Future<List<Game>> getTodaysGames(List<Game> allGames, User user) async {
+  Future<List<Game>> getTodaysGames(List<Game> allGames, User user) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? storedDate = prefs.getString('date');
     String today = DateTime.now().toIso8601String().split('T')[0];
 
     if (storedDate != today) {
-      allGames.shuffle();
-      List<Game> games = allGames.take(3).toList();
+      CollectionReference userGames = FirebaseFirestore.instance
+          .collection('users')
+          .doc(user.uniqueNumber.toString().padLeft(6, '0'))
+          .collection('userGames');
+
+      // Fetch the user's completed games
+      QuerySnapshot completedGamesSnapshot =
+          await userGames.where('Completed', isEqualTo: true).get();
+      List<String> completedGameIds =
+          completedGamesSnapshot.docs.map((doc) => doc.id).toList();
+
+      // Filter the games that have not been completed
+      List<Game> filteredGames = allGames
+          .where((game) => !completedGameIds.contains(game.id))
+          .toList();
+
+      // Shuffle and select the filtered games
+      filteredGames.shuffle();
+      List<Game> games = filteredGames.take(3).toList();
       List<String> gameIds = games.map((game) => game.id).toList();
+
       await prefs.setString('date', today);
       await prefs.setStringList('gameIds', gameIds);
       await saveTodaysGames(games, user);
@@ -209,13 +230,15 @@ class GameProvider extends ChangeNotifier {
 
 Future<void> saveTodaysGames(List<Game> games, User user) async {
   String today = DateTime.now().toIso8601String().split('T')[0];
-  CollectionReference userGames = FirebaseFirestore.instance.collection('users')
-                                          .doc(user.uniqueNumber.toString().padLeft(6, '0'))
-                                          .collection('userGames');
-                                          
+  CollectionReference userGames = FirebaseFirestore.instance
+      .collection('users')
+      .doc(user.uniqueNumber.toString().padLeft(6, '0'))
+      .collection('userGames');
 
   for (var game in games) {
-    await userGames.doc(game.id).set(game.toMap()..addAll({'Date': today}));
+    await userGames
+        .doc(game.id)
+        .set(game.toMap()..addAll({'Date': today, 'Completed': false}));
   }
 }
 /* class Challenge extends Game {

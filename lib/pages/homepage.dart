@@ -99,84 +99,84 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Game_01_steps(),
+                  builder: (context) => Game_01_steps(gameID: game.id, userID: user.uniqueNumber),
                 ),
               );
             } else if (game.id == 'game_02') {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Game_02_speed(),
+                  builder: (context) => Game_02_speed(gameID: game.id, userID: user.uniqueNumber),
                 ),
               );
             } else if (game.id == 'game_03') {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Game_03_time(),
+                  builder: (context) => Game_03_time(gameID: game.id, userID: user.uniqueNumber),
                 ),
               );
             } else if (game.id == 'game_04') {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Game_04_km(),
+                  builder: (context) => Game_04_km(gameID: game.id, userID: user.uniqueNumber),
                 ),
               );
             } else if (game.id == 'game_05') {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Game_05_steps(),
+                  builder: (context) => Game_05_steps(gameID: game.id, userID: user.uniqueNumber),
                 ),
               );
             } else if (game.id == 'game_06') {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Game_06_speed(),
+                  builder: (context) => Game_06_speed(gameID: game.id, userID: user.uniqueNumber),
                 ),
               );
             } else if (game.id == 'game_07') {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Game_07_time(),
+                  builder: (context) => Game_07_time(gameID: game.id, userID: user.uniqueNumber),
                 ),
               );
             } else if (game.id == 'game_08') {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Game_08_km(),
+                  builder: (context) => Game_08_km(gameID: game.id, userID: user.uniqueNumber),
                 ),
               );
             } else if (game.id == 'game_09') {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Game_09_steps(),
+                  builder: (context) => Game_09_steps(gameID: game.id, userID: user.uniqueNumber),
                 ),
               );
             } else if (game.id == 'game_10') {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Game_10_speed(),
+                  builder: (context) => Game_10_speed(gameID: game.id, userID: user.uniqueNumber),
                 ),
               );
             } else if (game.id == 'game_11') {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Game_11_time(),
+                  builder: (context) => Game_11_time(gameID: game.id, userID: user.uniqueNumber),
                 ),
               );
             } else if (game.id == 'game_12') {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Game_12_km(),
+                  builder: (context) => Game_12_km(gameID: game.id, userID: user.uniqueNumber),
                 ),
               );
             } 
@@ -404,7 +404,17 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                       );
                     },
                   ),
-                  ListTile(
+                  // ListTile(
+                  //   title: const Text('Test Challenge'),
+                  //   onTap: () {
+                  //     Navigator.push(
+                  //       context,
+                  //       MaterialPageRoute(
+                  //           builder: (context) => Game_01_steps(gameID: 'game_01', userID: user!.uniqueNumber)),
+                  //     );
+                  //   },
+                  // ),
+                /*  ListTile(
                     title: const Text('Game_01'),
                     onTap: () {
                       Navigator.push(
@@ -442,7 +452,7 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                         MaterialPageRoute(builder: (context) => Game_03_time()),
                       );
                     },
-                  ),
+                  ),*/
                   // ListTile(
                   //   title: Text('PiP mode'),
                   //   onTap: () async {

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:pedometer/pedometer.dart';
 import 'package:provider/provider.dart';
@@ -7,10 +8,13 @@ import 'package:stepit/classes/pip_mode_notifier.dart';
 import 'package:stepit/features/step_count.dart';
 
 class Game_12_km extends StatefulWidget {
+  final String gameID;
+  final int userID;
 
+  Game_12_km({required this.gameID, required this.userID});
 
-  const Game_12_km({Key? key})
-      : super(key: key);
+  // const Game_04_km({Key? key})
+  //     : super(key: key);
 
   @override
   _Game_12_kmState createState() => _Game_12_kmState();
@@ -23,8 +27,19 @@ class _Game_12_kmState extends State<Game_12_km> {
   int initialStepCount = 0;
   int stepsTakenSinceChallengeStarted = 0;
   StreamSubscription<int>? stepCountSubscription;
+  DateTime? _challengeStartTime;
+  DateTime? _challengeEndTime;
 
   void startNewChallenge() {
+    // Save start time to Firestore
+    _challengeStartTime = DateTime.now();
+    CollectionReference userGames = FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.userID.toString().padLeft(6, '0'))
+        .collection('userGames');
+    userGames.doc(widget.gameID).update({
+      'Start Time': _challengeStartTime,
+    });
     final provider = Provider.of<StepCounterProvider>(context, listen: false);
     provider.stepCountStream.first.then((currentStepCount) {
       setState(() {
@@ -35,6 +50,7 @@ class _Game_12_kmState extends State<Game_12_km> {
         stepsTakenSinceChallengeStarted = 0;
       });
     });
+
     subscribeToStepCountStream();
   }
 
@@ -55,11 +71,21 @@ class _Game_12_kmState extends State<Game_12_km> {
           });
           if (distanceTraveled >= 2) {
             challengeStarted = false;
+            CollectionReference userGames = FirebaseFirestore.instance
+                .collection('users')
+                .doc(widget.userID.toString().padLeft(6, '0'))
+                .collection('userGames');
+            _challengeEndTime = DateTime.now();
+            userGames.doc(widget.gameID).update({
+              'Completed': true,
+              'End Time': _challengeEndTime,
+              'Steps': stepsTakenSinceChallengeStarted,
+            });
             showDialog(
               context: context,
               builder: (context) => AlertDialog(
                 title: const Text('Congratulations!'),
-                content: const Text('You have completed the 2 km challenge.'),
+                content: const Text('You have completed the 1 km challenge.'),
                 actions: <Widget>[
                   TextButton(
                     child: Text('OK'),
@@ -134,13 +160,13 @@ class _Game_12_kmState extends State<Game_12_km> {
           title: Row(
             children: <Widget>[
               Image.asset(
-                Game.getGameIcon("2 km"), // Replace with your image path
+                Game.getGameIcon("1 km"), // Replace with your image path
                 width: 30, // Adjust the width as needed
                 height: 30, // Adjust the height as needed
               ),
               const SizedBox(
                   width: 15), // Add some space between the title and the icon
-              const Text("2 km",
+              const Text("1 km",
                   style: TextStyle(
                     fontSize: 20.0, // Adjust the font size as needed
                     fontFamily: 'Roboto', // Change to your preferred font
@@ -153,46 +179,44 @@ class _Game_12_kmState extends State<Game_12_km> {
           child: Padding(
             padding: const EdgeInsets.all(16.0),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-              Text(
-                "Your challenge is to walk for 2 kilometers in a row.",
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
-              ),
-          SizedBox(
-                  height:
-                      40),
-          Text(
-            'Distance Traveled: ${distanceTraveled.toStringAsFixed(2)} km',
-            style: TextStyle(fontSize: 18),
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    "Your challenge is to walk for 1 kilometers in a row.",
+                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 40),
+                  Text(
+                    'Distance Traveled: ${distanceTraveled.toStringAsFixed(2)} km',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    'Steps Taken: $stepsTakenSinceChallengeStarted',
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: challengeStarted
+                        ? null
+                        : () {
+                            setState(() {
+                              challengeStarted = true;
+                            });
+                            startNewChallenge();
+                          },
+                    child: Text('Start Challenge'),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: challengeStarted ? Colors.grey : null,
+                    ),
+                  ),
+                ]),
           ),
-          SizedBox(
-            height: 10,
-          ),
-          Text(
-            'Steps Taken: $stepsTakenSinceChallengeStarted',
-            style: TextStyle(fontSize: 18),
-          ),
-          SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: challengeStarted
-                ? null
-                : () {
-                    setState(() {
-                      challengeStarted = true;
-                    });
-                    startNewChallenge();
-                  },
-            child: Text('Start Challenge'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: challengeStarted ? Colors.grey : null,
-            ),
-          ),
-          ]),
         ),
       ),
-    ),
     );
   }
 }

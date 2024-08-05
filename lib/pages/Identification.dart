@@ -32,7 +32,7 @@ class _IdentificationPageState extends State<IdentificationPage> {
 
   String _generateGameType()  {
     if(Random().nextInt(2) == 0) {
-      return 'Challenge';
+      return 'Influence';
     }
     return 'Influence';
   }

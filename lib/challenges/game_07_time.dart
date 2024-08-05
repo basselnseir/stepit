@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:stepit/classes/game.dart';
@@ -6,20 +7,36 @@ import 'package:stepit/classes/pip_mode_notifier.dart';
 import 'package:stepit/features/step_count.dart';
 
 class Game_07_time extends StatefulWidget {
+  final String gameID;
+  final int userID;
+
+  Game_07_time({required this.gameID, required this.userID});
+
   @override
   _Game_07_time createState() => _Game_07_time();
 }
 
 class _Game_07_time extends State<Game_07_time> {
   Timer? _timer;
-  int _timeRemaining = 60 * 60 ; // 15 minutes in seconds
+  int _timeRemaining = 60 * 60; // 15 minutes in seconds
   int _stepCount = 0;
   bool challengeStarted = false;
   DateTime previousTime = DateTime.now();
   int previousStepCount = 0; // Move this variable to the class level
   bool challendgeEnded = false;
+  DateTime? _challengeStartTime;
+  DateTime? _challengeEndTime;
 
   void startNewChallenge() {
+    // Save start time to Firestore
+    _challengeStartTime = DateTime.now();
+    CollectionReference userGames = FirebaseFirestore.instance
+        .collection('users')
+        .doc(widget.userID.toString().padLeft(6, '0'))
+        .collection('userGames');
+    userGames.doc(widget.gameID).update({
+      'Start Time': _challengeStartTime,
+    });
     final provider = Provider.of<StepCounterProvider>(context, listen: false);
     provider.stepCountStream.first.then((currentStepCount) {
       setState(() {
@@ -30,7 +47,6 @@ class _Game_07_time extends State<Game_07_time> {
     });
     startChallenge();
   }
-
 
   void startChallengeTimer() {
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
@@ -44,12 +60,10 @@ class _Game_07_time extends State<Game_07_time> {
     });
   }
 
-
   void startChallenge() {
     startChallengeTimer();
     int previousCurrSteps = 0;
     int challengeStepCount = 0;
-    
 
     Future.delayed(Duration.zero, () {
       if (challengeStarted) {
@@ -60,9 +74,9 @@ class _Game_07_time extends State<Game_07_time> {
           setState(() {
             _stepCount = challengeStepCount;
           });
-        if (challengeStepCount >= 4000) {
-          _endChallenge();
-        }
+          if (challengeStepCount >= 4000) {
+            _endChallenge();
+          }
         });
       } else {
         previousStepCount =
@@ -71,16 +85,24 @@ class _Game_07_time extends State<Game_07_time> {
     });
   }
 
-  
-
   void _endChallenge() {
     _timer?.cancel();
 
     String message;
-    if (_stepCount >= 4000) {
+    if (_stepCount >= 2000) {
+      CollectionReference userGames = FirebaseFirestore.instance
+          .collection('users')
+          .doc(widget.userID.toString().padLeft(6, '0'))
+          .collection('userGames');
+      _challengeEndTime = DateTime.now();
+      userGames.doc(widget.gameID).update({
+        'Completed': true,
+        'End Time': _challengeEndTime,
+        'Steps Taken during Challenge': _stepCount,
+      });
       message = 'Congratulations! You have completed the challenge.';
     } else {
-        message = 'You have not completed the challenge. Try again next time.';
+      message = 'You have not completed the challenge. Try again next time.';
     }
 
     showDialog(
@@ -110,7 +132,7 @@ class _Game_07_time extends State<Game_07_time> {
   Widget build(BuildContext context) {
     final pipModeNotifier = Provider.of<PipModeNotifier>(context);
 
-    if (pipModeNotifier.inPipMode){
+    if (pipModeNotifier.inPipMode) {
       return pipModeNotifier.setPipModeImg();
     }
     return WillPopScope(
@@ -149,13 +171,14 @@ class _Game_07_time extends State<Game_07_time> {
           title: Row(
             children: <Widget>[
               Image.asset(
-                Game.getGameIcon("4000 in an hour"), // Replace with your image path
+                Game.getGameIcon(
+                    "2000 in an hour"), // Replace with your image path
                 width: 30, // Adjust the width as needed
                 height: 30, // Adjust the height as needed
               ),
               const SizedBox(
                   width: 15), // Add some space between the title and the icon
-              const Text("4000 in an hour",
+              const Text("2000 in an hour",
                   style: TextStyle(
                     fontSize: 20.0, // Adjust the font size as needed
                     fontFamily: 'Roboto', // Change to your preferred font
@@ -171,11 +194,13 @@ class _Game_07_time extends State<Game_07_time> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  'Your challenge is to walk at least 4000 steps in an hour',
+                  'Your challenge is to walk at least 2000 steps in an hour',
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 40), // Add some space between the description and the time remaining
+                SizedBox(
+                    height:
+                        40), // Add some space between the description and the time remaining
                 Text(
                   'Time remaining: ${(_timeRemaining ~/ 60).toString().padLeft(2, '0')}:${(_timeRemaining % 60).toString().padLeft(2, '0')}',
                   style: TextStyle(fontSize: 18),
