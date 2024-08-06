@@ -404,16 +404,16 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                       );
                     },
                   ),
-                  // ListTile(
-                  //   title: const Text('Test Challenge'),
-                  //   onTap: () {
-                  //     Navigator.push(
-                  //       context,
-                  //       MaterialPageRoute(
-                  //           builder: (context) => Game_01_steps(gameID: 'game_01', userID: user!.uniqueNumber)),
-                  //     );
-                  //   },
-                  // ),
+                  ListTile(
+                    title: const Text('Test Challenge'),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Game_01_steps(gameID: 'game_01', userID: user!.uniqueNumber)),
+                      );
+                    },
+                  ),
                 /*  ListTile(
                     title: const Text('Game_01'),
                     onTap: () {

@@ -1,6 +1,8 @@
 import 'package:pedometer/pedometer.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 import 'package:stepit/classes/database.dart';
+import 'package:stepit/features/step_count.dart';
 import 'package:stepit/firebase_options.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -163,10 +165,13 @@ Future<void> setAndSaveSteps () async {
 }
 
 Future<int> getSteps() async {
-  int steps = 0;
-  // StepCount stepCount = await Pedometer.stepCountStream.first;
-  await Pedometer.stepCountStream.first.then((StepCount event) { steps = event.steps;});
-  return steps;
+  // int steps = 0;
+  // // StepCount stepCount = await Pedometer.stepCountStream.first;
+
+  // await Pedometer.stepCountStream.first.then((StepCount event) { steps = event.steps;});
+  // return steps;
+  StepCounterProvider stepCounterProvider = StepCounterProvider();
+  return stepCounterProvider.stepCount;
 }
 
 // Future<void> saveStepsToFirebase(int steps) async {

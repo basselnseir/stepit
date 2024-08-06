@@ -17,20 +17,23 @@ class StepCounterProvider with ChangeNotifier {
   Stream<int> get stepCountStream => _stepCountController.stream;
 
   StepCounterProvider() {
-    _loadSavedData();
-    Pedometer.stepCountStream.listen(
-      (StepCount event) {
-        String today = DateTime.now().toIso8601String().split('T')[0];
 
+    Pedometer.stepCountStream.listen(
+      (StepCount event) async {
+       // await _saveNewDate("2024-08-05");
+        await _loadSavedDate();
+        String today = DateTime.now().toIso8601String().split('T')[0];
         if (today != _lastUpdateDate) {
-          yesterdayLastStepCount = _previousStepCount; // Save the previous step count
+          await _loadPreviousSteps(); // Save the previous step count
           _lastUpdateDate = today; // Update last update date to now
-          _saveNewDate(_lastUpdateDate); // Save the updated data
+          await _saveNewDate(_lastUpdateDate);
+          await _saveYesterdaySteps(_previousStepCount); // Save the updated data
         }
         else {
-          _saveYesterdaySteps(event.steps); // Save the last step count of yesterday
+          await _savePreviousSteps(event.steps); // Save the last step count of yesterday
         }
 
+        await _loadYesterdaySteps();
         print('Received step count event: $event');
         stepCount = event.steps - yesterdayLastStepCount; // Calculate steps for the new day
         _stepCountController.add(stepCount);
@@ -44,28 +47,54 @@ class StepCounterProvider with ChangeNotifier {
     );
   }
 
-  Future<void> _loadSavedData() async {
+  Future<void> _loadSavedDate() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    _previousStepCount = prefs.getInt('previousStepCount') ?? 0;
     String? storedDate = prefs.getString('date');
     _lastUpdateDate = storedDate ?? DateTime.now().toIso8601String().split('T')[0];
     
   }
 
+  Future<void> _loadPreviousSteps() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    _previousStepCount = prefs.getInt('previousStepCount') ?? 0;
+  }
+
+  Future<void> _loadYesterdaySteps() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    yesterdayLastStepCount = prefs.getInt('yesterdayStepCount') ?? 0;
+  }
+
   Future<void> _saveNewDate(String today) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    //await prefs.setInt('previousStepCount', _previousStepCount);
     await prefs.setString('date', today);
   }
 
     Future<void> _saveYesterdaySteps(int steps) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('yesterdayStepCount', steps);
+  }
+
+      Future<void> _savePreviousSteps(int steps) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setInt('previousStepCount', steps);
   }
+
 
   void updateStepCount(int newStepCount) {
     stepCount = newStepCount;
     _stepCountController.add(stepCount);
     notifyListeners();
   }
+
+    // Singleton instance
+  static final StepCounterProvider _instance = StepCounterProvider._internal();
+
+  // Factory constructor to return the singleton instance
+  factory StepCounterProvider._() {
+    // Private constructor for singleton pattern
+    return _instance;
+  }
+
+  // Private constructor for singleton pattern
+  StepCounterProvider._internal();
 }
