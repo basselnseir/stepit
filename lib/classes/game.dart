@@ -138,7 +138,7 @@ class Game {
       case 'Cleanliness':
         icon = "dust.png";
       case 'Add Vegetation':
-        icon = "shovel.png";
+        icon = "shovels.png";
 
       // case 'Crosswalks':
       //   icon = "crosswalk.png";

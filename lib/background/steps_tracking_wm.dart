@@ -165,17 +165,17 @@ Future<void> setAndSaveSteps () async {
 }
 
 Future<int> getSteps() async {
-   //int steps = 0;
+   int steps = 0;
   // // StepCount stepCount = await Pedometer.stepCountStream.first;
 
   // await Pedometer.stepCountStream.first.then((StepCount event) { steps = event.steps;});
   // return steps;
   StepCounterProvider stepCounterProvider = StepCounterProvider();
-   int steps = await stepCounterProvider.stepCountStream.first;
-  // await stepCounterProvider.stepCountStream.first.then((stepCount) {
-  // print('Current step count: $stepCount');
-  // steps = stepCount;
-  // });
+   //int steps = await stepCounterProvider.stepCountStream.first;
+  await stepCounterProvider.stepCountStream.first.then((stepCount) {
+    print('Current step count: $stepCount');
+    steps = stepCount;
+  });
   return steps;
 }
 

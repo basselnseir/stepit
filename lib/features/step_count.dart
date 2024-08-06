@@ -9,7 +9,7 @@ class StepCounterProvider with ChangeNotifier {
   int stepCount = 0;
   int _previousStepCount = 0;
   int yesterdayLastStepCount = 0;
-  String _lastUpdateDate = DateTime.now().toIso8601String().split('T')[0];
+  String _lastUpdateDate = "null";
   String? _error;
 
   String? get error => _error;
@@ -50,7 +50,7 @@ class StepCounterProvider with ChangeNotifier {
   Future<void> _loadSavedDate() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? storedDate = prefs.getString('date');
-    _lastUpdateDate = storedDate ?? DateTime.now().toIso8601String().split('T')[0];
+    _lastUpdateDate = storedDate ?? "null";
     
   }
 
