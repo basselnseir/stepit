@@ -374,97 +374,97 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
         },
         child: Scaffold(
           appBar: AppBar(
-            leading: Builder(
-              builder: (BuildContext context) {
-                return IconButton(
-                  icon: const Icon(Icons.menu),
-                  onPressed: () => Scaffold.of(context).openDrawer(),
-                );
-              },
-            ),
+            // leading: Builder(
+            //   builder: (BuildContext context) {
+            //     return IconButton(
+            //       icon: const Icon(Icons.menu),
+            //       onPressed: () => Scaffold.of(context).openDrawer(),
+            //     );
+            //   },
+            // ),
             centerTitle: true,
             automaticallyImplyLeading: false,
             title: const Text('Choose a Challenge'),
           ),
-          drawer: Drawer(
-            backgroundColor: const Color.fromARGB(255, 184, 239, 186),
-            child: Container(
-              margin: const EdgeInsets.only(top: 50.0),
-              width: MediaQuery.of(context).size.width * 0.8,
-              color: Colors.white,
-              child: ListView(
-                padding: EdgeInsets.zero,
-                children: <Widget>[
-                  ListTile(
-                    title: const Text('Log'),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => StatusPage()),
-                      );
-                    },
-                  ),
-                  ListTile(
-                    title: const Text('Test Challenge'),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => Game_01_steps(gameID: 'game_01', userID: user!.uniqueNumber)),
-                      );
-                    },
-                  ),
-                /*  ListTile(
-                    title: const Text('Game_01'),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => Game_01_steps()),
-                      );
-                    },
-                  ),
-                  ListTile(
-                    title: const Text('Speed Challenge'),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => Game_02_speed()),
-                      );
-                    },
-                  ),
-                  ListTile(
-                    title: const Text('KM Challenge'),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const Game_04_km()),
-                      );
-                    },
-                  ),
-                  ListTile(
-                    title: const Text('One Hour Challenge'),
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Game_03_time()),
-                      );
-                    },
-                  ),*/
-                  // ListTile(
-                  //   title: Text('PiP mode'),
-                  //   onTap: () async {
-                  //     enablePip(context);
-                  //     inPipMode = true;
-                  //   },
-                  // ),
-                  // Add more ListTiles for more pages
-                ],
-              ),
-            ),
-          ),
+          // drawer: Drawer(
+          //   backgroundColor: const Color.fromARGB(255, 184, 239, 186),
+          //   child: Container(
+          //     margin: const EdgeInsets.only(top: 50.0),
+          //     width: MediaQuery.of(context).size.width * 0.8,
+          //     color: Colors.white,
+          //     child: ListView(
+          //       padding: EdgeInsets.zero,
+          //       children: <Widget>[
+          //         // ListTile(
+          //         //   title: const Text('Log'),
+          //         //   onTap: () {
+          //         //     Navigator.push(
+          //         //       context,
+          //         //       MaterialPageRoute(builder: (context) => StatusPage()),
+          //         //     );
+          //         //   },
+          //         // ),
+          //         // ListTile(
+          //         //   title: const Text('Test Challenge'),
+          //         //   onTap: () {
+          //         //     Navigator.push(
+          //         //       context,
+          //         //       MaterialPageRoute(
+          //         //           builder: (context) => Game_01_steps(gameID: 'game_01', userID: user!.uniqueNumber)),
+          //         //     );
+          //         //   },
+          //         // ),
+          //       /*  ListTile(
+          //           title: const Text('Game_01'),
+          //           onTap: () {
+          //             Navigator.push(
+          //               context,
+          //               MaterialPageRoute(
+          //                   builder: (context) => Game_01_steps()),
+          //             );
+          //           },
+          //         ),
+          //         ListTile(
+          //           title: const Text('Speed Challenge'),
+          //           onTap: () {
+          //             Navigator.push(
+          //               context,
+          //               MaterialPageRoute(
+          //                   builder: (context) => Game_02_speed()),
+          //             );
+          //           },
+          //         ),
+          //         ListTile(
+          //           title: const Text('KM Challenge'),
+          //           onTap: () {
+          //             Navigator.push(
+          //               context,
+          //               MaterialPageRoute(
+          //                   builder: (context) => const Game_04_km()),
+          //             );
+          //           },
+          //         ),
+          //         ListTile(
+          //           title: const Text('One Hour Challenge'),
+          //           onTap: () {
+          //             Navigator.push(
+          //               context,
+          //               MaterialPageRoute(builder: (context) => Game_03_time()),
+          //             );
+          //           },
+          //         ),*/
+          //         // ListTile(
+          //         //   title: Text('PiP mode'),
+          //         //   onTap: () async {
+          //         //     enablePip(context);
+          //         //     inPipMode = true;
+          //         //   },
+          //         // ),
+          //         // Add more ListTiles for more pages
+          //       ],
+          //     ),
+          //   ),
+          // ),
           body: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Flex(
