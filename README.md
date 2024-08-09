@@ -22,3 +22,11 @@ Best use VSCode for developing.
 2)  Open it in VSCode.
 3)  Press CTRL+Shift+P, and then click "Flutter: Select Device", and select the device to run the app on.
 4)  In the left bar, click on "Run and Debug", and then press the "play" button above to run the app.
+
+
+## Firestore
+
+In order to store data this project uses Firestore. Here is the structure of our DB:
+1) "games" collection: includes the list of all the challenges as its documents.
+2) "images" collection: includes all the URLs of the pictures taken within the app.
+3) "users" collection: includes the list of the users, for every one there are several sub-collections like: gameType, joinedTime, level and his steps history.
