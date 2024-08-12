@@ -24,12 +24,13 @@ class StepCounterProvider with ChangeNotifier {
         await _loadSavedDate();
         String today = DateTime.now().toIso8601String().split('T')[0];
         if (today != _lastUpdateDate) {
-          await _loadPreviousSteps(); // Save the previous step count
+          await _loadPreviousSteps(event.steps); // Save the previous step count
           _lastUpdateDate = today; // Update last update date to now
           await _saveNewDate(_lastUpdateDate);
           await _saveYesterdaySteps(_previousStepCount); // Save the updated data
         }
         else {
+          
           await _savePreviousSteps(event.steps); // Save the last step count of yesterday
         }
 
@@ -49,14 +50,14 @@ class StepCounterProvider with ChangeNotifier {
 
   Future<void> _loadSavedDate() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? storedDate = prefs.getString('date');
+    String? storedDate = prefs.getString('date_count');
     _lastUpdateDate = storedDate ?? "null";
     
   }
 
-  Future<void> _loadPreviousSteps() async {
+  Future<void> _loadPreviousSteps(int steps) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    _previousStepCount = prefs.getInt('previousStepCount') ?? 0;
+    _previousStepCount = prefs.getInt('previousStepCount') ?? steps;
   }
 
   Future<void> _loadYesterdaySteps() async {
@@ -66,7 +67,7 @@ class StepCounterProvider with ChangeNotifier {
 
   Future<void> _saveNewDate(String today) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('date', today);
+    await prefs.setString('date_count', today);
   }
 
     Future<void> _saveYesterdaySteps(int steps) async {
