@@ -85,7 +85,7 @@ class _Game_12_kmState extends State<Game_12_km> {
               context: context,
               builder: (context) => AlertDialog(
                 title: const Text('Congratulations!'),
-                content: const Text('You have completed the 1 km challenge.'),
+                content: const Text('You have completed the 2 km challenge.'),
                 actions: <Widget>[
                   TextButton(
                     child: Text('OK'),
@@ -160,13 +160,13 @@ class _Game_12_kmState extends State<Game_12_km> {
           title: Row(
             children: <Widget>[
               Image.asset(
-                Game.getGameIcon("1 km"), // Replace with your image path
+                Game.getGameIcon("2 km"), // Replace with your image path
                 width: 30, // Adjust the width as needed
                 height: 30, // Adjust the height as needed
               ),
               const SizedBox(
                   width: 15), // Add some space between the title and the icon
-              const Text("1 km",
+              const Text("2 km",
                   style: TextStyle(
                     fontSize: 20.0, // Adjust the font size as needed
                     fontFamily: 'Roboto', // Change to your preferred font
@@ -182,7 +182,7 @@ class _Game_12_kmState extends State<Game_12_km> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Text(
-                    "Your challenge is to walk for 1 kilometers in a row.",
+                    "Your challenge is to walk for 2 kilometers in a row.",
                     style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   ),

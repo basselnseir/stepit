@@ -74,7 +74,7 @@ class _Game_11_time extends State<Game_11_time> {
           setState(() {
             _stepCount = challengeStepCount;
           });
-          if (challengeStepCount >= 2000) {
+          if (challengeStepCount >= 6000) {
             _endChallenge();
           }
         });
@@ -194,7 +194,7 @@ class _Game_11_time extends State<Game_11_time> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  'Your challenge is to walk at least 2000 steps in an hour',
+                  'Your challenge is to walk at least 6000 steps in an hour',
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),

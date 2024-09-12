@@ -89,7 +89,7 @@ class _Game_07_time extends State<Game_07_time> {
     _timer?.cancel();
 
     String message;
-    if (_stepCount >= 2000) {
+    if (_stepCount >= 4000) {
       CollectionReference userGames = FirebaseFirestore.instance
           .collection('users')
           .doc(widget.userID.toString().padLeft(6, '0'))
@@ -172,13 +172,13 @@ class _Game_07_time extends State<Game_07_time> {
             children: <Widget>[
               Image.asset(
                 Game.getGameIcon(
-                    "2000 in an hour"), // Replace with your image path
+                    "4000 in an hour"), // Replace with your image path
                 width: 30, // Adjust the width as needed
                 height: 30, // Adjust the height as needed
               ),
               const SizedBox(
                   width: 15), // Add some space between the title and the icon
-              const Text("2000 in an hour",
+              const Text("4000 in an hour",
                   style: TextStyle(
                     fontSize: 20.0, // Adjust the font size as needed
                     fontFamily: 'Roboto', // Change to your preferred font
@@ -194,7 +194,7 @@ class _Game_07_time extends State<Game_07_time> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  'Your challenge is to walk at least 2000 steps in an hour',
+                  'Your challenge is to walk at least 4000 steps in an hour',
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),

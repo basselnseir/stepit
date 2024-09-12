@@ -183,13 +183,13 @@ class _Game_10_speed extends State<Game_10_speed> {
           title: Row(
             children: <Widget>[
               Image.asset(
-                Game.getGameIcon("Fast 15 min"), // Replace with your image path
+                Game.getGameIcon("Fast 45 min"), // Replace with your image path
                 width: 30, // Adjust the width as needed
                 height: 30, // Adjust the height as needed
               ),
               const SizedBox(
                   width: 15), // Add some space between the title and the icon
-              const Text("Fast 15 min",
+              const Text("Fast 45 min",
                   style: TextStyle(
                     fontSize: 20.0, // Adjust the font size as needed
                     fontFamily: 'Roboto', // Change to your preferred font
@@ -205,7 +205,7 @@ class _Game_10_speed extends State<Game_10_speed> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Text(
-                  'Your challenge is to walk for 15 minutes with your maximal speed',
+                  'Your challenge is to walk for 45 minutes with your maximal speed',
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
