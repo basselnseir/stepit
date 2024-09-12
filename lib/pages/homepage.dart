@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:stepit/challenges/game_01_steps.dart';
 import 'package:stepit/challenges/game_02_speed.dart';
@@ -201,12 +202,16 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                   SizedBox(
                       height:
                           10), // Add some space between the title and the description
-                  Text(
-                    gameProvider.games[button_index]
-                        .description, // Replace with your description
-                    style: const TextStyle(
-                      fontSize: 16.0, // Adjust the font size as needed
-                      fontFamily: 'Roboto', // Change to your preferred font
+                  Flexible(
+                    child: Text(
+                      gameProvider.games[button_index]
+                          .description, // Replace with your description
+                      style: const TextStyle(
+                        fontSize: 16.0, // Adjust the font size as needed
+                        fontFamily: 'Roboto', // Change to your preferred font
+                      ),
+                      overflow: TextOverflow.ellipsis, // Handle overflow
+                      maxLines: 3, // Adjust the number of lines as needed
                     ),
                   ),
                   Expanded(
