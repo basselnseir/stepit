@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
@@ -100,97 +101,113 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Game_01_steps(gameID: game.id, userID: user.uniqueNumber),
+                  builder: (context) =>
+                      Game_01_steps(gameID: game.id, userID: user.uniqueNumber),
                 ),
               );
             } else if (game.id == 'game_02') {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Game_02_speed(gameID: game.id, userID: user.uniqueNumber),
+                  builder: (context) =>
+                      Game_02_speed(gameID: game.id, userID: user.uniqueNumber),
                 ),
               );
             } else if (game.id == 'game_03') {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Game_03_time(gameID: game.id, userID: user.uniqueNumber),
+                  builder: (context) =>
+                      Game_03_time(gameID: game.id, userID: user.uniqueNumber),
                 ),
               );
             } else if (game.id == 'game_04') {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Game_04_km(gameID: game.id, userID: user.uniqueNumber),
+                  builder: (context) =>
+                      Game_04_km(gameID: game.id, userID: user.uniqueNumber),
                 ),
               );
             } else if (game.id == 'game_05') {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Game_05_steps(gameID: game.id, userID: user.uniqueNumber),
+                  builder: (context) =>
+                      Game_05_steps(gameID: game.id, userID: user.uniqueNumber),
                 ),
               );
             } else if (game.id == 'game_06') {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Game_06_speed(gameID: game.id, userID: user.uniqueNumber),
+                  builder: (context) =>
+                      Game_06_speed(gameID: game.id, userID: user.uniqueNumber),
                 ),
               );
             } else if (game.id == 'game_07') {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Game_07_time(gameID: game.id, userID: user.uniqueNumber),
+                  builder: (context) =>
+                      Game_07_time(gameID: game.id, userID: user.uniqueNumber),
                 ),
               );
             } else if (game.id == 'game_08') {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Game_08_km(gameID: game.id, userID: user.uniqueNumber),
+                  builder: (context) =>
+                      Game_08_km(gameID: game.id, userID: user.uniqueNumber),
                 ),
               );
             } else if (game.id == 'game_09') {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Game_09_steps(gameID: game.id, userID: user.uniqueNumber),
+                  builder: (context) =>
+                      Game_09_steps(gameID: game.id, userID: user.uniqueNumber),
                 ),
               );
             } else if (game.id == 'game_10') {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Game_10_speed(gameID: game.id, userID: user.uniqueNumber),
+                  builder: (context) =>
+                      Game_10_speed(gameID: game.id, userID: user.uniqueNumber),
                 ),
               );
             } else if (game.id == 'game_11') {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Game_11_time(gameID: game.id, userID: user.uniqueNumber),
+                  builder: (context) =>
+                      Game_11_time(gameID: game.id, userID: user.uniqueNumber),
                 ),
               );
             } else if (game.id == 'game_12') {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => Game_12_km(gameID: game.id, userID: user.uniqueNumber),
+                  builder: (context) =>
+                      Game_12_km(gameID: game.id, userID: user.uniqueNumber),
                 ),
               );
-            } 
+            }
           }
         },
         child: Container(
-          height: 220, // Adjust the height as needed
+          //height: 220,
+          height: MediaQuery.of(context).size.height *
+              0.25, // Adjust the height as needed
           child: Card(
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
+                  // Flexible(
                   Text(
                     gameProvider.games[button_index].title,
                     style: const TextStyle(
@@ -199,9 +216,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                       fontWeight: FontWeight.bold, // Make the text bold
                     ),
                   ),
-                  SizedBox(
-                      height:
-                          10), // Add some space between the title and the description
+                  // ),
+                  // SizedBox(
+                  //     height:
+                  //         10), // Add some space between the title and the description
                   Flexible(
                     child: Text(
                       gameProvider.games[button_index]
@@ -211,24 +229,31 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
                         fontFamily: 'Roboto', // Change to your preferred font
                       ),
                       overflow: TextOverflow.ellipsis, // Handle overflow
-                      maxLines: 3, // Adjust the number of lines as needed
+                      maxLines: 10, // Adjust the number of lines as needed
                     ),
                   ),
-                  Expanded(
-                    child: Align(
-                      alignment: Alignment.bottomRight,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Image.asset(
-                          Game.getGameIcon(gameProvider.games[button_index]
-                              .title), // Replace with your image path
-                          width: 80,
-                          height: 80,
-                          fit: BoxFit.cover,
-                        ),
+                  // Expanded(
+                  //   child:
+                  Align(
+                    alignment: Alignment.bottomRight,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: LayoutBuilder(
+                        builder: (context, constraints) {
+                          double iconSize = MediaQuery.of(context).size.width *
+                              0.2; // Adjust the icon size based on screen width
+                          return Image.asset(
+                            Game.getGameIcon(gameProvider.games[button_index]
+                                .title), // Replace with your image path
+                            width: iconSize,
+                            height: iconSize,
+                            fit: BoxFit.cover,
+                          );
+                        },
                       ),
                     ),
                   ),
+                  //  ),
                 ],
               ),
             ),
@@ -513,7 +538,5 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
     }
   }
 }
-
-
 
 // 'ID: ${snapshot.data!.uniqueNumber.toString().padLeft(6, '0')}'
